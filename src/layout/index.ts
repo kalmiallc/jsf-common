@@ -17,6 +17,10 @@ import {
   JsfLayoutDrawerHeader,
   JsfLayoutExpansionPanelContent,
   JsfLayoutExpansionPanelHeader,
+  JsfLayoutExpansionPanelStandalone,
+  JsfLayoutExpansionPanelStandaloneContent,
+  JsfLayoutExpansionPanelStandaloneHeader,
+  JsfLayoutExpansionPanelStandalonePanel,
   JsfLayoutHeading,
   JsfLayoutHr,
   JsfLayoutHtml,
@@ -85,7 +89,11 @@ export type JsfItemsLayout =
   | JsfLayoutListItem
   | JsfLayoutDialogContent
   | JsfLayoutDialogActions
-  | JsfLayoutProgressTracker;
+  | JsfLayoutProgressTracker
+  | JsfLayoutExpansionPanelStandalone
+  | JsfLayoutExpansionPanelStandalonePanel
+  | JsfLayoutExpansionPanelStandaloneHeader
+  | JsfLayoutExpansionPanelStandaloneContent;
 
 export type JsfPropLayout = JsfLayoutProp | JsfLayoutPropArray | JsfLayoutPropTable | JsfLayoutPropExpansionPanel;
 
