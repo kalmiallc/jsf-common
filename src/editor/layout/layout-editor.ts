@@ -19,12 +19,15 @@ import {
   JsfSpecialLayoutBuilder,
   JsfTablePropLayoutBuilder
 }                                     from '../../builder/layout';
+import { Subject }                    from 'rxjs';
 
 export class JsfLayoutEditor {
 
   public jsfEditor: JsfEditor;
   protected _definition: JsfUnknownLayout;
   private _parent: JsfLayoutEditor;
+
+  public update$: Subject<void> = new Subject<void>();
 
   /**
    * Returns raw definition object, so it's properties can be mutated directly.
@@ -266,6 +269,7 @@ export class JsfLayoutEditor {
       parent   : this
     });
     this.items.splice(+index, 0, item);
+    this.update$.next();
   }
 
   addItem(instance: JsfLayoutEditor, index?: number) {
@@ -282,6 +286,7 @@ export class JsfLayoutEditor {
 
     instance.parent = this;
     this.items.splice(+index, 0, instance);
+    this.update$.next();
   }
 
   /**
@@ -294,7 +299,8 @@ export class JsfLayoutEditor {
     if (i > -1) {
       this.items.splice(i, 1);
     }
-    this._items = this._items.slice();
+    this.items = this.items.slice();
+    this.update$.next();
   }
 
   /**
