@@ -227,7 +227,7 @@ export class JsfLayoutEditor {
     if (!this.supportsItems) {
       return;
     }
-    this._definition.items
+    (this._definition.items || [])
       .forEach((x, i) => this.createItem(x, i));
   }
 
