@@ -235,7 +235,7 @@ export class JsfLayoutEditor {
     if (!this.supportsItems) {
       return false;
     }
-    return false;
+    return true;
   }
 
   moveTo(newParent: JsfLayoutEditor, index?: number) {
@@ -308,6 +308,7 @@ export class JsfLayoutEditor {
     }
 
     this._items = this._items.slice();  // intentional reference change (FP)
+
     this.update$.next();
   }
 

@@ -9,8 +9,8 @@ export class JsfEditor {
 
   private uniqueIdCounter = 0;
 
-  private propsMap: { [id: string]: JsfAbstractPropEditor<any> }     = {};
-  private layoutsMap: { [id: string]: JsfLayoutEditor } = {};
+  private propsMap: { [id: string]: JsfAbstractPropEditor<any> } = {};
+  private layoutsMap: { [id: string]: JsfLayoutEditor }          = {};
 
 
   private _jsfDefinition: JsfDefinition;
@@ -19,7 +19,7 @@ export class JsfEditor {
     return {
       schema: this.schemaEditor.getDefinition(),
       layout: this._jsfDefinition.layout
-    }
+    };
   }
 
   set jsfDefinition(value: JsfDefinition) {
@@ -50,6 +50,13 @@ export class JsfEditor {
       throw new Error(`Prop with id ${ id } doesn't exist.`);
     }
     return this.propsMap[id];
+  }
+
+  getLayoutById(id: string) {
+    if (!this.layoutsMap[id]) {
+      throw new Error(`Layout with id ${ id } doesn't exist.`);
+    }
+    return this.layoutsMap[id];
   }
 
   registerLayout(layout: JsfLayoutEditor) {
