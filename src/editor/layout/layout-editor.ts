@@ -100,6 +100,9 @@ export class JsfLayoutEditor {
 
   private _items: JsfLayoutEditor[] = [];
 
+  /**
+   * If items change add, remove or order change, returned array will have new reference (FP).
+   */
   get items(): JsfLayoutEditor[] {
     return this._items;
   }
@@ -269,6 +272,8 @@ export class JsfLayoutEditor {
       parent   : this
     });
     this.items.splice(+index, 0, item);
+    this._items = this._items.slice(); // intentional reference change (FP)
+
     this.update$.next();
   }
 
@@ -286,6 +291,8 @@ export class JsfLayoutEditor {
 
     instance.parent = this;
     this.items.splice(+index, 0, instance);
+    this._items = this._items.slice();  // intentional reference change (FP)
+
     this.update$.next();
   }
 
@@ -299,7 +306,8 @@ export class JsfLayoutEditor {
     if (i > -1) {
       this.items.splice(i, 1);
     }
-    this.items = this.items.slice();
+
+    this._items = this._items.slice();  // intentional reference change (FP)
     this.update$.next();
   }
 
