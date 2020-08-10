@@ -2,7 +2,12 @@ export interface LayoutBuilderInfoInterface {
   /**
    * Type of layout.
    */
-  type: string,
+  type: string;
+
+  /**
+   * Nice title for builder UI. If not set type will be used.
+   */
+  title?: string;
 
   formControl?: {
     /**
@@ -47,7 +52,13 @@ export interface LayoutBuilderInfoInterface {
      * Note: 'fixed' and 'allowedTypes' are exclusive.
      */
     allowedTypes?: string[];
-  }
+  };
+
+  /**
+   * Icon for builder UI (toolbox).
+   * @example layout-icons/span.svg
+   */
+  icon?: string;
 }
 
 //// DEV DRAFT 0.1 EXAMPLES
