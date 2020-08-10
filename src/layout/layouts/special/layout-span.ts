@@ -3,7 +3,9 @@ import { DefLayout, DefProp, DefExtends, DefCategory } from '../../../jsf-for-js
 import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
-  type: 'span'
+  type: 'span',
+  title: 'Span',
+  icon: 'layout-icons/span.svg'
 })
 @DefLayout({
   type : 'div',
