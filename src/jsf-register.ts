@@ -24,6 +24,10 @@ export class JsfRegister {
   }
 
   static getLayoutInfo(type: string) {
+    return JsfRegister.layoutsBuilderInfo[type];
+  }
+
+  static getLayoutInfoOrThrow(type: string) {
     if (!JsfRegister.layoutsBuilderInfo[type]) {
       throw new Error(`Layout info for ${ type } not found.`);
     }
@@ -31,7 +35,7 @@ export class JsfRegister {
   }
 
   static getNewLayoutDefinition(type: string) {
-    const x = JsfRegister.getLayoutInfo(type);
+    const x = JsfRegister.getLayoutInfoOrThrow(type);
 
     return {
       type: type === 'prop' ? undefined : type,
