@@ -50,6 +50,10 @@ export class JsfEditor {
   }
 
   getPropById(id: string) {
+    return this.propsMap[id];
+  }
+
+  getPropByIdOrThrow(id: string) {
     if (!this.propsMap[id]) {
       throw new Error(`Prop with id ${ id } doesn't exist.`);
     }
@@ -57,6 +61,10 @@ export class JsfEditor {
   }
 
   getLayoutById(id: string) {
+    return this.layoutsMap[id];
+  }
+
+  getLayoutByIdOrThrow(id: string) {
     if (!this.layoutsMap[id]) {
       throw new Error(`Layout with id ${ id } doesn't exist.`);
     }
