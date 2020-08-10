@@ -4,7 +4,9 @@ import { createDependencyArray } from '../../../jsf-for-jsf/util/dependency-arra
 import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
-  type: 'badge'
+  type: 'badge',
+  title: 'Badge',
+  icon: 'layout-icons/badge.svg'
 })
 @DefExtends('JsfAbstractSpecialLayout')
 @DefCategory('Text')

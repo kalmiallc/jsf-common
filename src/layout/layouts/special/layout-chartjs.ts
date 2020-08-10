@@ -4,7 +4,9 @@ import { createDependencyArray } from '../../../jsf-for-jsf/util/dependency-arra
 import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
-  type: 'chartjs'
+  type: 'chartjs',
+  title: 'Chart',
+  icon: 'layout-icons/chartjs.svg'
 })
 @DefExtends('JsfAbstractSpecialLayout')
 @DefCategory('Layout')

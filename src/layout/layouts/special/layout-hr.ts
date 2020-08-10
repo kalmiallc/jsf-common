@@ -3,7 +3,9 @@ import { DefExtends, DefCategory }               from '../../../jsf-for-jsf/deco
 import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
-  type: 'hr'
+  type: 'hr',
+  title: 'Horizontal rule',
+  icon: 'layout-icons/hr.svg'
 })
 @DefExtends('JsfAbstractSpecialLayout')
 @DefCategory('Layout')

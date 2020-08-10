@@ -3,7 +3,9 @@ import { DefLayout, DefProp, DefExtends, DefCategory } from '../../../jsf-for-js
 import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
-  type: 'progress-tracker-step'
+  type: 'progress-tracker-step',
+  title: 'Progress tracker step',
+  icon: 'layout-icons/progress-tracker.svg'
 })
 @DefExtends('JsfAbstractSpecialLayout')
 @DefCategory('Layout')

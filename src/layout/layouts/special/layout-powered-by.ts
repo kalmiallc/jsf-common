@@ -3,7 +3,9 @@ import { DefCategory, DefExtends }  from '../../../jsf-for-jsf/decorators';
 import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
-  type: 'powered-by'
+  type: 'powered-by',
+  title: 'Powered by',
+  icon: 'layout-icons/powered-by.svg'
 })
 @DefExtends('JsfAbstractSpecialLayout')
 @DefCategory('Layout')

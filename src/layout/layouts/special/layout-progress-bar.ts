@@ -4,7 +4,9 @@ import { createDependencyArray } from '../../../jsf-for-jsf/util/dependency-arra
 import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
-  type: 'progress-bar'
+  type: 'progress-bar',
+  title: 'Progress bar',
+  icon: 'layout-icons/progress-bar.svg'
 })
 @DefTransform((x: any) => {
   x.schema.properties._progress = {

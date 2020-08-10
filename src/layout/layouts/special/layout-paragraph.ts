@@ -3,7 +3,9 @@ import { DefLayout, DefProp, DefExtends, DefCategory } from '../../../jsf-for-js
 import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
-  type: 'paragraph'
+  type: 'paragraph',
+  title: 'Paragraph',
+  icon: 'layout-icons/paragraph.svg'
 })
 @DefLayout({
   type : 'div',

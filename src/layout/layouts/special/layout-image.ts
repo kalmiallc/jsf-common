@@ -4,7 +4,9 @@ import { createDependencyArray } from '../../../jsf-for-jsf/util/dependency-arra
 import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
-  type: 'image'
+  type: 'image',
+  title: 'Image',
+  icon: 'layout-icons/image.svg'
 })
 @DefLayout({
   type : 'div',

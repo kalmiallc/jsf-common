@@ -5,7 +5,9 @@ import { createLayoutButtonLayout } from '../../../jsf-for-jsf/util/jsf-layout-b
 import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
-  type: 'button'
+  type: 'button',
+  title: 'Button',
+  icon: 'layout-icons/button.svg'
 })
 @DefLayout({
   type : 'div',

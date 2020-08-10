@@ -3,7 +3,9 @@ import { DefExtends, DefCategory, DefProp, DefLayout }               from '../..
 import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
-  type: 'app-breadcrumbs'
+  type: 'app-breadcrumbs',
+  title: 'Breadcrumbs',
+  icon: 'layout-icons/app-breadcrumbs.svg'
 })
 @DefExtends('JsfAbstractSpecialLayout')
 @DefCategory('Navigation')

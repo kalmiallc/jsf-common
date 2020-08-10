@@ -3,7 +3,9 @@ import { DefLayout, DefProp, DefExtends, DefCategory } from '../../../jsf-for-js
 import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
-  type: 'd3'
+  type: 'd3',
+  title: 'Chart library',
+  icon: 'layout-icons/d3.svg'
 })
 @DefLayout({
   type : 'div',

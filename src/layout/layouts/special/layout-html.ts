@@ -3,7 +3,9 @@ import { DefLayout, DefProp, DefExtends, DefCategory } from '../../../jsf-for-js
 import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
-  type: 'html'
+  type: 'html',
+  title: 'Html',
+  icon: 'layout-icons/html.svg'
 })
 @DefLayout({
   type : 'div',

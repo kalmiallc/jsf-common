@@ -3,7 +3,9 @@ import { DefLayout, DefProp, DefExtends, DefCategory } from '../../../jsf-for-js
 import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
-  type: 'custom-component'
+  type: 'custom-component',
+  title: 'Custom component',
+  icon: 'layout-icons/custom-component.svg'
 })
 @DefExtends('JsfAbstractSpecialLayout')
 @DefCategory('Layout')

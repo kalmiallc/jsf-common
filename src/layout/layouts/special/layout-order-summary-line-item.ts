@@ -4,7 +4,9 @@ import { createDependencyArray } from '../../../jsf-for-jsf/util/dependency-arra
 import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
-  type: 'order-summary-line-item'
+  type: 'order-summary-line-item',
+  title: 'Order summery line item',
+  icon: 'layout-icons/order-summary.svg'
 })
 @DefLayout({
   type : 'div',
