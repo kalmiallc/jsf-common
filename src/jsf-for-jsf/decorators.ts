@@ -3,6 +3,7 @@ import { JsfUnknownLayout }                                 from '../layout';
 import { JsfDocument }                                      from '../jsf-document';
 import { isArray, isPlainObject, mapValues, groupBy, omit } from 'lodash';
 import { JsfDefinition }                                    from '../jsf-definition';
+import { JsfRegister }                                      from '../jsf-register';
 
 export const jsfRawStore: {
   [key: string]: {
@@ -39,8 +40,9 @@ export const jsfForJsf = new class {
         } else if (c.key.startsWith('JsfLayout')) {
           a.layouts.push({
             category: c.value.category,
-            type    : c.value.type ||  this.convertToKebabCase(c.key.substr(9)),
+            type    : c.value.type || this.convertToKebabCase(c.key.substr(9)),
             name    : c.key,
+            info    : JsfRegister.getLayoutInfo(c.value.type || 'prop')
           })
         } else {
           console.warn('JSF Class name should start with JsfProp or JsfLayout prefix.');
@@ -93,7 +95,7 @@ export const jsfForJsf = new class {
         // Here, we copy parent schema's default object to x.schema.default
         // while correcting the type property to what it should be
 
-        const defaultType = {type: typeForDefault}
+        const defaultType = { type: typeForDefault }
         if (typeForDefault === 'object') {
           defaultType['properties'] = {};
         }
@@ -102,14 +104,14 @@ export const jsfForJsf = new class {
           x.schema = {};
         }
 
-        x.schema.default = {...(parent.schema as any).default, ...defaultType};
+        x.schema.default = { ...(parent.schema as any).default, ...defaultType };
       }
 
       if (
         (parent.schema?.type as any)?.const === 'CHANGE_ME'
         && key.startsWith('JsfLayout')
       ) {
-        const newConst = {const: this.convertToKebabCase(key.substr(9))};
+        const newConst = { const: this.convertToKebabCase(key.substr(9)) };
 
         // x.schema.type may also not exist either, hence the spread
         x.schema.type = { ...(parent.schema as any).type, ...newConst };
@@ -137,11 +139,11 @@ export const jsfForJsf = new class {
       };
 
       let jsfDoc = {
-        $title: key,
+        $title      : key,
         $description: key,
-        $theme: 'rounded/yellowgreen',
-        schema: schema,
-        layout: layout,
+        $theme      : 'rounded/yellowgreen',
+        schema      : schema,
+        layout      : layout,
         value
       } as JsfDocument;
 
@@ -165,7 +167,7 @@ export const jsfForJsf = new class {
 export function DefTransform(cb: (x: JsfDocument) => JsfDocument): any {
   // tslint:disable-next-line:only-arrow-functions
   return function (target: any, propertyName: string, descriptor: PropertyDescriptor) {
-    jsfRawStore[target.name] = jsfRawStore[target.name] || {};
+    jsfRawStore[target.name]           = jsfRawStore[target.name] || {};
     jsfRawStore[target.name].transform = cb;
   };
 }
