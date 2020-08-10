@@ -249,7 +249,7 @@ export class JsfLayoutEditor {
     if (!newParent.canAddItem(instance.getDefinition())) {
       throw new Error(`Parent "${ newParent.id }:${ newParent.path }" does not accept child "${ instance.id }:${ instance.path }".`);
     }
-    this.parent.removeItem(instance);
+    this.removeItem(instance);
     newParent.addItem(instance, index);
   }
 
@@ -301,7 +301,7 @@ export class JsfLayoutEditor {
     instance.parent = undefined;
     const i         = this.items.indexOf(instance);
     if (i > -1) {
-      this.items.splice(i, 1);
+      this._items.splice(i, 1);
     }
 
     this._items = this._items.slice();  // intentional reference change (FP)
