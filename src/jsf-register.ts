@@ -24,7 +24,19 @@ export class JsfRegister {
   }
 
   static getLayoutInfo(type: string) {
+    if (!JsfRegister.layoutsBuilderInfo[type]) {
+      throw new Error(`Layout info for ${ type } not found.`);
+    }
     return JsfRegister.layoutsBuilderInfo[type];
+  }
+
+  static getNewLayoutDefinition(type: string) {
+    const x = JsfRegister.getLayoutInfo(type);
+
+    return {
+      type: type === 'prop' ? undefined : type,
+      items: x.items?.enabled ? [] : undefined
+    };
   }
 
   static getHandlerFormDefinition(type: string, prop: JsfProp) {
