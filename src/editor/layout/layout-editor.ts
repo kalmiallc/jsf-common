@@ -240,17 +240,14 @@ export class JsfLayoutEditor {
 
   moveTo(newParent: JsfLayoutEditor, index?: number) {
     if (!this.parent) {
-      throw new Error('Root prop can\'t be moved.');
+      throw new Error('Root layout can\'t be moved.');
     }
     this.parent.moveItemTo(this, newParent, index);
   }
 
   moveItemTo(instance: JsfLayoutEditor, newParent: JsfLayoutEditor, index?: number) {
-    if (!this.parent) {
-      throw new Error('Root prop can\'t be moved.');
-    }
     if (!newParent.canAddItem(instance.getDefinition())) {
-      throw new Error('Parent does not accept this child.');
+      throw new Error(`Parent "${ newParent.id }:${ newParent.path }" does not accept child "${ instance.id }:${ instance.path }".`);
     }
     this.parent.removeItem(instance);
     newParent.addItem(instance, index);
@@ -258,7 +255,7 @@ export class JsfLayoutEditor {
 
   createItem(itemDefinition: JsfUnknownLayout, index?: number) {
     if (!this.supportsItems) {
-      throw new Error('Items not supported by layout.');
+      throw new Error(`Items not supported by layout "${ this.id }:${ this.path }".`);
     }
 
     if (isNaN(index)) {
@@ -279,7 +276,7 @@ export class JsfLayoutEditor {
 
   addItem(instance: JsfLayoutEditor, index?: number) {
     if (this.items.indexOf(instance) > -1) {
-      throw new Error('JSF Builder child with same instance already exists.');
+      throw new Error(`JSF Builder child "${ instance.id }:${ instance.path }" with same instance already exists on parent "${ this.id }:${ this.path }"`);
     }
 
     if (isNaN(index)) {

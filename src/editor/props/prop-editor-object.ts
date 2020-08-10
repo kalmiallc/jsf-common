@@ -62,7 +62,7 @@ export class JsfPropEditorObject
     }
 
     if (this.properties.find(x => x.propertyName === key)) {
-      throw new Error('Child with same name already exists.')
+      throw new Error(`Child "${ key }" with same name already exists on parent "${ this.id }:${ this.path }"`)
     }
 
     this.properties.push(createJsfPropEditor(childDefinition, {
@@ -74,7 +74,7 @@ export class JsfPropEditorObject
 
   addChild(instance: JsfAbstractPropEditor<any>, key?: string) {
     if (this.properties.indexOf(instance) > -1) {
-      throw new Error('JSF Builder child with same instance already exists.');
+      throw new Error(`JSF Builder child "${ instance.id }:${ instance.path }" with same instance already exists on parent "${ this.id }:${ this.path }"`);
     }
 
     if (key) {
@@ -82,7 +82,7 @@ export class JsfPropEditorObject
     }
 
     if (this.properties.find(x => x.propertyName === instance.propertyName)) {
-      throw new Error('JSF Builder child with same property name already exists.');
+      throw new Error(`JSF Builder child "${ instance.id }:${ instance.path }" with same property name already exists on parent "${ this.id }:${ this.path }"`);
     }
 
     instance.parent = this;
