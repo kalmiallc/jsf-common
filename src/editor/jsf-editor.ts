@@ -5,6 +5,8 @@ import { createJsfLayoutEditor, createJsfPropEditor } from './util/jsf-editor-fa
 import { JsfProp }                                    from '../schema/props';
 import { JsfLayoutEditor }                            from './layout';
 
+let editorId = 0;
+
 export class JsfEditor {
 
   private uniqueIdCounter = 0;
@@ -14,6 +16,8 @@ export class JsfEditor {
 
 
   private _jsfDefinition: JsfDefinition;
+
+  readonly id = editorId++;
 
   get jsfDefinition(): JsfDefinition {
     return {
