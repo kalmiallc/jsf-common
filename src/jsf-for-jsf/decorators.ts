@@ -38,11 +38,12 @@ export const jsfForJsf = new class {
             name    : c.key,
           })
         } else if (c.key.startsWith('JsfLayout')) {
+          const type = c.value.type || this.convertToKebabCase(c.key.substr(9))
           a.layouts.push({
             category: c.value.category,
-            type    : c.value.type || this.convertToKebabCase(c.key.substr(9)),
+            type    : type,
             name    : c.key,
-            info    : JsfRegister.getLayoutInfo(c.value.type || 'prop')
+            info    : JsfRegister.getLayoutInfo(type || 'prop')
           })
         } else {
           console.warn('JSF Class name should start with JsfProp or JsfLayout prefix.');
