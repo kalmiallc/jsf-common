@@ -6,6 +6,7 @@ import { JsfDefinition }                                    from '../jsf-definit
 
 export const jsfRawStore: {
   [key: string]: {
+    type?: string;
     transform?: (x: JsfDocument) => JsfDocument,
     parent?: string,
     category?: string,
@@ -38,7 +39,7 @@ export const jsfForJsf = new class {
         } else if (c.key.startsWith('JsfLayout')) {
           a.layouts.push({
             category: c.value.category,
-            type    : this.convertToKebabCase(c.key.substr(9)),
+            type    : c.value.type ||  this.convertToKebabCase(c.key.substr(9)),
             name    : c.key,
           })
         } else {
