@@ -6,7 +6,10 @@ import { createDependencyArray } from '../../jsf-for-jsf/util/dependency-array';
 @DefLayout({
   type: 'div',
   items: [
-    { key: '$comment' }, // string
+    { key: 'id' },       // string
+    { key: 'htmlClass' },       // string
+    { key: 'htmlOuterClass' },  // string
+
     // { key: '$mode' },    // string | string[] | {}
     // MODE (object) ↓
     {
@@ -18,130 +21,65 @@ import { createDependencyArray } from '../../jsf-for-jsf/util/dependency-array';
           title: 'Mode',
           level: 5,
         },
-        // {$ eval:}
-        { key: '$mode.$eval' }
-      ]
-    },
-    { key: 'id' },       // string
-    { key: 'htmlClass' },       // string
-    { key: 'htmlOuterClass' },  // string
-    // { key: 'preferences' },     // any
-    // { key: 'handlerPreferences' },
-
-    // VISIBLE IF ↓
-    {
-      type: 'div',
-      items: [
-        {
-          type: 'heading',
-          title: 'Visible if',
-          level: '5',
-        },
-        { key: 'visibleIf.$eval' },
-        createDependencyArray('visibleIf'),
-        createDependencyArray('visibleIf', 'layoutDependencies', 'Layout dependencies')
-      ]
-    },
-    // BUILD IF
-    {
-      // buildIf (object)
-      type: 'div',
-      items: [
-        {
-          type: 'heading',
-          title: 'Build if',
-          level: 5,
-        },
-        { key: 'buildIf.$eval' }
-      ]
-    },
-    // TRANSLATABLE FIELDS ↓
-    {
-      type: 'div',
-      items: [
-        {
-          type: 'heading',
-          title: 'Translatable fields',
-          level: 5
-        },
         {
           type: 'array',
-          key: 'translatableFields',
+          key: '$mode',
           items: [
             {
-              type: 'expansion-panel-content',
+              type: 'row',
               items: [
                 {
-                  type: 'hr'
-                },
-                {
-                  type: 'div',
-                  htmlClass: 'd-flex justify-content-between',
+                  type: 'col',
+                  xs: 'auto',
                   items: [
-                    {
-                      type: 'div',
-                    },
-                    {
-                      type: 'button',
-                      icon: 'delete',
-                      color: 'accent',
-                      preferences: {
-                        variant: 'icon'
-                      },
-                      onClick: [
-                        {
-                          arrayItemRemove: {
-                            path: 'translatableFields',
-                            index: {
-                              $eval: `return $getItemIndex('translatableFields[]')`
-                            }
-                          }
-                        }
-                      ]
+                    { 
+                      key: '$mode[]' 
                     }
                   ]
                 },
                 {
-                  key: 'translatableFields[]'
-                },
+                  type: 'col',
+                  xs: 'content',
+                  items: [
+                    {
+                      type: 'button',
+                      icon: 'delete',
+                      tooltip: 'Delete',
+                      preferences: {
+                        variant: 'icon'
+                      },
+                      onClick: {
+                        arrayItemRemove: {
+                          path: '$mode',
+                          index: {
+                            $eval: `return $getItemIndex('$mode[]')`
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
               ]
             }
           ]
         },
         {
-          type: 'div',
-          visibleIf: {
-            $eval: `return !$val.translatableFields.length`,
-            dependencies: ['translatableFields']
+          type: 'button',
+          icon: 'add',
+          title: 'Add',
+          tooltip: 'Add mode',
+          preferences: {
+            variant: 'icon'
           },
-          items: [
-            {
-              type: 'span',
-              htmlClass: 'd-block py-4 text-center',
-              title: 'No translatable fields yet.'
+          onClick: {
+            arrayItemAdd: {
+              path: '$mode'
             }
-          ]
-        },
-        {
-          type: 'row',
-          horizontalAlign: 'center',
-          htmlClass: 'mt-2',
-          items: [
-            {
-              type: 'button',
-              title: 'Add translatable field',
-              // htmlClass: 't-3',
-              onClick: {
-                arrayItemAdd: {
-                  path: 'translatableFields',
-                }
-              }
-            },
-          ]
+          }
         }
       ]
     },
-    { key: 'onClick' },
+
     // TOOLTIP ↓
     {
       type: 'div',
@@ -165,6 +103,135 @@ import { createDependencyArray } from '../../jsf-for-jsf/util/dependency-array';
         createDependencyArray('tooltip.templateData')
       ]
     },
+    
+    
+    // { key: 'preferences' },     // any
+    // { key: 'handlerPreferences' },
+
+    // VISIBLE IF ↓
+    {
+      type: 'div',
+      items: [
+        {
+          type: 'heading',
+          title: 'Visible if',
+          level: 5
+        },
+        { key: 'visibleIf.$eval' },
+        createDependencyArray('visibleIf'),
+        createDependencyArray('visibleIf', 'layoutDependencies', 'Layout dependencies')
+      ]
+    },
+    // BUILD IF
+    {
+      // buildIf (object)
+      type: 'div',
+      items: [
+        {
+          type: 'heading',
+          title: 'Build if',
+          level: 5,
+        },
+        { key: 'buildIf.$eval' }
+      ]
+    },
+
+    // - - THIS IS LEGACY FOR LEGACY - -
+    // TRANSLATABLE FIELDS ↓
+    // {
+    //   type: 'div',
+    //   items: [
+    //     {
+    //       type: 'heading',
+    //       title: 'Translatable fields',
+    //       level: 5
+    //     },
+    //     {
+    //       type: 'array',
+    //       key: 'translatableFields',
+    //       items: [
+    //         {
+    //           type: 'expansion-panel-content',
+    //           items: [
+    //             {
+    //               type: 'hr'
+    //             },
+    //             {
+    //               type: 'div',
+    //               htmlClass: 'd-flex justify-content-between',
+    //               items: [
+    //                 {
+    //                   type: 'div',
+    //                 },
+    //                 {
+    //                   type: 'button',
+    //                   icon: 'delete',
+    //                   color: 'accent',
+    //                   preferences: {
+    //                     variant: 'icon'
+    //                   },
+    //                   onClick: [
+    //                     {
+    //                       arrayItemRemove: {
+    //                         path: 'translatableFields',
+    //                         index: {
+    //                           $eval: `return $getItemIndex('translatableFields[]')`
+    //                         }
+    //                       }
+    //                     }
+    //                   ]
+    //                 }
+    //               ]
+    //             },
+    //             {
+    //               key: 'translatableFields[]'
+    //             },
+    //           ]
+    //         }
+    //       ]
+    //     },
+    //     {
+    //       type: 'div',
+    //       visibleIf: {
+    //         $eval: `return !$val.translatableFields.length`,
+    //         dependencies: ['translatableFields']
+    //       },
+    //       items: [
+    //         {
+    //           type: 'span',
+    //           htmlClass: 'd-block py-4 text-center',
+    //           title: 'No translatable fields yet.'
+    //         }
+    //       ]
+    //     },
+    //     {
+    //       type: 'row',
+    //       horizontalAlign: 'center',
+    //       htmlClass: 'mt-2',
+    //       items: [
+    //         {
+    //           type: 'button',
+    //           title: 'Add translatable field',
+    //           // htmlClass: 't-3',
+    //           onClick: {
+    //             arrayItemAdd: {
+    //               path: 'translatableFields',
+    //             }
+    //           }
+    //         },
+    //       ]
+    //     }
+    //   ]
+    // },
+    // { key: 'onClick' },
+
+
+
+    
+
+    { key: '$comment' }, // string
+
+
     // ANALYTICS ↓
     {
       type: 'div',
@@ -206,23 +273,10 @@ export abstract class JsfAbstractLayout {
    * - "new"
    */
   @DefProp({
-      type      : 'object',
+      type      : 'array',
       title     : 'Mode',
-      properties: {
-        $eval       : {
-          type : 'string',
-          title: 'Eval',
-          handler: {
-            type: 'common/code-editor',
-            options: {
-              language: 'javascript',
-            }
-          }
-        },
-        dependencies: {
-          type : 'string',
-          title: 'Dependencies',
-        }
+      items: {
+        type: 'string'
       }
     }
   )
@@ -322,7 +376,13 @@ export abstract class JsfAbstractLayout {
       properties: {
         $eval             : {
           type : 'string',
-          title: 'Eval'
+          title: 'Eval',
+          handler: {
+            type: 'common/code-editor',
+            preferences: {
+              language: 'javascript'
+            }
+          }
         },
         dependencies      : {
           type : 'array',
