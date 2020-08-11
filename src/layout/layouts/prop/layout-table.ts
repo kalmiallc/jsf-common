@@ -7,6 +7,8 @@ import { DefLayoutInfo }                                               from '../
 
 @DefLayoutInfo({
   type: 'table',
+  title: 'Table',
+  icon: 'layout-icons/table.svg',
   formControl: {
     enabled: true
   },

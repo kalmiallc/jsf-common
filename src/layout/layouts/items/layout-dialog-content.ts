@@ -5,6 +5,8 @@ import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
   type: 'dialog-content',
+  title: 'Dialog content',
+  icon: 'layout-icons/dialog-content.svg',
   items: {
     enabled: true
   }

@@ -3,7 +3,9 @@ import { DefExtends, DefLayout, DefProp, DefCategory, DefSpecialProp } from '../
 import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
-  type: 'render-2d'
+  type: 'render-2d',
+  title: 'Render 2D',
+  icon: 'layout-icons/render2d.svg'
 })
 @DefLayout({
   type : 'div',

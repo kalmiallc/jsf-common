@@ -6,6 +6,8 @@ import { DefLayoutInfo }                                               from '../
 
 @DefLayoutInfo({
   type: 'prop',
+  title: 'Form control',
+  icon: 'layout-icons/prop.svg',
   formControl: {
     enabled: true
   }

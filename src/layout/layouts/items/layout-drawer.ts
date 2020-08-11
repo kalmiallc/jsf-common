@@ -6,6 +6,8 @@ import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
   type: 'drawer',
+  title: 'Drawer',
+  icon: 'layout-icons/drawer.svg',
   items: {
     enabled: true,
     fixed: [ 'drawer-header', 'drawer-content' ]

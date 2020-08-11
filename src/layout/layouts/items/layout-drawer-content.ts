@@ -5,6 +5,8 @@ import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
   type: 'drawer-content',
+  title: 'Drawer content',
+  icon: 'unknown.svg',
   items: {
     enabled: true
   }

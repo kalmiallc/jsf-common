@@ -5,6 +5,8 @@ import { DefLayoutInfo }                                               from '../
 
 @DefLayoutInfo({
   type: 'array',
+  title: 'Array',
+  icon: 'layout-icons/array.svg',
   formControl: {
     enabled: true
   },

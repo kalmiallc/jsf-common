@@ -7,6 +7,8 @@ import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
   type: 'menu-item',
+  title: 'Menu item',
+  icon: 'layout-icons/menu-item.svg',
   items: {
     enabled: true
   }

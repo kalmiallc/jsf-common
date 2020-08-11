@@ -8,6 +8,8 @@ export class JsfLayoutPropExpansionPanelPreferences {}
 
 @DefLayoutInfo({
   type: 'expansion-panel',
+  title: 'Expansion-panel',
+  icon: 'layout-icons/expansion-panel.svg',
   formControl: {
     enabled: true
   },

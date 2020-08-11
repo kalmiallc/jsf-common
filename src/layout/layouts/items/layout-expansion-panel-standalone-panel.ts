@@ -5,6 +5,8 @@ import { DefLayoutInfo }                    from '../../../jsf-register-decorato
 
 @DefLayoutInfo({
   type : 'expansion-panel-standalone-panel',
+  title: 'Expansion panel standalone panel',
+  icon: 'unknown.svg',
   items: {
     enabled: true,
     default: ['expansion-panel-standalone-header', 'expansion-panel-standalone-content'],

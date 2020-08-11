@@ -6,6 +6,8 @@ import { DefLayoutInfo }                                             from '../..
 
 @DefLayoutInfo({
   type: 'col',
+  title: 'Column',
+  icon: 'layout-icons/col.svg',
   items: {
     enabled: true
   }

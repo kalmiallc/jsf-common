@@ -5,6 +5,8 @@ import { DefLayoutInfo }                               from '../../../jsf-regist
 
 @DefLayoutInfo({
   type: 'div',
+  title: 'Div',
+  icon: 'layout-icons/div.svg',
   items: {
     enabled: true
   }

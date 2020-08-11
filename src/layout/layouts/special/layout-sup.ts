@@ -4,7 +4,9 @@ import { createDependencyArray } from '../../../jsf-for-jsf/util/dependency-arra
 import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
-  type: 'sup'
+  type: 'sup',
+  title: 'Superscript',
+  icon: 'layout-icons/sup.svg'
 })
 @DefLayout({
   type : 'div',

@@ -5,6 +5,8 @@ import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
   type: 'expansion-panel-content',
+  title: 'Expansion panel content',
+  icon: 'unknown.svg',
   items: {
     enabled: true
   }

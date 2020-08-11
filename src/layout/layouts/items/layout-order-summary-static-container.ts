@@ -5,6 +5,8 @@ import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
   type: 'order-summary-static-container',
+  title: 'Order summary static container',
+  icon: 'unknown.svg',
   items: {
     enabled: true
   }

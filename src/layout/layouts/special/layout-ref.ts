@@ -2,7 +2,9 @@ import { JsfAbstractSpecialLayout }       from '../../abstract/abstract-layout';
 import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
-  type: 'ref'
+  type: 'ref',
+  title: 'Ref',
+  icon: 'unknown.svg'
 })
 export class JsfLayoutRef extends JsfAbstractSpecialLayout<'$ref'> {
 

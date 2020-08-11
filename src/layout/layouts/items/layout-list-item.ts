@@ -5,6 +5,8 @@ import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
   type: 'list-item',
+  title: 'List item',
+  icon: 'unknown.svg',
   items: {
     enabled: true
   }

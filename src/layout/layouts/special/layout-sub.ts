@@ -3,7 +3,9 @@ import { DefLayout, DefProp, DefExtends, DefCategory } from '../../../jsf-for-js
 import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
-  type: 'sub'
+  type: 'sub',
+  title: 'Subscript',
+  icon: 'layout-icons/sub.svg'
 })
 @DefLayout({
   type : 'div',

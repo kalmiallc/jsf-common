@@ -5,6 +5,8 @@ import { DefLayoutInfo }                                               from '../
 
 @DefLayoutInfo({
   type : 'expansion-panel-standalone',
+  title: 'Expansion panel standalone',
+  icon: 'unknown.svg',
   items: {
     enabled     : true,
     default     : ['expansion-panel-standalone-panel'],
