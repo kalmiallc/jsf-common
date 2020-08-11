@@ -4,6 +4,17 @@ import { JsfProp, JsfPropObject, JsfPropTypes }             from './schema/props
 import { LayoutBuilderInfoInterface }                       from './editor/layout';
 
 export interface HandlerCompatibilityInterface {
+  /**
+   * Icon for builder UI (toolbox).
+   * @example layout-icons/span.svg
+   */
+  icon?: string;
+
+  /**
+   * Nice title for builder UI. If not set type will be used.
+   */
+  title?: string;
+
   formDefinition: JsfDefinition;
 
   compatibleWith: {
