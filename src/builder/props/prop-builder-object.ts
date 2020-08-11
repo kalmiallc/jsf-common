@@ -8,6 +8,7 @@ import {
   PatchValueOptionsInterface,
   SetValueOptionsInterface
 }                                                                           from '../interfaces/set-value-options.interface';
+import { jsfEnv }                                                           from '../../jsf-env';
 
 export class JsfPropBuilderObject
   extends JsfAbstractPropBuilder<JsfPropObject, JsfHandlerBuilderObject, JsfPropObjectValue, JsfPropObjectJsonValue> {
@@ -83,11 +84,11 @@ export class JsfPropBuilderObject
       this.properties = {};
       for (let i = 0; i < this.propertyKeys.length; i++) {
         const propertyName = this.propertyKeys[i];
-        /** TODO FIXME Temporary fix for builder!
-         if (propertyName.startsWith('$')) {
+
+        if (jsfEnv.preventDollarSignUsage && propertyName.startsWith('$')) {
           throw new Error('Property name can not start with $.');
         }
-        **/
+
         this.properties[propertyName] = JsfPropBuilderFactory.create({
           prop       : this.prop.properties[propertyName],
           parentProp : this,
@@ -130,15 +131,17 @@ export class JsfPropBuilderObject
     this.processEvalValidators();
 
     // Properties
-    await Promise.all(
-      Object.keys(this.prop.properties)
-        .map(propertyName => this.properties[propertyName].validate())
-    );
+    if (this.prop.properties && this.properties) {
+      await Promise.all(
+        Object.keys(this.prop.properties)
+          .map(propertyName => this.properties[propertyName].validate())
+      );
 
-    // Check Properties result
-    for (const propName of Object.keys(this.properties)) {
-      if (this.properties[propName].invalid) {
-        return false;
+      // Check Properties result
+      for (const propName of Object.keys(this.properties)) {
+        if (this.properties[propName].invalid) {
+          return false;
+        }
       }
     }
 
