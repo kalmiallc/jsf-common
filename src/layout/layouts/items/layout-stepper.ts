@@ -5,6 +5,8 @@ import { DefLayoutInfo }                                             from '../..
 
 @DefLayoutInfo({
   type: 'stepper',
+  title: 'Stepper',
+  icon: 'layout-icons/stepper.svg',
   items: {
     enabled: true,
     default: ['step', 'step', 'step'],

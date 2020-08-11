@@ -5,6 +5,8 @@ import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
   type: 'tab',
+  title: 'Tab',
+  icon: 'layout-icons/tab.svg',
   items: {
     enabled: true
   }

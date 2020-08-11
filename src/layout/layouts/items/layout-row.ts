@@ -5,6 +5,8 @@ import { DefLayoutInfo }                               from '../../../jsf-regist
 
 @DefLayoutInfo({
   type: 'row',
+  title: 'Row',
+  icon: 'layout-icons/row.svg',
   items: {
     enabled: true,
     allowedTypes: ['col']

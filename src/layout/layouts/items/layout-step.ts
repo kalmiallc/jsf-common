@@ -6,6 +6,8 @@ import { DefLayoutInfo }                               from '../../../jsf-regist
 
 @DefLayoutInfo({
   type: 'step',
+  title: 'Step',
+  icon: 'unknown.svg',
   items: {
     enabled: true
   }

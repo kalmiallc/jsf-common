@@ -4,6 +4,8 @@ import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
   type: 'section',
+  title: 'Section',
+  icon: 'layout-icons/section.svg',
   items: {
     enabled: true
   }

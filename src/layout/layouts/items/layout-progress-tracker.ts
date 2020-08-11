@@ -6,6 +6,8 @@ import { DefLayoutInfo } from '../../../jsf-register-decorators';
 
 @DefLayoutInfo({
   type: 'progress-tracker',
+  title: 'Progress tracker',
+  icon: 'layout-icons/progress-tracker.svg',
   items: {
     enabled: true,
     fixed: ['progress-tracker-step']
