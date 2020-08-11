@@ -9,6 +9,11 @@ export interface LayoutBuilderInfoInterface {
    */
   title?: string;
 
+  /**
+   * Used in builder when creating new layout if not set it's automatically constructed.
+   */
+  defaultDefinition?: any,
+
   formControl?: {
     /**
      * If this layout supports `key` property.

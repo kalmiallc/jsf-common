@@ -47,7 +47,9 @@ export class JsfRegister {
 
   static getNewLayoutDefinition(type: string) {
     const x = JsfRegister.getLayoutInfoOrThrow(type);
-
+    if (x.defaultDefinition) {
+      return x.defaultDefinition;
+    }
     return {
       type: type === 'prop' ? undefined : type,
       items: x.items?.enabled ? [] : undefined

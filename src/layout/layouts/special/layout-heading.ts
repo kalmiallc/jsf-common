@@ -6,7 +6,12 @@ import { DefLayoutInfo } from '../../../jsf-register-decorators';
 @DefLayoutInfo({
   type: 'heading',
   title: 'Heading',
-  icon: 'layout-icons/heading.svg'
+  icon: 'layout-icons/heading.svg',
+  defaultDefinition:  {
+    type: 'heading',
+    level: 3,
+    title: 'Heading text'
+  }
 })
 @DefLayout({
   type : 'div',
