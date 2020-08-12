@@ -27,21 +27,25 @@ export function createDependencyArray(
         title: title,
         level: 6
       },
+
       {
         type: 'array',
         key: `${ancestorKeyWithDot}${itemKey}`,
         items: [
           {
-            type: 'expansion-panel-content',
+            type: 'row',
             items: [
               {
-                type: 'hr'
+                type: 'col',
+                xs: 'auto',
+                items: [
+                  ...createSubitems(ancestorKeyWithDot, itemKey, subitemKeys)
+                ]
               },
               {
-                type: 'div',
-                htmlClass: 'd-flex justify-content-between',
+                type: 'col',
+                xs: 'content',
                 items: [
-                  { type: 'div' },
                   {
                     type: 'button',
                     icon: 'delete',
@@ -61,12 +65,53 @@ export function createDependencyArray(
                     ]
                   }
                 ]
-              },
-              ...createSubitems(ancestorKeyWithDot, itemKey, subitemKeys)
+              }
             ]
           }
         ]
       },
+
+
+      // {
+      //   type: 'array',
+      //   key: `${ancestorKeyWithDot}${itemKey}`,
+      //   items: [
+      //     {
+      //       type: 'expansion-panel-content',
+      //       items: [
+      //         {
+      //           type: 'hr'
+      //         },
+      //         {
+      //           type: 'div',
+      //           htmlClass: 'd-flex justify-content-between',
+      //           items: [
+      //             { type: 'div' },
+      //             {
+      //               type: 'button',
+      //               icon: 'delete',
+      //               color: 'accent',
+      //               preferences: {
+      //                 variant: 'icon'
+      //               },
+      //               onClick: [
+      //                 {
+      //                   arrayItemRemove: {
+      //                     path: `${ancestorKeyWithDot}${itemKey}`,
+      //                     index: {
+      //                       $eval: `return $getItemIndex('${ancestorKeyWithDot}${itemKey}[]')`
+      //                     }
+      //                   }
+      //                 }
+      //               ]
+      //             }
+      //           ]
+      //         },
+      //         ...createSubitems(ancestorKeyWithDot, itemKey, subitemKeys)
+      //       ]
+      //     }
+      //   ]
+      // },
       {
         type: 'div',
         visibleIf: {
@@ -82,22 +127,36 @@ export function createDependencyArray(
         ]
       },
       {
-        type: 'div',
-        // horizontalAlign: 'center',
-        htmlClass: 'mt-2 text-center',
-        items: [
-          {
-            type: 'button',
-            title: addItemButtonTitle,
-            // htmlClass: 't-3',
-            onClick: {
-              arrayItemAdd: {
-                path: `${ancestorKeyWithDot}${itemKey}`,
-              }
-            }
-          },
-        ]
+        type: 'button',
+        icon: 'add',
+        title: addItemButtonTitle,
+        // htmlClass: 't-3',
+        onClick: {
+          arrayItemAdd: {
+            path: `${ancestorKeyWithDot}${itemKey}`,
+          }
+        }
       }
+      
+      
+      // ,
+      // {
+      //   type: 'div',
+      //   // horizontalAlign: 'center',
+      //   htmlClass: 'mt-2 text-center',
+      //   items: [
+      //     {
+      //       type: 'button',
+      //       title: addItemButtonTitle,
+      //       // htmlClass: 't-3',
+      //       onClick: {
+      //         arrayItemAdd: {
+      //           path: `${ancestorKeyWithDot}${itemKey}`,
+      //         }
+      //       }
+      //     },
+      //   ]
+      // }
     ]
   }
 }

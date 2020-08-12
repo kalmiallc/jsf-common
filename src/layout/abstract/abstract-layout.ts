@@ -64,13 +64,24 @@ import { createDependencyArray } from '../../jsf-for-jsf/util/dependency-array';
           ]
         },
         {
+          type: 'div',
+          visibleIf: {
+            $eval: `return !$getItemValue('$mode').length`,
+            dependencies: ['$mode']
+          },
+          items: [
+            {
+              type: 'span',
+              htmlClass: 'd-block py-4 text-center',
+              title: 'No modes yet.'
+            }
+          ]
+        },
+        {
           type: 'button',
           icon: 'add',
           title: 'Add',
           tooltip: 'Add mode',
-          preferences: {
-            variant: 'icon'
-          },
           onClick: {
             arrayItemAdd: {
               path: '$mode'

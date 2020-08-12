@@ -28,12 +28,18 @@ import { DefLayoutInfo } from '../../../jsf-register-decorators';
           title: 'Template data',
           level: 5
         },
-        { key: 'templateData.$eval' },
+        { 
+          key: 'templateData.$eval',
+          htmlClass: 'mb-3'
+        },
         // bogus layout for sensible collapsing & readability
         createDependencyArray('templateData')
       ]
     },
-    { key: 'level' }
+    { 
+      key: 'level',
+      htmlClass: 'my-3'
+    }
   ]
 })
 
