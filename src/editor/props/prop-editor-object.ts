@@ -2,6 +2,7 @@ import { JsfAbstractPropEditor }  from '../abstract/abstract-prop-editor';
 import { JsfProp, JsfPropObject } from '../../schema/props/index';
 import { JsfUnknownPropEditor }   from './index';
 import { createJsfPropEditor }    from '../util/jsf-editor-factory';
+import { pathNextProp }           from '../util';
 
 export class JsfPropEditorObject
   extends JsfAbstractPropEditor<JsfPropObject> {
@@ -16,15 +17,35 @@ export class JsfPropEditorObject
     this.initProperties();
   }
 
+  getProp(path: string) {
+    const chunks = pathNextProp(path);
+    if (chunks.length === 0) {
+      return this;
+    }
+    const nextChild = this.properties.find(x => x.propertyName === chunks[0]);
+    if (!nextChild) {
+      throw new Error(`Prop object "${ this.path}" can't find child "${ path }"`);
+    }
+    if (chunks.length === 1) {
+      return nextChild;
+    }
+    if (chunks.length === 2) {
+      return nextChild.getProp(chunks[1]);
+    }
+    throw new Error(`Prop object "${ this.path}" can't find child "${ path }"`);
+  }
+
   initProperties() {
     Object.keys(this._definition.properties || {})
       .forEach(propertyName => this.createChild(this._definition.properties[propertyName], propertyName));
   }
 
-  getDefinition() {
+  getDefinition(opt: { skipItems?: boolean } = {}) {
     return {
       ...super.getDefinition(),
-      properties: this.properties.reduce((a, c) => {
+      properties: opt.skipItems
+                  ? undefined
+                  : this.properties.reduce((a, c) => {
         a[c.propertyName] = c.getDefinition();
         return a;
       }, {} as any)

@@ -45,8 +45,13 @@ export class JsfEditor {
     return this.uniqueIdCounter++;
   }
 
+  getAllPropPaths() {
+    return Object.keys(this.propsMap)
+      .map(x => this.propsMap[x].path);
+  }
+
   getProp(path: string) {
-    throw new Error('Not supported');
+    return this.schemaEditor.getProp(path);
   }
 
   getPropById(id: string) {
@@ -84,7 +89,7 @@ export class JsfEditor {
 
   registerProp(prop: JsfAbstractPropEditor<any>) {
     if (this.propsMap[prop.id]) {
-      throw new Error(`Prop ${ prop.path } with id ${ prop.id } already registered in id map.`);
+      throw new Error(`Prop ${ prop.xPath } with id ${ prop.id } already registered in id map.`);
     }
     this.propsMap[prop.id] = prop;
   }

@@ -1,13 +1,22 @@
 import { JsfUnknownProp }         from '../../schema/abstract';
-import { JsfEditor }                                                            from '../jsf-editor';
-import { JsfProp }                                                              from '../../schema/props';
+import { JsfEditor }              from '../jsf-editor';
+import { JsfProp }                from '../../schema/props';
 import { JsfTranslatableMessage } from '../../translations';
 import { JsfDocument }            from '../../jsf-document';
 import { jsfForJsf }              from '../../jsf-for-jsf';
+import { JsfRegister }            from '../../jsf-register';
 
 export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownProp> {
 
   abstract editorType: string;
+
+  get isArray() {
+    return this.editorType === 'array';
+  }
+
+  get isFixedArray() {
+    return this.editorType === 'fixed-array';
+  }
 
   get id(): string {
     return this._id;
@@ -29,9 +38,29 @@ export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownPro
     return !!(this._definition.handler && this._definition.handler.type);
   }
 
+  get handlerType(): string {
+    return this._definition.handler?.type;
+  }
+
   protected jsfEditor: JsfEditor;
   protected _definition: PropDefinition;
   private _parent: JsfAbstractPropEditor<any>;
+
+  /**
+   * Returns raw definition object, so it's properties can be mutated directly.
+   * Note: changing type, items, id, key has no effect. Only options of layout should be changed.
+   */
+  get mutableDefinition(): any {
+    return this._definition;
+  }
+
+  get definitionWithoutItems(): any {
+    return this.getDefinition({ skipItems: true });
+  }
+
+  get definition() {
+    return this.getDefinition();
+  }
 
   get children(): JsfAbstractPropEditor<any>[] {
     return this.getChildren();
@@ -41,8 +70,22 @@ export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownPro
     return this.parent ? this.parent.pathAsArray.concat([this.propertyName]) : [];
   }
 
-  get path() {
+  get xPath() {
     return this.pathAsArray.join('/');
+  }
+
+  get path() {
+    if (this.parent) {
+      if (this.parent.isArray) {
+        return this.parent.path + '[]';
+      } else if (this.parent.isFixedArray) {
+        return this.parent.path + '[' + this.propertyName + ']';
+      } else {
+        return this.parent.path + (this.parent.parent ? '.' : '') + this.propertyName;
+      }
+    } else {
+      return '';
+    }
   }
 
   constructor(options: {
@@ -52,17 +95,24 @@ export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownPro
     parent?: JsfAbstractPropEditor<any>;
   }) {
     this.propertyName = options.propertyName;
-    this.jsfEditor   = options.jsfEditor;
-    this._definition = options.definition;
-    this._parent     = options.parent;
-    this._id         = this._definition.id
-                       ? this._definition.id
-                       : '#/tmp/' + this.jsfEditor.getNewUniqueId();
+    this.jsfEditor    = options.jsfEditor;
+    this._definition  = options.definition;
+    this._parent      = options.parent;
+    this._id          = this._definition.id
+                        ? this._definition.id
+                        : '#/tmp/' + this.jsfEditor.getNewUniqueId();
 
     this.register(false);
   }
 
-  getDefinition() { // TODO PropDefinition error TS2577: Return type annotation circularly references itself.
+  getProp(path: string) {
+    if (!path) {
+      return this;
+    }
+    throw new Error(`Prop "${ this.path}" can't find child "${ path }"`);
+  }
+
+  getDefinition(opt: { skipItems?: boolean } = {}) { // TODO PropDefinition error TS2577: Return type annotation circularly references itself.
     return {
       ...this._definition,
       id: this.id.startsWith('#/tmp/') ? undefined : this.id
@@ -76,8 +126,20 @@ export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownPro
     ).jsfDoc;
   }
 
+  setHandler(type: string) {
+    this._definition.handler = {
+      type
+    };
+  }
+
   getHandlerForm(): JsfDocument {
-    return undefined;
+    if (this.hasHandler) {
+      return JsfRegister.getHandlerFormDefinition(this.handlerType, this.definition as any);
+    }
+  }
+
+  removeHandler() {
+    delete this._definition.handler;
   }
 
   private register(recursive = true) {
