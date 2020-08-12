@@ -127,9 +127,9 @@ export class JsfPropEditorFixedArray extends JsfAbstractPropEditor<JsfPropArray 
     if (!this.items[cIndex]) {
       throw new Error(`Prop array "${ this.path}" can't find child "${ path }"`);
     }
-    return this.items[cIndex].getProp(path.substring(dEndIndex) + (
+    return this.items[cIndex].getProp(path.substring(dEndIndex + (
       path[dEndIndex + 1] === '.' ? 2 : 1
-    ));
+    )));
   }
 
   getDefinition(opt: { skipItems?: boolean } = {}) {
