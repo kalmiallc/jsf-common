@@ -80,61 +80,142 @@ import { createDependencyArray } from '../../jsf-for-jsf/util/dependency-array';
       ]
     },
 
-    // TOOLTIP ↓
+    
     {
-      type: 'div',
+      type: 'expansion-panel-standalone',
       items: [
         {
-          type: 'heading',
-          title: 'Tooltip',
-          level: 5
+          // TOOLTIP ↓
+          type: 'expansion-panel-standalone-panel',
+          items: [
+            {
+              type: 'expansion-panel-standalone-header',
+              items: [
+                {
+                  type: 'heading',
+                  title: 'Tooltip',
+                  level: 5
+                }
+              ]
+            },
+            {
+              type: 'expansion-panel-standalone-content',
+              items: [
+                { key: 'tooltip.title' },
+                { key: 'tooltip.displayAsTitleAttribute', htmlClass: 'mb-3' },
+                { key: 'tooltip.position' },
+                {
+                  type: 'heading',
+                  title: 'Tooltip template eval',
+                  level: 6,
+                },
+                {
+                  key: 'tooltip.templateData.$eval',
+                  htmlClass: 'mb-3'
+                },
+                {
+                  type: 'div',
+                  htmlClass: 'mb-3',
+                  items: [
+                    createDependencyArray('tooltip.templateData')
+                  ]
+                }
+              ]
+            }
+          ]
         },
-        { key: 'tooltip.title' },
-        { key: 'tooltip.displayAsTitleAttribute' },
-        { key: 'tooltip.position' },
         {
-          type: 'heading',
-          title: 'Tooltip template eval',
-          level: 6,
+          // VISIBLE IF ↓
+          type: 'expansion-panel-standalone-panel',
+          items: [
+            {
+              type: 'expansion-panel-standalone-header',
+              items: [
+                {
+                  type: 'heading',
+                  title: 'Visible if',
+                  level: 5
+                }
+              ]
+            },
+            {
+              type: 'expansion-panel-standalone-content',
+              items: [
+                { key: 'visibleIf.$eval' },
+                {
+                  type: 'div',
+                  htmlClass: 'mb-3',
+                  items: [
+                    createDependencyArray('visibleIf'),
+                  ]
+                },
+                {
+                  type: 'div',
+                  htmlClass: 'mb-3',
+                  items: [
+                    createDependencyArray('visibleIf', 'layoutDependencies', 'Layout dependencies')
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
-          key: 'tooltip.templateData.$eval',
+          // BUILD IF ↓
+          type: 'expansion-panel-standalone-panel',
+          items: [
+            {
+              type: 'expansion-panel-standalone-header',
+              items: [
+                {
+                  type: 'heading',
+                  title: 'Build if',
+                  level: 5,
+                }
+              ]
+            },
+            {
+              type: 'expansion-panel-standalone-content',
+              items: [
+                { key: 'buildIf.$eval' }
+              ]
+            }
+          ]
         },
-        createDependencyArray('tooltip.templateData')
+        {
+          // ANALYTICS ↓
+          type: 'expansion-panel-standalone-panel',
+          items: [
+            {
+              type: 'expansion-panel-standalone-header',
+              items: [
+                {
+                  type: 'heading',
+                  title: 'Analytics',
+                  level: 5
+                }
+              ]
+            },
+            {
+              type: 'expansion-panel-standalone-content',
+              items: [
+                { key: 'analytics.category' },
+                {
+                  type: 'div',
+                  htmlClass: 'mb-3',
+                  items: [
+                    createDependencyArray('analytics', 'track', 'Track events', 'No events yet', 'Add event', ['event', 'as'])
+                  ]
+                }
+              ]
+            }
+          ]
+        }
       ]
     },
-    
-    
-    // { key: 'preferences' },     // any
-    // { key: 'handlerPreferences' },
 
-    // VISIBLE IF ↓
-    {
-      type: 'div',
-      items: [
-        {
-          type: 'heading',
-          title: 'Visible if',
-          level: 5
-        },
-        { key: 'visibleIf.$eval' },
-        createDependencyArray('visibleIf'),
-        createDependencyArray('visibleIf', 'layoutDependencies', 'Layout dependencies')
-      ]
-    },
-    // BUILD IF
-    {
-      // buildIf (object)
-      type: 'div',
-      items: [
-        {
-          type: 'heading',
-          title: 'Build if',
-          level: 5,
-        },
-        { key: 'buildIf.$eval' }
-      ]
-    },
+    { key: '$comment' }, // string
+
 
     // - - THIS IS LEGACY FOR LEGACY - -
     // TRANSLATABLE FIELDS ↓
@@ -229,22 +310,7 @@ import { createDependencyArray } from '../../jsf-for-jsf/util/dependency-array';
 
     
 
-    { key: '$comment' }, // string
-
-
-    // ANALYTICS ↓
-    {
-      type: 'div',
-      items: [
-        {
-          type: 'heading',
-          title: 'Analytics',
-          level: 5
-        },
-        { key: 'analytics.category' },
-        createDependencyArray('analytics', 'track', 'Track events', 'No events yet', 'Add event', ['event', 'as'])
-      ]
-    }
+    
   ]
 })
 
@@ -260,7 +326,8 @@ export abstract class JsfAbstractLayout {
    */
   @DefProp({
     type : 'string',
-    title: 'Comment'
+    title: 'Developer comment',
+    multiline: 3
   })
   $comment?: string;
 
