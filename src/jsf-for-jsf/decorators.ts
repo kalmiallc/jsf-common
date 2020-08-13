@@ -142,7 +142,6 @@ export const jsfForJsf = new class {
       let jsfDoc = {
         $title      : key,
         $description: key,
-        $theme      : 'rounded/yellowgreen',
         schema      : schema,
         layout      : layout,
         value

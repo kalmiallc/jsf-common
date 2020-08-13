@@ -27,7 +27,16 @@ export class JsfLayoutEditor {
   protected _definition: JsfUnknownLayout;
   private _parent: JsfLayoutEditor;
 
-  public update$: Subject<void> = new Subject<void>();
+  /**
+   * Will emit whenever a layout update is required.
+   */
+  public updateLayout$: Subject<void> = new Subject<void>();
+
+  /**
+   * Will emit whenever the mutable definition is updated from outside the properties view (such as when using actions in the action bar).
+   * Note that you are responsible for triggering this event yourself, it will not be done automatically.
+   */
+  public definitionChange$: Subject<void> = new Subject<void>();
 
   /**
    * Returns raw definition object, so it's properties can be mutated directly.
@@ -271,7 +280,7 @@ export class JsfLayoutEditor {
     this.items.splice(+index, 0, item);
     this._items = this._items.slice(); // intentional reference change (FP)
 
-    this.update$.next();
+    this.updateLayout$.next();
   }
 
   addItem(instance: JsfLayoutEditor, index?: number) {
@@ -290,7 +299,7 @@ export class JsfLayoutEditor {
     this.items.splice(+index, 0, instance);
     this._items = this._items.slice();  // intentional reference change (FP)
 
-    this.update$.next();
+    this.updateLayout$.next();
   }
 
   /**
@@ -306,7 +315,7 @@ export class JsfLayoutEditor {
 
     this._items = this._items.slice();  // intentional reference change (FP)
 
-    this.update$.next();
+    this.updateLayout$.next();
   }
 
   /**
@@ -316,5 +325,12 @@ export class JsfLayoutEditor {
   destroyChild(instance: JsfLayoutEditor) {
     this.removeItem(instance);
     instance.destroy();
+  }
+
+  /**
+   * Emit a definition change event. Call this if you mutated the definition and want the changes to be reflected in other parts of the application.
+   */
+  emitDefinitionChange() {
+    this.definitionChange$.next();
   }
 }
