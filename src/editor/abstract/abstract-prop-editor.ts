@@ -1,10 +1,10 @@
-import { JsfUnknownProp }         from '../../schema/abstract';
-import { JsfEditor }              from '../jsf-editor';
-import { JsfProp }                from '../../schema/props';
-import { JsfTranslatableMessage } from '../../translations';
-import { JsfDocument }            from '../../jsf-document';
-import { jsfForJsf }              from '../../jsf-for-jsf';
-import { JsfRegister }            from '../../jsf-register';
+import { JsfUnknownProp }                             from '../../schema/abstract';
+import { JsfEditor }                                  from '../jsf-editor';
+import { JsfProp }                                    from '../../schema/props';
+import { JsfTranslatableMessage }                     from '../../translations';
+import { JsfDocument }                                from '../../jsf-document';
+import { jsfForJsf }                                  from '../../jsf-for-jsf';
+import { HandlerCompatibilityInterface, JsfRegister } from '../../jsf-register';
 
 export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownProp> {
 
@@ -99,8 +99,8 @@ export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownPro
     this._definition  = options.definition;
     this._parent      = options.parent;
     this._id          = this._definition.id
-                        ? this._definition.id
-                        : '#/tmp/' + this.jsfEditor.getNewUniqueId();
+      ? this._definition.id
+      : '#/tmp/' + this.jsfEditor.getNewUniqueId();
 
     this.register(false);
   }
@@ -109,7 +109,7 @@ export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownPro
     if (!path) {
       return this;
     }
-    throw new Error(`Prop "${ this.path}" can't find child "${ path }"`);
+    throw new Error(`Prop "${ this.path }" can't find child "${ path }"`);
   }
 
   getDefinition(opt: { skipItems?: boolean } = {}) { // TODO PropDefinition error TS2577: Return type annotation circularly references itself.
@@ -135,6 +135,12 @@ export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownPro
   getHandlerForm(): JsfDocument {
     if (this.hasHandler) {
       return JsfRegister.getHandlerFormDefinition(this.handlerType, this.definition as any);
+    }
+  }
+
+  getHandlerCompatibility(): HandlerCompatibilityInterface {
+    if (this.hasHandler) {
+      return JsfRegister.getHandlerCompatibility(this.handlerType);
     }
   }
 

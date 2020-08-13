@@ -11,6 +11,11 @@ export interface HandlerCompatibilityInterface {
   icon?: string;
 
   /**
+   * Category (for example: "Common")
+   */
+  category?: string;
+
+  /**
    * Nice title for builder UI. If not set type will be used.
    */
   title?: string;
