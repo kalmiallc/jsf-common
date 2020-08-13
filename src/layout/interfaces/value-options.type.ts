@@ -1,5 +1,9 @@
 export class JsfValueOptionsInterface {
+  /**
+   * From other prop.
+   */
   key?: string;
+
   const?: any;
   $eval?: string;
 
