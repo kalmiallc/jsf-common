@@ -1,11 +1,12 @@
-import { JsfRegister }            from '../../jsf-register';
-import { JsfBasicHandlerBuilder } from '../../builder/abstract/abstract-basic-handler-builder';
-import { JsfPropBuilderObject }   from '../../builder/props';
+import { JsfRegister }                from '../../jsf-register';
+import { JsfBasicHandlerBuilder }     from '../../builder/abstract/abstract-basic-handler-builder';
+import { JsfPropBuilderObject }       from '../../builder/props';
 import {
   PatchValueOptionsInterface,
   SetValueOptionsInterface
-}                                 from '../../builder/interfaces/set-value-options.interface';
-import { JsfUnknownPropBuilder }  from '../../builder/abstract/index';
+}                                     from '../../builder/interfaces/set-value-options.interface';
+import { JsfUnknownPropBuilder }      from '../../builder/abstract/index';
+import { jsfHandlerAnyCompatibility } from './any.schema';
 
 export class JsfHandlerBuilderAny extends JsfBasicHandlerBuilder<JsfUnknownPropBuilder> {
   type: 'any';
@@ -59,4 +60,4 @@ export class JsfHandlerBuilderAny extends JsfBasicHandlerBuilder<JsfUnknownPropB
   }
 }
 
-JsfRegister.handler('any', JsfHandlerBuilderAny, [JsfPropBuilderObject]);
+JsfRegister.handler('any', JsfHandlerBuilderAny, jsfHandlerAnyCompatibility);

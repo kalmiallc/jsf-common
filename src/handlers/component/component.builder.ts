@@ -1,12 +1,9 @@
-import { JsfRegister }                     from '../../jsf-register';
-import { JsfBasicHandlerBuilder }          from '../../builder/abstract/abstract-basic-handler-builder';
-import { JsfPropBuilderObject }            from '../../builder/props';
-import {
-  PatchValueOptionsInterface,
-  SetValueOptionsInterface
-}                                          from '../../builder/interfaces/set-value-options.interface';
-import { JsfBuilder, JsfComponentBuilder } from '../../builder';
-import { JsfComponent }                    from '../../jsf-component';
+import { JsfRegister }                                                       from '../../jsf-register';
+import { JsfBasicHandlerBuilder }                                            from '../../builder/abstract/abstract-basic-handler-builder';
+import { JsfPropBuilderObject }                                              from '../../builder/props';
+import { PatchValueOptionsInterface, SetValueOptionsInterface }              from '../../builder/interfaces/set-value-options.interface';
+import { JsfBuilder, JsfComponentBuilder, jsfHandlerComponentCompatibility } from '../../builder';
+import { JsfComponent }                                                      from '../../jsf-component';
 
 export interface JsfHandlerBuilderComponentOptionsInterface {
   componentDefinition: JsfComponent;
@@ -36,11 +33,11 @@ export class JsfHandlerBuilderComponent extends JsfBasicHandlerBuilder<JsfPropBu
     this.constructJsfComponent();
 
     this.builder.valueToJson = x => this.jsfComponentBuilder.jsfBuilder
-                                    ? this.jsfComponentBuilder.jsfBuilder.propBuilder.valueToJson
-                                    : x;
+      ? this.jsfComponentBuilder.jsfBuilder.propBuilder.valueToJson
+      : x;
     this.builder.jsonToValue = x => this.jsfComponentBuilder.jsfBuilder
-                                    ? this.jsfComponentBuilder.jsfBuilder.propBuilder.jsonToValue
-                                    : x;
+      ? this.jsfComponentBuilder.jsfBuilder.propBuilder.jsonToValue
+      : x;
   }
 
   private constructJsfComponent() {
@@ -84,17 +81,17 @@ export class JsfHandlerBuilderComponent extends JsfBasicHandlerBuilder<JsfPropBu
 
   getJsonValue() {
     if (!this.jsfComponentBuilder || !this.jsfComponentBuilder.jsfBuilder) {
-      return  this.tmpValueHolder;
+      return this.tmpValueHolder;
     }
     return this.jsfComponentBuilder && this.jsfComponentBuilder.getJsonValue();
   }
 
   getValue() {
     if (!this.jsfComponentBuilder || !this.jsfComponentBuilder.jsfBuilder) {
-      return  this.tmpValueHolder;
+      return this.tmpValueHolder;
     }
     return this.jsfComponentBuilder && this.jsfComponentBuilder.getValue();
   }
 }
 
-JsfRegister.handler('component', JsfHandlerBuilderComponent, [JsfPropBuilderObject]);
+JsfRegister.handler('component', JsfHandlerBuilderComponent, jsfHandlerComponentCompatibility);
