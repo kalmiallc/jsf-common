@@ -117,11 +117,12 @@ import { DefLayoutInfo }                                             from '../..
     },
     {
       type: 'div',
-      htmlClass: 'ml-2 mt-3',
+      htmlClass: '',
       items: [
         {
           type: 'heading',
           title: 'Offset',
+          htmlClass: 'mt-3',
           level: 5
         },
         {
@@ -143,11 +144,12 @@ import { DefLayoutInfo }                                             from '../..
     },
     {
       type: 'div',
-      htmlClass: 'ml-2 mt-3',
+      htmlClass: '',
       items: [
         {
           type: 'heading',
           title: 'Order',
+          htmlClass: 'mt-3',
           level: 5
         },
         {
@@ -182,8 +184,9 @@ import { DefLayoutInfo }                                             from '../..
     {
       type: 'heading',
       title: 'Vertical align',
+      htmlClass: 'mt-3',
       level: 5
-    },    
+    },
     {
       key: 'verticalAlign'
     }
@@ -350,7 +353,7 @@ export class JsfLayoutCol extends JsfAbstractItemsLayout<'col'> {
     description: 'Align on start, center or end',
     handler: {
       type: 'common/dropdown',
-      value: [
+      values: [
         { label: 'Start', value: 'start'},
         { label: 'Center', value: 'center'},
         { label: 'End', value: 'end'}

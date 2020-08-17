@@ -28,6 +28,9 @@ import { DefLayoutInfo }                               from '../../../jsf-regist
             },
             {
               key: 'scroll.vertical',
+              preferences: {
+                variant: 'slider'
+              },
               htmlClass: 'h5'
             }
           ]
@@ -43,6 +46,9 @@ import { DefLayoutInfo }                               from '../../../jsf-regist
             },
             {
               key: 'scroll.horizontal',
+              preferences: {
+                variant: 'slider'
+              },
               htmlClass: 'h5'
             }
           ]
@@ -50,12 +56,10 @@ import { DefLayoutInfo }                               from '../../../jsf-regist
       ]
     },
     {
-      type: 'hr'
-    },
-    {
       type: 'heading',
       level: 5,
-      title: 'Custom code - on scroll stop'
+      title: 'Custom code - on scroll stop',
+      htmlClass: 'mt-3'
     },
     {
       key: 'scroll.onScrollStop.$eval'

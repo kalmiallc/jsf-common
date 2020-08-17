@@ -728,7 +728,6 @@ export abstract class JsfAbstractPropLayout extends JsfAbstractLayout {
 @DefLayout({
   type: 'div',
   items: [
-    { key: 'items' }
   ]
 })
 @DefExtends('JsfAbstractLayout')

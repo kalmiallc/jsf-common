@@ -40,7 +40,10 @@ import { DefLayoutInfo }                                             from '../..
             },
             {
               key: 'linear',
-              htmlClass: 'h5'
+              htmlClass: 'h5',
+              preferences: {
+                variant: 'slider'
+              }
             }
           ]
         },
@@ -55,7 +58,10 @@ import { DefLayoutInfo }                                             from '../..
             },
             {
               key: 'primary',
-              htmlClass: 'h5'
+              htmlClass: 'h5',
+              preferences: {
+                variant: 'slider'
+              }
             }
           ]
         }
@@ -68,7 +74,7 @@ import { DefLayoutInfo }                                             from '../..
         {
           type: 'heading',
           level: 5,
-          title: 'Initialize on specific step'
+          title: 'Step to initialize on'
         },
         {
           type: 'span',
@@ -79,6 +85,7 @@ import { DefLayoutInfo }                                             from '../..
         },
         {
           key: '_initialStep.initStepNumber',
+          htmlClass: 'mt-1',
           visibleIf: {
             $eval: `return ($val._initialStep.initStepType == 'number');`,
             dependencies: ['_initialStep.initStepType']
@@ -128,7 +135,11 @@ import { DefLayoutInfo }                                             from '../..
       initStepNumber: {
         type: 'number',
         title: 'Step',
-        description: 'Choose on which step should stepper be initialized.'
+        description: 'Choose on which step should stepper be initialized.',
+        enabledIf: {
+          $eval: `return ($val._initialStep.initStepType == 'number');`,
+          dependencies: ['_initialStep.initStepType']
+        }
       },
       initStepCustom: {
         type: 'object',
@@ -141,6 +152,10 @@ import { DefLayoutInfo }                                             from '../..
                 language: 'javascript'
               },
               description: 'Custom code to determine on which step should stepper be initialized.'
+            },
+            enabledIf: {
+              $eval: `return ($val._initialStep.initStepType == 'custom');`,
+              dependencies: ['_initialStep.initStepType']
             }
           }
         }

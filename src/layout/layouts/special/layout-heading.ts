@@ -19,6 +19,10 @@ import { DefLayoutInfo } from '../../../jsf-register-decorators';
     {
       key: 'title'
     },
+    { 
+      key: 'level',
+      htmlClass: 'my-3'
+    },
     {
       type: 'div',
       htmlClass: 'ml-2 mt-3',
@@ -35,10 +39,6 @@ import { DefLayoutInfo } from '../../../jsf-register-decorators';
         // bogus layout for sensible collapsing & readability
         createDependencyArray('templateData')
       ]
-    },
-    { 
-      key: 'level',
-      htmlClass: 'my-3'
     }
   ]
 })
