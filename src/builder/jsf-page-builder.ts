@@ -4,8 +4,8 @@ import { JsfBuilder }                                   from './jsf-builder';
 import { JsfTranslatableMessage, JsfTranslationServer } from '../translations';
 import { JsfComponentBuilder }                          from './jsf-component-builder';
 import { Observable, Subject, timer }                   from 'rxjs';
-import { JsfDefinition }                                from '../jsf-definition';
-import { debounce, finalize, takeUntil }                from 'rxjs/operators';
+import { JsfDefinition }                               from '../jsf-definition';
+import { debounce, finalize, takeUntil, throttleTime } from 'rxjs/operators';
 
 /**
  * Global counter so each page can have uniq ID.
@@ -143,7 +143,10 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
     });
 
     this.requestProcessDirtyDataSources
-      .pipe(takeUntil(this.onDestroy), debounce(() => timer(100)))
+      .pipe(
+        takeUntil(this.onDestroy),
+        throttleTime(250, undefined, { leading: true, trailing: true })
+      )
       .subscribe(() => this.processDirtyDataSources());
   }
 
@@ -228,6 +231,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
     for (const filter of this.components[componentPath].jsfComponentDefinition.dataSourcesFilters || []) {
       this.initDataSourcesInfoChunk(filter.dataSource, componentPath);
       const { value, hash } = jb.getProp(filter.filterPath).getValueWithHash();
+      this.dataSourcesInfo[filter.dataSource].dirty = true;
       this.dataSourcesInfo[filter.dataSource].components[componentPath].filters.push({
         value, hash, path: filter.filterPath
       });
@@ -263,6 +267,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
     for (const dataSource of this.components[componentPath].jsfComponentDefinition.dataSources || []) {
       this.initDataSourcesInfoChunk(dataSource.key, componentPath);
       this.dataSourcesInfo[dataSource.key].components[componentPath].subscribed = true;
+      this.dataSourcesInfo[dataSource.key].dirty = true;
     }
   }
 
@@ -287,7 +292,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
         continue;
       }
       let filters    = [];
-      let components = [];
+      const components = [];
       for (const componentKey of Object.keys(dataSource.components)) {
         const component = dataSource.components[componentKey];
         if (component.filters) {
@@ -299,7 +304,6 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
       }
 
       if (components.length) {
-        const dataSource = this.dataSourcesInfo[dataSourceKey];
         dataSource.dirty = false;
         this.requestDataForDataSource(dataSourceKey, {
           filters
