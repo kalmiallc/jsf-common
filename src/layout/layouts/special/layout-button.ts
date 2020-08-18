@@ -7,7 +7,11 @@ import { DefLayoutInfo } from '../../../jsf-register-decorators';
 @DefLayoutInfo({
   type: 'button',
   title: 'Button',
-  icon: 'layout-icons/button.svg'
+  icon: 'layout-icons/button.svg',
+  defaultDefinition:  {
+    type     : 'button',
+    title    : 'Button'
+  }
 })
 @DefLayout({
   type : 'div',

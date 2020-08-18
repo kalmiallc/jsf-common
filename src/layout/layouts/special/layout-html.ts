@@ -5,7 +5,11 @@ import { DefLayoutInfo } from '../../../jsf-register-decorators';
 @DefLayoutInfo({
   type: 'html',
   title: 'Html',
-  icon: 'layout-icons/html.svg'
+  icon: 'layout-icons/html.svg',
+  defaultDefinition:  {
+    type: 'html',
+    html: '<span>Custom HTML here</span>'
+  }
 })
 @DefLayout({
   type : 'div',

@@ -6,7 +6,10 @@ import { DefLayoutInfo } from '../../../jsf-register-decorators';
 @DefLayoutInfo({
   type: 'app-page-title',
   title: 'Page title',
-  icon: 'layout-icons/app-page-title.svg'
+  icon: 'layout-icons/app-page-title.svg',
+  defaultDefinition:  {
+    type     : 'app-page-title'
+  }
 })
 @DefLayout({
   type : 'div',

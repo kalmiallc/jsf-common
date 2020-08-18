@@ -6,7 +6,11 @@ import { DefLayoutInfo } from '../../../jsf-register-decorators';
 @DefLayoutInfo({
   type: 'badge',
   title: 'Badge',
-  icon: 'layout-icons/badge.svg'
+  icon: 'layout-icons/badge.svg',
+  defaultDefinition:  {
+    type: 'badge',
+    title: 'Badge'
+  }
 })
 @DefExtends('JsfAbstractSpecialLayout')
 @DefCategory('Text')

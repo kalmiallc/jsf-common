@@ -5,7 +5,11 @@ import { DefLayoutInfo } from '../../../jsf-register-decorators';
 @DefLayoutInfo({
   type: 'paragraph',
   title: 'Paragraph',
-  icon: 'layout-icons/paragraph.svg'
+  icon: 'layout-icons/paragraph.svg',
+  defaultDefinition:  {
+    type: 'paragraph',
+    title: 'Paragraph text'
+  }
 })
 @DefLayout({
   type : 'div',

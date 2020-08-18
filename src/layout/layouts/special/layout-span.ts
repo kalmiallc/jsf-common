@@ -5,7 +5,11 @@ import { DefLayoutInfo } from '../../../jsf-register-decorators';
 @DefLayoutInfo({
   type: 'span',
   title: 'Span',
-  icon: 'layout-icons/span.svg'
+  icon: 'layout-icons/span.svg',
+  defaultDefinition:  {
+    type: 'span',
+    title: 'Span text'
+  }
 })
 @DefLayout({
   type : 'div',

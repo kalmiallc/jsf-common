@@ -6,7 +6,12 @@ import { DefLayoutInfo } from '../../../jsf-register-decorators';
 @DefLayoutInfo({
   type: 'anchor',
   title: 'Link',
-  icon: 'layout-icons/anchor.svg'
+  icon: 'layout-icons/anchor.svg',
+  defaultDefinition:  {
+    type : 'anchor',
+    title: 'My link',
+    href : 'https://'
+  }
 })
 @DefLayout({
   type : 'div',
