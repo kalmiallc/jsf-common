@@ -22,7 +22,7 @@ export class JsfEditor {
   get jsfDefinition(): JsfDefinition {
     return {
       schema: this.schemaEditor.getDefinition(),
-      layout: this._jsfDefinition.layout
+      layout: this.layoutEditor.getDefinition()
     };
   }
 
