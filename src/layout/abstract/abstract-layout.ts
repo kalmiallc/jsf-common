@@ -328,11 +328,6 @@ import { createDependencyArray } from '../../jsf-for-jsf/util/dependency-array';
 export abstract class JsfAbstractLayout {
 
   /**
-   * @ignore
-   */
-  __uuid?: string;
-
-  /**
    * Intended for notes to schema maintainers, as opposed to "description" which is suitable for display to end users
    */
   @DefProp({

@@ -119,11 +119,6 @@ export abstract class JsfAbstractBareProp<TypeString, Handlers> {
   /**
    * @ignore
    */
-  __uuid?: string;
-
-  /**
-   * @ignore
-   */
   id?: string;
 
   /**

@@ -94,12 +94,6 @@ export abstract class JsfAbstractLayoutBuilder<LayoutType extends JsfAbstractLay
     this.rootBuilder   = rootBuilder;
     this.parentBuilder = parentBuilder;
     this.resetItemsPropMap(arrayPropMap);
-
-    if (!jsfEnv.isApi && jsfEnv.__uuid) {
-      if (!layout.__uuid || !layout.__uuid.startsWith(uniqIdPrefix)) {
-        layout.__uuid = uniqIdPrefix + (++uniqIdCount);
-      }
-    }
   }
 
   private computeId(parentBuilder: JsfAbstractLayoutBuilder<JsfUnknownLayout>, options: JsfLayoutBuilderOptionsInterface) {

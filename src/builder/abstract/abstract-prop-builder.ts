@@ -448,12 +448,6 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
       data.rootProp = this as any as JsfPropBuilder as any; // TODO FIXME;
     }
 
-    if (!jsfEnv.isApi && jsfEnv.__uuid) {
-      if (!data.prop.__uuid || !data.prop.__uuid.startsWith(uniqIdPrefix)) {
-        data.prop.__uuid = uniqIdPrefix + (++uniqIdCount);
-      }
-    }
-
     this.safeMode   = data.safeMode;
     this.prop       = data.prop;
     this.parentProp = data.parentProp;
