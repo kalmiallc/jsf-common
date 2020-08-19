@@ -142,10 +142,17 @@ export class JsfDependencyResolver {
 
   runWithDelayedUpdate(cb) {
     this.requestPauseByOne();
-    cb();
+    const x = cb();
     this.requestResumeByOne();
+    return x;
   }
 
+  async asyncRunWithDelayedUpdate(cb) {
+    this.requestPauseByOne();
+    const x = await cb();
+    this.requestResumeByOne();
+    return x;
+  }
 
   // ══════════════════════
   // On create/destroy nodes util
