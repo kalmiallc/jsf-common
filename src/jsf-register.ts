@@ -1,7 +1,8 @@
 import { JsfAbstractHandlerBuilder, JsfUnknownPropBuilder } from './builder/abstract';
 import { JsfDefinition }                                    from './jsf-definition';
 import { JsfProp, JsfPropObject, JsfPropTypes }             from './schema/props';
-import { LayoutBuilderInfoInterface }                       from './editor/layout';
+import { LayoutBuilderInfoInterface }     from './editor/layout';
+import { EvalContextOptions, JsfBuilder } from './builder';
 
 export interface HandlerCompatibilityInterface {
   /**
@@ -30,10 +31,20 @@ export interface HandlerCompatibilityInterface {
 
 export class JsfRegister {
 
+  static appEvalContextLambda: (builder: JsfBuilder, options?: EvalContextOptions) => any;
+
   static layoutsBuilderInfo: { [layoutKey: string]: LayoutBuilderInfoInterface } = {};
 
   static storage: { [propBuilderKey: string]: (new (builder: JsfUnknownPropBuilder) => JsfAbstractHandlerBuilder<any>) } = {};
   static compatibility: { [handlerKey: string]: HandlerCompatibilityInterface }                                          = {};
+
+  static getAppEvalContextLambda(): (builder: JsfBuilder, options?: EvalContextOptions) => any {
+    return JsfRegister.appEvalContextLambda;
+  }
+
+  static setAppEvalContextLambda(x: (builder: JsfBuilder, options?: EvalContextOptions) => any) {
+    JsfRegister.appEvalContextLambda = x;
+  }
 
   static setLayoutInfo(info: LayoutBuilderInfoInterface) {
     JsfRegister.layoutsBuilderInfo[info.type] = info;
