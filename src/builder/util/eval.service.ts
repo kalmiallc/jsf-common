@@ -1,18 +1,13 @@
-import { JsfEvalRuntimeError }                                               from '../../errors';
-import { JsfUnknownLayoutBuilder }                                                              from '../layout';
-import { JsfI18nObject }                                                                        from '../../translations';
-import { JsfBuilder }                                                                           from '../jsf-builder';
-import * as lodash                                                                         from 'lodash';
-import * as moment                                                                              from 'moment';
-import { Moment } from 'moment';
-import { JsfUnknownPropBuilder }                                                                from '../abstract';
-import {
-  jsfClipboardClear,
-  jsfClipboardClearAll,
-  jsfClipboardClearMany,
-  jsfClipboardGet,
-  jsfClipboardKeys
-} from './clipboard';
+import { JsfEvalRuntimeError }                                                                               from '../../errors';
+import { JsfUnknownLayoutBuilder }                                                                           from '../layout';
+import { JsfI18nObject }                                                                                     from '../../translations';
+import { JsfBuilder }                                                                                        from '../jsf-builder';
+import * as lodash                                                                                           from 'lodash';
+import * as moment                                                                                           from 'moment';
+import { Moment }                                                                                            from 'moment';
+import { JsfUnknownPropBuilder }                                                                             from '../abstract';
+import { jsfClipboardClear, jsfClipboardClearAll, jsfClipboardClearMany, jsfClipboardGet, jsfClipboardKeys } from './clipboard';
+import { JsfRegister }                                                                                       from '../../jsf-register';
 
 export interface EvalContextOptions {
   layoutBuilder?: JsfUnknownLayoutBuilder;
@@ -35,7 +30,7 @@ export const evalService = new class {
 
     return {
       $moment: moment,
-      _: lodash,
+      _      : lodash,
 
       $locale: locale,
 
@@ -43,17 +38,22 @@ export const evalService = new class {
         currency: (value: number, currency = 'EUR') => {
           return new Intl.NumberFormat(locale, { style: 'currency', currency, maximumFractionDigits: 2 }).format(value);
         },
-        number: (value: number, minimumFractionDigits = 0, maximumFractionDigits = void 0) => {
+        number  : (value: number, minimumFractionDigits = 0, maximumFractionDigits = void 0) => {
           return new Intl.NumberFormat(locale, { minimumFractionDigits, maximumFractionDigits }).format(value);
         },
-        date: (date: string | Date | Moment) => {
+        date    : (date: string | Date | Moment) => {
           return moment(date).locale(locale).format('L');
         },
         dateTime: (date: string | Date | Moment) => {
           return moment(date).locale(locale).format('L LT');
         }
-      },
+      }
     };
+  }
+
+  getAppEvalContext(builder: JsfBuilder, options: EvalContextOptions = {}) {
+    const lambda = JsfRegister.getAppEvalContextLambda();
+    return lambda ? lambda(builder, options) : {};
   }
 
 
@@ -71,7 +71,8 @@ export const evalService = new class {
     }
 
     const context = {
-      ... this.getStaticEvalContext(builder),
+      ...this.getStaticEvalContext(builder),
+      ...this.getAppEvalContext(builder, options),
 
       $linked: linkedContext,
 
@@ -92,15 +93,15 @@ export const evalService = new class {
       $setValue  : (x: any, y: any) => builder.setJsonValue(x, y),
       $patchValue: (x: any, y: any) => builder.patchJsonValue(x, y),
 
-      $clipboard : {
-        get: jsfClipboardGet,
-        keys: jsfClipboardKeys,
-        clearAll: jsfClipboardClearAll,
-        clear: jsfClipboardClear,
-        clearMany: jsfClipboardClearMany,
+      $clipboard: {
+        get      : jsfClipboardGet,
+        keys     : jsfClipboardKeys,
+        clearAll : jsfClipboardClearAll,
+        clear    : jsfClipboardClear,
+        clearMany: jsfClipboardClearMany
       },
 
-      $getItemIndex     : (key) => {
+      $getItemIndex: (key) => {
         if (!options.layoutBuilder) {
           throw new Error(`'$getItem' cannot be used outside of layout schema.`);
         }
@@ -119,7 +120,7 @@ export const evalService = new class {
         return options.layoutBuilder.getPropItem(key).getValue();
       },
 
-      $getPropIndex     : (key) => {
+      $getPropIndex: (key) => {
         if (!options.propBuilder) {
           throw new Error(`'$getProp' cannot be used outside of prop schema.`);
         }
@@ -137,7 +138,7 @@ export const evalService = new class {
         }
         return options.propBuilder.getSibling(key).getValue();
       },
-      $propVal: new Proxy({}, {
+      $propVal     : new Proxy({}, {
         get: (target, name: string) => {
           if (!options.propBuilder) {
             throw new Error(`'$propVal' cannot be used outside of prop schema.`);
@@ -151,7 +152,7 @@ export const evalService = new class {
       /**
        * @deprecated use #isMode
        */
-      $mode  : (key) => builder.modes.indexOf(key) > -1,
+      $mode: (key) => builder.modes.indexOf(key) > -1,
 
       $isMode: (key) => builder.modes.indexOf(key) > -1,
 
@@ -163,7 +164,8 @@ export const evalService = new class {
       ...(options.extraContextParams || {})
     };
 
-    // Handle special cases such as accessing `$val` by itself, where we want to return the whole document value instead of the proxy object itself.
+    // Handle special cases such as accessing `$val` by itself, where we want to return the whole document value instead of the proxy
+    // object itself.
     const contextProxy = new Proxy(context, {
       get: (target, name: string) => {
         if (name === '$val') {

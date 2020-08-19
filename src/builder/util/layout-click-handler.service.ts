@@ -7,6 +7,7 @@ import { isBoolean, isObject, isPlainObject, isString }                         
 import { JsfValueOptionsType }                                                                                  from '../../layout/interfaces/value-options.type';
 import { jsfClipboardBaseKey, jsfClipboardClear, jsfClipboardClearAll, jsfClipboardClearMany, jsfClipboardGet } from './clipboard';
 import { JsfArrayPropLayoutBuilder }                                                                            from '../layout';
+import { isObservable, Observable }                                                                             from 'rxjs';
 
 export class JsfAbortEventChain extends Error {
 
@@ -165,8 +166,14 @@ export const layoutClickHandlerService = new class {
           extraContextParams: options.extraContextParams
         });
 
-        options.rootBuilder.resolver.runWithDelayedUpdate(() => {
-          options.rootBuilder.runEvalWithContext((onClickData as any).$evalTranspiled || onClickData.$eval, ctx);
+
+        await options.rootBuilder.resolver.asyncRunWithDelayedUpdate(() => {
+          const result = options.rootBuilder.runEvalWithContext((onClickData as any).$evalTranspiled || onClickData.$eval, ctx);
+          if (isObservable(result)) {
+            return result.toPromise();
+          } else {
+            return result;
+          }
         });
 
         return;
