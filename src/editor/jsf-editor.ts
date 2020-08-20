@@ -4,6 +4,7 @@ import { JsfAbstractPropEditor }                      from './abstract';
 import { createJsfLayoutEditor, createJsfPropEditor } from './util/jsf-editor-factory';
 import { JsfProp }                                    from '../schema/props';
 import { JsfLayoutEditor }                            from './layout';
+import { omit } from 'lodash';
 
 let editorId = 0;
 
@@ -14,6 +15,10 @@ export class JsfEditor {
   private propsMap: { [id: string]: JsfAbstractPropEditor<any> } = {};
   private layoutsMap: { [id: string]: JsfLayoutEditor }          = {};
 
+  schemaEditor: JsfAbstractPropEditor<any>;
+  layoutEditor: JsfLayoutEditor;
+
+  definitionConfig: any;
 
   private _jsfDefinition: JsfDefinition;
 
@@ -21,6 +26,7 @@ export class JsfEditor {
 
   get jsfDefinition(): JsfDefinition {
     return {
+      ... this.definitionConfig,
       schema: this.schemaEditor.getDefinition(),
       layout: this.layoutEditor.getDefinition()
     };
@@ -30,10 +36,8 @@ export class JsfEditor {
     this._jsfDefinition = value;
     this.initSchema(this._jsfDefinition.schema);
     this.intiLayout(this._jsfDefinition.layout);
+    this.definitionConfig = omit(this._jsfDefinition, ['schema', 'layout']);
   }
-
-  schemaEditor: JsfAbstractPropEditor<any>;
-  layoutEditor: JsfLayoutEditor;
 
   constructor(options: {
     jsfDefinition: JsfDefinition
