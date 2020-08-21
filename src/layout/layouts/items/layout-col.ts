@@ -10,6 +10,9 @@ import { DefLayoutInfo }                                             from '../..
   icon: 'layout-icons/col.svg',
   items: {
     enabled: true
+  },
+  parent: {
+    allowedTypes: ['row']
   }
 })
 @DefTransform((x: any) => {

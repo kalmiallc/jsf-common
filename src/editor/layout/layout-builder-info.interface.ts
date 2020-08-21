@@ -60,6 +60,16 @@ export interface LayoutBuilderInfoInterface {
   };
 
   /**
+   * Information about this layout's parent.
+   */
+  parent?: {
+    /**
+     * Limit what type of parent this layout can be attached to.
+     */
+    allowedTypes?: string[];
+  }
+
+  /**
    * Icon for builder UI (toolbox).
    * @example layout-icons/span.svg
    */

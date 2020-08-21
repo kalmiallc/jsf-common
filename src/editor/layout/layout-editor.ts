@@ -2,24 +2,12 @@ import { JsfEditor }                  from '../jsf-editor';
 import { JsfTranslatableMessage }     from '../../translations';
 import { JsfDocument }                from '../../jsf-document';
 import { jsfForJsf }                  from '../../jsf-for-jsf';
-import {
-  isItemsLayout,
-  isPropArrayLayout,
-  isPropExpansionPanelLayout, isPropLayout,
-  isPropTableLayout,
-  isSpecialLayout,
-  JsfUnknownLayout
-}                                     from '../../layout';
+import { JsfUnknownLayout }           from '../../layout';
 import { LayoutBuilderInfoInterface } from './layout-builder-info.interface';
 import { createJsfLayoutEditor }      from '../util';
 import { JsfRegister }                from '../../jsf-register';
-import {
-  JsfArrayPropLayoutBuilder, JsfExpansionPanelPropLayoutBuilder,
-  JsfItemsLayoutBuilder, JsfPropLayoutBuilder,
-  JsfSpecialLayoutBuilder,
-  JsfTablePropLayoutBuilder
-}                                     from '../../builder/layout';
 import { Subject }                    from 'rxjs';
+import { isNil }                      from 'lodash';
 
 export class JsfLayoutEditor {
 
@@ -101,8 +89,8 @@ export class JsfLayoutEditor {
 
   get index(): number {
     return this.parent
-           ? this.parent._items.indexOf(this)
-           : 0;
+      ? this.parent._items.indexOf(this)
+      : 0;
   }
 
   /// ITEMS
@@ -153,8 +141,8 @@ export class JsfLayoutEditor {
     this._definition = options.definition;
     this._parent     = options.parent;
     this._id         = this._definition.id
-                       ? this._definition.id
-                       : '#/tmp/' + this.jsfEditor.getNewUniqueId();
+      ? this._definition.id
+      : '#/tmp/' + this.jsfEditor.getNewUniqueId();
 
     this._type = this._definition.type;
     if (this.supportsProp) {
@@ -173,15 +161,15 @@ export class JsfLayoutEditor {
     return {
       ...this._definition,
       type : this.type === 'prop'
-             ? undefined
-             : this.type,
+        ? undefined
+        : this.type,
       key  : this.key,
       items: !opt.skipItems && this.supportsItems
-             ? this.items.map(x => x.getDefinition())
-             : undefined,
+        ? this.items.map(x => x.getDefinition())
+        : undefined,
       id   : this.id.startsWith('#/tmp/')
-             ? undefined
-             : this.id
+        ? undefined
+        : this.id
     } as any;
   }
 
@@ -240,22 +228,56 @@ export class JsfLayoutEditor {
       .forEach((x, i) => this.createItem(x, i));
   }
 
-  canAddItem(itemDefinition: JsfUnknownLayout) {
+  canAddItem(itemDefinition: JsfUnknownLayout, index?: number) {
     if (!this.supportsItems) {
       return false;
     }
+
+    const targetInfo = JsfRegister.getLayoutInfo(itemDefinition.type || 'prop');
+
+    // Check fixed
+    if (this.info.items?.fixed) {
+      const idx = this.info.items.fixed.indexOf(targetInfo.type);
+      if (idx > -1) {
+        // Validate insertion index if provided
+        if (!isNil(index) && idx !== index) {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    }
+
+    // Check allowed types
+    if (this.info.items?.allowedTypes) {
+      if (this.info.items.allowedTypes.indexOf(targetInfo.type) === -1) {
+        return false;
+      }
+    }
+
+    // Check if target can be inserted
+    if (targetInfo.parent?.allowedTypes) {
+      if (targetInfo.parent.allowedTypes.indexOf(this.info.type) === -1) {
+        return false;
+      }
+    }
+
     return true;
   }
 
+
   moveTo(newParent: JsfLayoutEditor, index?: number) {
     if (!this.parent) {
+      this.parent.updateLayout$.next();
       throw new Error('Root layout can\'t be moved.');
     }
     this.parent.moveItemTo(this, newParent, index);
   }
 
   moveItemTo(instance: JsfLayoutEditor, newParent: JsfLayoutEditor, index?: number) {
-    if (!newParent.canAddItem(instance.getDefinition())) {
+    if (!newParent.canAddItem(instance.getDefinition(), index)) {
+      this.updateLayout$.next();
+      newParent.updateLayout$.next();
       throw new Error(`Parent "${ newParent.id }:${ newParent.path }" does not accept child "${ instance.id }:${ instance.path }".`);
     }
     this.removeItem(instance);
@@ -263,8 +285,9 @@ export class JsfLayoutEditor {
   }
 
   createItem(itemDefinition: JsfUnknownLayout, index?: number) {
-    if (!this.supportsItems) {
-      throw new Error(`Items not supported by layout "${ this.id }:${ this.path }".`);
+    if (!this.canAddItem(itemDefinition, index)) {
+      this.updateLayout$.next();
+      throw new Error(`Parent "${ this.id }:${ this.path }" does not accept child of type "${ itemDefinition.type }" on index ${ index }`);
     }
 
     if (isNaN(index)) {
@@ -284,7 +307,13 @@ export class JsfLayoutEditor {
   }
 
   addItem(instance: JsfLayoutEditor, index?: number) {
+    if (!this.canAddItem(instance.getDefinition(), index)) {
+      this.updateLayout$.next();
+      throw new Error(`Parent "${ this.id }:${ this.path }" does not accept child of type "${ instance.realType }" on index ${ index }`);
+    }
+
     if (this.items.indexOf(instance) > -1) {
+      this.updateLayout$.next();
       throw new Error(`JSF Builder child "${ instance.id }:${ instance.path }" with same instance already exists on parent "${ this.id }:${ this.path }"`);
     }
 
@@ -328,7 +357,8 @@ export class JsfLayoutEditor {
   }
 
   /**
-   * Emit a definition change event. Call this if you mutated the definition and want the changes to be reflected in other parts of the application.
+   * Emit a definition change event. Call this if you mutated the definition and want the changes to be reflected in other parts of the
+   * application.
    */
   emitDefinitionChange() {
     this.definitionChange$.next();
