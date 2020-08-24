@@ -323,7 +323,7 @@ export class JsfLayoutCol extends JsfAbstractItemsLayout<'col'> {
       }
     }
   })
-  offset: {
+  offset?: {
     xs?: number;
     sm?: number;
     md?: number;
@@ -363,7 +363,7 @@ export class JsfLayoutCol extends JsfAbstractItemsLayout<'col'> {
       ]
     }
   })
-  verticalAlign: 'start' | 'center' | 'end';
+  verticalAlign?: 'start' | 'center' | 'end';
 
 
   constructor(data: JsfLayoutCol) {
