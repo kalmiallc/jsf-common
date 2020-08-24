@@ -38,6 +38,16 @@ export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownPro
     return !!(this._definition.handler && this._definition.handler.type);
   }
 
+  get hasHandlerInfo(): boolean {
+    return !!this.getHandlerCompatibility();
+  }
+
+  get handlerTitle(): string {
+    if (this.hasHandler) {
+      return JsfRegister.getHandlerCompatibility(this.handlerType)?.title;
+    }
+  }
+
   get handlerType(): string {
     return this._definition.handler?.type;
   }

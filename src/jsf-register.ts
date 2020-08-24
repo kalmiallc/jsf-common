@@ -87,11 +87,15 @@ export class JsfRegister {
   }
 
   static getHandlerCompatibility(type: string) {
+    return JsfRegister.compatibility[type];
+  }
+
+  static getHandlerCompatibilityOrThrow(type: string) {
     if (!JsfRegister.compatibility[type]) {
       throw new Error(`Handler ${ type } not found!`);
     }
 
-    return JsfRegister.compatibility[type];
+    return JsfRegister.getHandlerCompatibility(type);
   }
 
   static listHandlers() {
