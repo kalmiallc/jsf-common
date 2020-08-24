@@ -72,12 +72,18 @@ export class JsfRegister {
     };
   }
 
-  static getHandlerFormDefinition(type: string, prop: JsfProp) {
+  static getHandlerFormDefinition(type: string, prop: JsfProp, options: { crashIfNotFound?: boolean } = {}) {
     if (!JsfRegister.compatibility[type]) {
+      if (!options.crashIfNotFound) {
+        return;
+      }
       throw new Error(`Handler ${ type } not found!`);
     }
     const compatibleType = (JsfRegister.compatibility[type].compatibleWith || []).find(x => x.type === prop.type);
     if (!compatibleType) {
+      if (!options.crashIfNotFound) {
+        return;
+      }
       throw new Error(`Handler ${ type } does not have compatible type ${ prop.type }!`);
     }
 
