@@ -93,7 +93,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
 
   readonly jsfDefinitionProvider?: (key: string) => Observable<JsfDefinition>;
   readonly dataSourceProvider?: (req: DataSourceProviderRequestInterface) => Observable<DataSourceProviderResponseInterface>;
-  readonly dataSourceConfig?: any;
+  readonly dataSourceConfig?: { [key: string]: { title: string } };
 
   private _id = jsfPageId++;
   get id(): number {
