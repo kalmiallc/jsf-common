@@ -1,9 +1,11 @@
-import { JsfRegister }                                                       from '../../jsf-register';
-import { JsfBasicHandlerBuilder }                                            from '../../builder/abstract/abstract-basic-handler-builder';
-import { JsfPropBuilderObject }                                              from '../../builder/props';
-import { PatchValueOptionsInterface, SetValueOptionsInterface }              from '../../builder/interfaces/set-value-options.interface';
-import { JsfBuilder, JsfComponentBuilder, jsfHandlerComponentCompatibility } from '../../builder';
-import { JsfComponent }                                                      from '../../jsf-component';
+import { JsfRegister }                                          from '../../jsf-register';
+import { JsfBasicHandlerBuilder }                               from '../../builder/abstract/abstract-basic-handler-builder';
+import { JsfPropBuilderObject }                                 from '../../builder/props';
+import { PatchValueOptionsInterface, SetValueOptionsInterface } from '../../builder/interfaces/set-value-options.interface';
+import { JsfBuilder, JsfComponentBuilder }                      from '../../builder';
+import { JsfComponent }                                         from '../../jsf-component';
+import { jsfHandlerComponentCompatibility }                     from './component.schema';
+
 
 export interface JsfHandlerBuilderComponentOptionsInterface {
   componentDefinition: JsfComponent;
