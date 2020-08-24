@@ -18,7 +18,7 @@ export class JsfEditor {
   schemaEditor: JsfAbstractPropEditor<any>;
   layoutEditor: JsfLayoutEditor;
 
-  definitionConfig: any;
+  definitionConfig: JsfDefinition & { schema: never, layout: never };
 
   private _jsfDefinition: JsfDefinition;
 
@@ -36,7 +36,7 @@ export class JsfEditor {
     this._jsfDefinition = value;
     this.initSchema(this._jsfDefinition.schema);
     this.intiLayout(this._jsfDefinition.layout);
-    this.definitionConfig = omit(this._jsfDefinition, ['schema', 'layout']);
+    this.definitionConfig = omit(this._jsfDefinition, ['schema', 'layout']) as any;
   }
 
   constructor(options: {
