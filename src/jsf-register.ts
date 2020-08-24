@@ -110,8 +110,7 @@ export class JsfRegister {
         type : 'string',
         const: type,
         title: 'Type'
-      }
-      compatibility.formDefinition.$theme                                       = 'rounded/blue';
+      };
       JsfRegister.compatibility[type]                                           = compatibility;
     }
   }
