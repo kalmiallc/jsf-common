@@ -242,11 +242,9 @@ export abstract class JsfAbstractBareProp<TypeString, Handlers> {
         dependencies: {
           type : 'array',
           title: 'Dependencies',
-          items: [
-            {
-              type: 'string'
-            }
-          ]
+          items: {
+            type: 'string'
+          }
         }
       }
     },
