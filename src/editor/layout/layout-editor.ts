@@ -7,7 +7,7 @@ import { LayoutBuilderInfoInterface } from './layout-builder-info.interface';
 import { createJsfLayoutEditor }      from '../util';
 import { JsfRegister }                from '../../jsf-register';
 import { Subject }                    from 'rxjs';
-import { isNil }                      from 'lodash';
+import { isNil, isObject }                      from 'lodash';
 
 export class JsfLayoutEditor {
 
@@ -158,6 +158,27 @@ export class JsfLayoutEditor {
   }
 
   getDefinition(opt: { skipItems?: boolean } = {}): JsfUnknownLayout {
+    /// AUTO RECOVERY SECTION (ideally we don't need this, but builder UI is still in beta)
+    if (this._definition.$mode === null) {
+      delete this._definition.$mode;
+    }
+    if (isObject(this._definition.visibleIf) && this._definition.visibleIf.$eval === null) {
+      delete this._definition.visibleIf;
+    }
+    if (this._definition.buildIf?.$eval === null) {
+      delete this._definition.buildIf;
+    }
+    if (isObject(this._definition.tooltip) && this._definition.tooltip?.title === null) {
+      delete this._definition.tooltip;
+    }
+    if (this._definition.analytics?.category === null) {
+      delete this._definition.analytics;
+    }
+    if ((this._definition as any).templateData) {
+      delete (this._definition as any).templateData;
+    }
+    /// AUTO RECOVERY END
+
     return {
       ...this._definition,
       type : this.type === 'prop'

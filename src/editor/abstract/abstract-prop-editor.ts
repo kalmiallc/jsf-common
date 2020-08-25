@@ -5,6 +5,7 @@ import { JsfTranslatableMessage }                     from '../../translations';
 import { JsfDocument }                                from '../../jsf-document';
 import { jsfForJsf }                                  from '../../jsf-for-jsf';
 import { HandlerCompatibilityInterface, JsfRegister } from '../../jsf-register';
+import { isObject }                                   from 'lodash';
 
 export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownProp> {
 
@@ -123,6 +124,29 @@ export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownPro
   }
 
   getDefinition(opt: { skipItems?: boolean } = {}) { // TODO PropDefinition error TS2577: Return type annotation circularly references itself.
+    /// AUTO RECOVERY SECTION (ideally we don't need this, but builder UI is still in beta)
+    if ((this._definition as any).onInit?.type === null) {
+      delete this._definition.onInit;
+    }
+    if ((this._definition as any).title === null) {
+      delete (this._definition as any).title;
+    }
+    if ((this._definition as any).required === null) {
+      delete (this._definition as any).required;
+    }
+    if (isObject(this._definition.enabledIf) && this._definition.enabledIf.$eval === null) {
+      delete this._definition.enabledIf;
+    }
+    if (isObject((this._definition as any).evalValidators) && (this._definition as any).evalValidators?.$evals === null) {
+      delete (this._definition as any).evalValidators;
+    }
+
+    // TODO we are removing following (for now) since UI is setting bed data
+    delete this._definition.onValueChange;
+    delete (this._definition as any).searchable;
+    delete (this._definition as any).default;
+    /// AUTO RECOVERY END
+
     return {
       ...this._definition,
       id: this.id.startsWith('#/tmp/') ? undefined : this.id
