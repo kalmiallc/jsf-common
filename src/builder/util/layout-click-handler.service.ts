@@ -1,13 +1,26 @@
-import { JsfBuilder }                                                                                           from '../jsf-builder';
-import { JsfLayoutOnClickInterface }                                                                            from '../../layout/interfaces/layout-on-click.interface';
-import { JsfAbstractLayoutBuilder }                                                                             from '../abstract';
-import { JsfAbstractLayout }                                                                                    from '../../layout';
-import { JsfRouterNavigationOptionsInterface }                                                                  from '../../abstract';
-import { isBoolean, isObject, isPlainObject, isString }                                                         from 'lodash';
-import { JsfValueOptionsType }                                                                                  from '../../layout/interfaces/value-options.type';
-import { jsfClipboardBaseKey, jsfClipboardClear, jsfClipboardClearAll, jsfClipboardClearMany, jsfClipboardGet } from './clipboard';
-import { JsfArrayPropLayoutBuilder }                                                                            from '../layout';
-import { isObservable, Observable }                                                                             from 'rxjs';
+import { JsfBuilder }                          from '../jsf-builder';
+import { JsfLayoutOnClickInterface }                       from '../../layout/interfaces/layout-on-click.interface';
+import { JsfAbstractLayoutBuilder, JsfUnknownPropBuilder } from '../abstract';
+import { JsfAbstractLayout }                               from '../../layout';
+import { JsfRouterNavigationOptionsInterface } from '../../abstract';
+import {
+  isBoolean,
+  isObject,
+  isPlainObject,
+  isString
+}                                                                     from 'lodash';
+import { JsfValueOptionsType }                 from '../../layout/interfaces/value-options.type';
+import {
+  jsfClipboardBaseKey,
+  jsfClipboardClear,
+  jsfClipboardClearAll,
+  jsfClipboardClearMany,
+  jsfClipboardGet
+}                                              from './clipboard';
+import { JsfArrayPropLayoutBuilder }           from '../layout';
+import {
+  isObservable
+}                                              from 'rxjs';
 
 export class JsfAbortEventChain extends Error {
 
@@ -44,7 +57,8 @@ export const layoutClickHandlerService = new class {
    */
   getValue(valueOptions: JsfValueOptionsType, ctxOptions: {
     rootBuilder: JsfBuilder,
-    layoutBuilder: JsfAbstractLayoutBuilder<JsfAbstractLayout>,
+    layoutBuilder?: JsfAbstractLayoutBuilder<JsfAbstractLayout>,
+    propBuilder?: JsfUnknownPropBuilder,
     extraContextParams?: { [key: string]: any }
   }): any {
 
@@ -60,8 +74,8 @@ export const layoutClickHandlerService = new class {
     // Key
     if (valueOptions.key) {
       const prop = ctxOptions.layoutBuilder
-        ? ctxOptions.layoutBuilder.getPropItem(valueOptions.key)
-        : ctxOptions.rootBuilder.propBuilder.getControlByPath(valueOptions.key);
+                   ? ctxOptions.layoutBuilder.getPropItem(valueOptions.key)
+                   : ctxOptions.rootBuilder.propBuilder.getControlByPath(valueOptions.key);
 
       if (!prop) {
         throw new Error(`Can not find prop for ${ valueOptions.key }.`);
@@ -74,6 +88,7 @@ export const layoutClickHandlerService = new class {
     if (valueOptions.$eval) {
       const ctx = ctxOptions.rootBuilder.getEvalContext({
         layoutBuilder     : ctxOptions.layoutBuilder as any, // TODO (prio: low) remove as any
+        propBuilder       : ctxOptions.propBuilder,
         extraContextParams: ctxOptions.extraContextParams
       });
       return ctxOptions.rootBuilder.runEvalWithContext(
@@ -205,8 +220,8 @@ export const layoutClickHandlerService = new class {
           const path = this.getValueLegacy(onClickData.setValue.path, options);
 
           control = options.layoutBuilder && !onClickData.setValue.onLinked
-            ? options.layoutBuilder.getPropItem(path)
-            : builder.propBuilder.getControlByPath(path);
+                    ? options.layoutBuilder.getPropItem(path)
+                    : builder.propBuilder.getControlByPath(path);
         } else {
           control = builder.propBuilder;
         }
@@ -232,8 +247,8 @@ export const layoutClickHandlerService = new class {
           const path = this.getValueLegacy(onClickData.patchValue.path, options);
 
           control = options.layoutBuilder && !onClickData.patchValue.onLinked
-            ? options.layoutBuilder.getPropItem(path)
-            : builder.propBuilder.getControlByPath(path);
+                    ? options.layoutBuilder.getPropItem(path)
+                    : builder.propBuilder.getControlByPath(path);
         } else {
           control = builder.propBuilder;
         }
@@ -352,8 +367,8 @@ export const layoutClickHandlerService = new class {
         let control;
         if (onClickData.arrayItemAdd.path) {
           control = options.layoutBuilder && !onClickData.arrayItemAdd.onLinked
-            ? options.layoutBuilder.getPropItem(onClickData.arrayItemAdd.path)
-            : builder.propBuilder.getControlByPath(onClickData.arrayItemAdd.path);
+                    ? options.layoutBuilder.getPropItem(onClickData.arrayItemAdd.path)
+                    : builder.propBuilder.getControlByPath(onClickData.arrayItemAdd.path);
         } else {
           control = builder.propBuilder;
         }
@@ -380,8 +395,8 @@ export const layoutClickHandlerService = new class {
         let control;
         if (onClickData.arrayItemRemove.path) {
           control = options.layoutBuilder && !onClickData.arrayItemRemove.onLinked
-            ? options.layoutBuilder.getPropItem(onClickData.arrayItemRemove.path)
-            : builder.propBuilder.getControlByPath(onClickData.arrayItemRemove.path);
+                    ? options.layoutBuilder.getPropItem(onClickData.arrayItemRemove.path)
+                    : builder.propBuilder.getControlByPath(onClickData.arrayItemRemove.path);
         } else {
           control = builder.propBuilder;
         }

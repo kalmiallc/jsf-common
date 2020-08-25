@@ -1,5 +1,5 @@
-import { JsfDocument }                                                                                  from '../jsf-document';
-import { JsfPropBuilderFactory }                                                                        from './util/prop-builder-factory';
+import { JsfDocument }                                                                     from '../jsf-document';
+import { JsfPropBuilderFactory }                                                           from './util/prop-builder-factory';
 import {
   JsfAbstractBuilder,
   JsfComponentBuilder,
@@ -7,12 +7,12 @@ import {
   PropStatus,
   ValidationError,
   ValueChangeInterface
-} from './abstract/index';
-import { JsfLayoutBuilderFactory, JsfUnknownLayoutBuilder }                                             from './layout/index';
-import { JsfTranslatableMessage, JsfTranslationServer }                                                 from '../translations';
-import { filter, flattenDeep, uniq, uniqWith }                                                          from 'lodash';
-import { Observable, Subject }                                                                          from 'rxjs';
-import { JsfDependencyResolver }                                                                        from './jsf-dependency-resolver';
+}                                                                                          from './abstract/index';
+import { JsfLayoutBuilderFactory, JsfUnknownLayoutBuilder }                                from './layout/index';
+import { JsfTranslatableMessage, JsfTranslationServer }                                    from '../translations';
+import { filter, flattenDeep, uniq, uniqWith }                                             from 'lodash';
+import { Observable, Subject }                                                             from 'rxjs';
+import { JsfDependencyResolver }                                                           from './jsf-dependency-resolver';
 import {
   PatchValueOptionsInterface,
   SetValueOptionsInterface
@@ -313,6 +313,8 @@ export class JsfBuilder extends JsfAbstractBuilder {
   private valueChangeListeners: { [path: string]: Subject<PropValueChangeInterface> }   = {};
   private statusChangeListeners: { [path: string]: Subject<PropStatusChangeInterface> } = {};
 
+  private propWaitingForOnInitCallback: string[] = [];
+
   get valid() {
     return this.propBuilder.valid;
   }
@@ -451,6 +453,13 @@ export class JsfBuilder extends JsfAbstractBuilder {
     }
     this.ready = true;
 
+    for (const propPath of this.propWaitingForOnInitCallback) {
+      const propBuilder = this.getProp(propPath);
+      if (propBuilder) {
+        propBuilder.runOnInitUserActions();
+      }
+    }
+
     if (!jsfEnv.isApi) {
       if (this.doc.$lifeCycle && this.doc.$lifeCycle.$afterFormInit) {
         if (this.doc.$lifeCycle.$afterFormInit.$eval) {
@@ -460,6 +469,14 @@ export class JsfBuilder extends JsfAbstractBuilder {
     }
 
     this.emitFormInit();
+  }
+
+  registerPropForOnInitCallback(propBuilder: JsfUnknownPropBuilder) {
+    if (this.ready) {
+      propBuilder.runOnInitUserActions();
+    } else {
+      this.propWaitingForOnInitCallback.push(propBuilder.path);
+    }
   }
 
   onDestroy() {

@@ -14,6 +14,16 @@ export class JsfValueOptionsInterface {
   $evalTranspiled?: string;
 
   paste?: string;
+
+  // PROPOSAL:
+  // /**
+  //  * Set from query URL
+  //  */
+  // query?: string;
+  // /**
+  //  * Set from local storage
+  //  */
+  // localStorage?: string;
 }
 
 export type JsfValueOptionsType = string | boolean | null | JsfValueOptionsInterface | undefined;

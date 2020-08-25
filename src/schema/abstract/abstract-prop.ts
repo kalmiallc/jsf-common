@@ -1,6 +1,7 @@
 import { JsfProp, JsfPropTypes }          from '../index';
 import { DefExtends, DefLayout, DefProp, DefCategory } from '../../jsf-for-jsf/decorators';
 import { JsfProviderExecutorInterface }   from '../../providers';
+import { JsfValueOptionsInterface } from '../../layout/interfaces/value-options.type';
 
 export type JsfUnknownProp = JsfAbstractBareProp<JsfPropTypes, any>;
 
@@ -170,6 +171,29 @@ export abstract class JsfAbstractBareProp<TypeString, Handlers> {
     title: 'Virtual'
   })
   virtual?: boolean;
+
+  /**
+   * Intended for grouping props together.
+   */
+  @DefProp({
+    type : 'object',
+    properties: {
+      type: { type: 'string'}
+    }
+  })
+  onInit?: (
+    /**
+     * Sets default value. More advanced than 'default' field following JSON Schema  since it can set dynamic value.
+     */
+    {
+      type: 'set',
+      value: JsfValueOptionsInterface
+    } |
+    {
+      type: 'eval',
+      $eval: string
+    }
+    )[];
 
   /**
    * The "definitions" keywords provides a standardized location for schema authors to inline re-usable JSON Schemas
@@ -771,6 +795,16 @@ export abstract class JsfAbstractProp<Type, TypeString, Handlers> extends JsfAbs
     title: 'Default value'
   })
   default?: Type | null;
+
+  advancedDefault?:  {
+    /**
+     * Used to help builder UI
+     */
+    type: 'query' | '$eval';
+
+    query: string;
+    $eval: string;
+  };
 
   /**
    * The value of this keyword MAY be of any type, including null.

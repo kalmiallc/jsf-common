@@ -48,8 +48,9 @@ import { ProviderFailedError }           from '../../providers/errors/provider-f
 import { getEvalValidatorsDependencies } from '../util/abstarct-prop-util';
 import { safeModeCompatibleHandlers }    from '../../handlers';
 import { jsfEnv }                        from '../../jsf-env';
-import { isString }                        from 'lodash';
+import { isString }                      from 'lodash';
 import * as hash                         from 'object-hash';
+import { layoutClickHandlerService }     from '../util';
 
 export type JsfUnknownPropBuilder = JsfAbstractPropBuilder<JsfUnknownProp, JsfUnknownHandlerBuilder, any, any>;
 
@@ -488,7 +489,41 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
       this.providerExecutor.enqueue();
     }
 
+    if (this.prop.onInit && !this.safeMode) {
+      this.rootBuilder.registerPropForOnInitCallback(this);
+    }
+
     return this;
+  }
+
+  runOnInitUserActions() {
+    if (!this.prop.onInit) {
+      return;
+    }
+
+    for (const x of this.prop.onInit) {
+      switch (x.type) {
+        case 'set':
+          this.setValue(layoutClickHandlerService.getValue(x.value, {
+            propBuilder: this,
+            rootBuilder: this.rootBuilder
+          }))
+            .catch(console.error);
+          break;
+        case 'eval':
+          const ctx = this.rootBuilder.getEvalContext({
+            propBuilder       : this,
+            extraContextParams: {
+              $eventData: x
+            }
+          });
+          this.rootBuilder.runEvalWithContext((x as any).$evalTranspiled || x.$eval, ctx);
+          break;
+        default:
+          console.warn(`Unknown onInit action ${ JSON.stringify(x) } in ${ this.path }.`);
+          break;
+      }
+    }
   }
 
   private setPath() {
@@ -541,6 +576,43 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
       );
     } else if (this.prop.hasOwnProperty('default')) {
       this.setJsonValueNoResolve((this.prop as any).default, { noValueChange: options.noValueChange });
+    } else if (this.prop.hasOwnProperty('advancedDefault')) {
+      const advancedDefault = (this.prop as JsfAbstractProp<any, any, any>).advancedDefault;
+      let value;
+
+      if (advancedDefault.query) {
+        if ((window as any)) {
+          const query = (window as any).location.search.substring(1);
+          const vars = query.split('&');
+          for (let i = 0; i < vars.length; i++) {
+            const pair = vars[i].split('=');
+            if (decodeURIComponent(pair[0]) === advancedDefault.query) {
+              try {
+                if (this.prop.type === 'string' || this.prop.type === 'date') {
+                  value = decodeURIComponent(pair[1]);
+                } else {
+                  value = JSON.parse(decodeURIComponent(pair[1]));
+                }
+              } catch (e) {
+                console.error(e);
+              }
+              break;
+            }
+          }
+        }
+      }
+
+      if (advancedDefault.$eval) {
+        const ctx = this.rootBuilder.getEvalContext({
+          propBuilder: this,
+          extraContextParams: { currentValue: value }
+        });
+        value     = this.rootBuilder.runEvalWithContext((advancedDefault as any).$evalTranspiled || advancedDefault.$eval, ctx);
+      }
+
+      if (value !== undefined) {
+        this.setJsonValueNoResolve(value, { noValueChange: options.noValueChange });
+      }
     }
   }
 
@@ -802,7 +874,7 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
                 $newValue: newValue
               }
             });
-            
+
             key = builderValue.runEvalWithContext((udv.key as any).$evalTranspiled || udv.key.$eval, ctxKey);
           }
 
