@@ -41,64 +41,69 @@ export const jsfHandlerComponentJsfDefinition: any = {
         title    : 'HTML class',
         htmlClass: 'mt-2'
       },
-      dataSourcesFilters: {
-        type : 'array',
-        items: {
-          type      : 'object',
-          properties: {
-            dataSource: {
-              type    : 'string',
-              title   : 'Data source',
-              required: true,
-              handler : {
-                type  : 'common/dropdown',
-                values: {
-                  provider: {
-                    key: 'data-sources'
-                  }
-                }
-              }
-            },
-            filterPath: {
-              type : 'string',
-              title: 'Filter path'
-            }
-          }
-        }
-      },
-      dataSources       : {
-        type : 'array',
-        items: {
-          type      : 'object',
-          properties: {
-            key: {
-              type    : 'string',
-              required: true,
-              title   : 'Data source key',
-              handler : {
-                type  : 'common/dropdown',
-                values: {
-                  provider: {
-                    key: 'data-sources'
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      jsfDefinition     : {
-        type      : 'object',
+      componentDefinition: {
+        type: 'object',
         properties: {
-          $ref: {
-            type    : 'string',
-            title   : 'JSF definition',
-            required: true,
-            handler : {
-              type  : 'common/dropdown',
-              values: {
-                provider: {
-                  key: 'jsf-definitions'
+          dataSourcesFilters: {
+            type : 'array',
+            items: {
+              type      : 'object',
+              properties: {
+                dataSource: {
+                  type    : 'string',
+                  title   : 'Data source',
+                  required: true,
+                  handler : {
+                    type  : 'common/dropdown',
+                    values: {
+                      provider: {
+                        key: 'data-sources'
+                      }
+                    }
+                  }
+                },
+                filterPath: {
+                  type : 'string',
+                  title: 'Filter path'
+                }
+              }
+            }
+          },
+          dataSources       : {
+            type : 'array',
+            items: {
+              type      : 'object',
+              properties: {
+                key: {
+                  type    : 'string',
+                  required: true,
+                  title   : 'Data source key',
+                  handler : {
+                    type  : 'common/dropdown',
+                    values: {
+                      provider: {
+                        key: 'data-sources'
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          jsfDefinition     : {
+            type      : 'object',
+            properties: {
+              $ref: {
+                type    : 'string',
+                title   : 'JSF definition',
+                required: true,
+                handler : {
+                  type  : 'common/dropdown',
+                  values: {
+                    provider: {
+                      key: 'jsf-definitions'
+                    }
+                  }
                 }
               }
             }
@@ -123,7 +128,7 @@ export const jsfHandlerComponentJsfDefinition: any = {
         htmlClass: 'mt-3'
       },
       {
-        key  : 'dataSources',
+        key  : 'componentDefinition.dataSources',
         type : 'array',
         items: [
           {
@@ -134,7 +139,7 @@ export const jsfHandlerComponentJsfDefinition: any = {
                 xs   : 10,
                 items: [
                   {
-                    key: 'dataSources[].key'
+                    key: 'componentDefinition.dataSources[].key'
                   }
                 ]
               },
@@ -151,9 +156,9 @@ export const jsfHandlerComponentJsfDefinition: any = {
                     onClick    : [
                       {
                         arrayItemRemove: {
-                          path : 'dataSources',
+                          path : 'componentDefinition.dataSources',
                           index: {
-                            $eval: `return $getItemIndex('dataSources[]')`
+                            $eval: `return $getItemIndex('componentDefinition.dataSources[]')`
                           }
                         }
                       }
@@ -174,7 +179,7 @@ export const jsfHandlerComponentJsfDefinition: any = {
         onClick    : [
           {
             arrayItemAdd: {
-              path: 'dataSources'
+              path: 'componentDefinition.dataSources'
             }
           }
         ]
@@ -187,7 +192,7 @@ export const jsfHandlerComponentJsfDefinition: any = {
         htmlClass: 'mt-3'
       },
       {
-        key  : 'dataSourcesFilters',
+        key  : 'componentDefinition.dataSourcesFilters',
         type : 'array',
         items: [
           {
@@ -205,7 +210,7 @@ export const jsfHandlerComponentJsfDefinition: any = {
                         xs   : 6,
                         items: [
                           {
-                            key: 'dataSourcesFilters[].dataSource'
+                            key: 'componentDefinition.dataSourcesFilters[].dataSource'
                           }
                         ]
                       },
@@ -214,7 +219,7 @@ export const jsfHandlerComponentJsfDefinition: any = {
                         xs   : 6,
                         items: [
                           {
-                            key: 'dataSourcesFilters[].filterPath'
+                            key: 'componentDefinition.dataSourcesFilters[].filterPath'
                           }
                         ]
                       }
@@ -235,9 +240,9 @@ export const jsfHandlerComponentJsfDefinition: any = {
                     onClick    : [
                       {
                         arrayItemRemove: {
-                          path : 'dataSourcesFilters',
+                          path : 'componentDefinition.dataSourcesFilters',
                           index: {
-                            $eval: `return $getItemIndex('dataSourcesFilters[]')`
+                            $eval: `return $getItemIndex('componentDefinition.dataSourcesFilters[]')`
                           }
                         }
                       }
@@ -258,7 +263,7 @@ export const jsfHandlerComponentJsfDefinition: any = {
         onClick    : [
           {
             arrayItemAdd: {
-              path: 'dataSourcesFilters'
+              path: 'componentDefinition.dataSourcesFilters'
             }
           }
         ]
@@ -271,7 +276,7 @@ export const jsfHandlerComponentJsfDefinition: any = {
         htmlClass: 'mt-3'
       },
       {
-        key: 'jsfDefinition.$ref'
+        key: 'componentDefinition.jsfDefinition.$ref'
       }
 
     ]
