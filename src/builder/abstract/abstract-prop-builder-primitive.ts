@@ -1,10 +1,16 @@
-import { GetControlOptions, JsfAbstractPropBuilder, JsfUnknownPropBuilder } from './abstract-prop-builder';
-import { JsfUnknownProp }                                                   from '../../schema/abstract/abstract-prop';
-import { JsfUnknownHandlerBuilder }                                         from './abstract-handler-builder';
+import {
+  GetControlOptions,
+  JsfAbstractPropBuilder,
+  JsfUnknownPropBuilder,
+  SafeModeTypes
+}                                   from './abstract-prop-builder';
+import { JsfUnknownProp }           from '../../schema/abstract/abstract-prop';
+import { JsfUnknownHandlerBuilder } from './abstract-handler-builder';
 import {
   PatchValueOptionsInterface,
   SetValueOptionsInterface
-}                                                                           from '../interfaces/set-value-options.interface';
+}                                   from '../interfaces/set-value-options.interface';
+import { JsfPropBuilder }           from '../props';
 
 export abstract class JsfAbstractPropBuilderPrimitive<PropType extends JsfUnknownProp,
   PropHandler extends JsfUnknownHandlerBuilder,
@@ -16,6 +22,20 @@ export abstract class JsfAbstractPropBuilderPrimitive<PropType extends JsfUnknow
   lockMap: Map<Symbol, any> = new Map<Symbol, any>();
 
   protected abstract isValidPrimitiveValue(value): boolean;
+
+  onInit(data: {
+    prop: PropType,
+    docDefPath: string,
+    parentProp?: JsfPropBuilder,
+    rootProp?: JsfPropBuilder,
+    propName: string,
+    safeMode?: SafeModeTypes
+  }) {
+    if ((data.prop as any).nullable) {
+      this.value = null;
+    }
+    return super.onInit(data);
+  }
 
   lock(lockKey: Symbol = Symbol() as Symbol): Symbol {
     this.lockMap.set(lockKey, this.getValue());

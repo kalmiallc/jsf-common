@@ -113,14 +113,14 @@ export class JsfPropBuilderObject
   async _validateViaProp() {
     this.errors = [];
 
-    // Required
-    if (this.prop.required) {
-      for (const prop of this.prop.required) {
-        if (!this.properties.hasOwnProperty(prop)) {
-          this.errors.push(new RequiredValidationError());
-        }
-      }
-    }
+    // // Required
+    // if (this.prop.required) {
+    //   for (const prop of this.prop.required) {
+    //     if (!this.properties.hasOwnProperty(prop)) {
+    //       this.errors.push(new RequiredValidationError());
+    //     }
+    //   }
+    // }
 
     // translate
     for (const error of this.errors) {
@@ -195,11 +195,28 @@ export class JsfPropBuilderObject
      }, {} as any); // FIXME any type :(
      */
     const value = {};
+    let valuePropCount = 0;
     for (let i = 0; i < this.propertyKeys.length; i++) {
       const propertyName = this.propertyKeys[i];
 
       if (!this.properties[propertyName].disabled) {
-        value[propertyName] = this.properties[propertyName].getValue();
+        const x = this.properties[propertyName].getValue();
+
+        if (!(
+          x === undefined
+          || (x === null && !(this.properties[propertyName].prop as any).nullable)
+        )) {
+          value[propertyName] = x;
+          valuePropCount++;
+        }
+      }
+    }
+
+    if (valuePropCount === 0) {
+      if (this.prop.required) {
+        return {};
+      } else {
+        return this.prop.nullable ? null : undefined;
       }
     }
 

@@ -805,6 +805,17 @@ export abstract class JsfAbstractProp<Type, TypeString, Handlers> extends JsfAbs
   };
 
   /**
+   * If true value can be null else null will be converted into undefined. If object has only undefined
+   * properties whole section will be converted into
+   * @default false
+   */
+  @DefProp({
+    title      : 'Allow null as value.',
+    type       : 'boolean'
+  })
+  nullable?: boolean;
+
+  /**
    * The value of this keyword MAY be of any type, including null.
    *
    * An instance validates successfully against this keyword if its value is equal to the value of the keyword.
