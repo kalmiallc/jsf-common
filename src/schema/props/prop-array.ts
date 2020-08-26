@@ -109,6 +109,17 @@ export class JsfPropArray extends JsfAbstractProp<JsfPropArrayValue[] | null, 'a
 
   contains?: any;
 
+
+  /**
+   * If true array can be null.
+   * @default false
+   */
+  @DefProp({
+    title      : 'Allow null type',
+    type       : 'boolean'
+  })
+  nullable?: boolean;
+
   /**
    * This keyword's value MUST be a valid JSON Schema.
    *

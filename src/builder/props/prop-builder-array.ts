@@ -390,7 +390,11 @@ None existing path: <${ path }>`);
 
   private setNull() {
     const removedItems = this.items || [];
-    this.items = null;
+    if (this.prop.nullable) {
+      this.items = null;
+    } else {
+      this.items = [];
+    }
     for (let i = 0; i < removedItems.length; i++) {
       this._onItemRemove.next({
         index: i,
