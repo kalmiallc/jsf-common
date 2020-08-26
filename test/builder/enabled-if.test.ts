@@ -7,6 +7,7 @@ const doc: JsfDocument = {
     properties: {
       conditionalPropA     : {
         type     : 'string',
+        nullable: true,
         enabledIf: {
           $eval       : `return !!($val.areas && $val.areas.A12)`,
           dependencies: ['areas.A12'],
@@ -14,6 +15,7 @@ const doc: JsfDocument = {
       },
       conditionalPropB     : {
         type     : 'string',
+        nullable: true,
         enabledIf: {
           $eval       : `return !!($val.areas && $val.areas.A12)`,
           dependencies: ['areas'],
@@ -21,6 +23,7 @@ const doc: JsfDocument = {
       },
       conditionalPropC     : {
         type     : 'string',
+        nullable: true,
         enabledIf: {
           $eval       : `return !!($val.areas && $val.areas.B24)`,
           dependencies: ['areas.B24'],
@@ -28,22 +31,26 @@ const doc: JsfDocument = {
       },
       conditionalPropD     : {
         type     : 'string',
+        nullable: true,
         enabledIf: {
           $eval       : `return !!($val.areas && $val.areas.B24)`,
           dependencies: ['areas'],
         },
       },
       condForB24          : {
+        nullable: true,
         type: 'string'
       },
       areas: new JsfPropObject({
         type      : 'object',
         properties: {
           A12: new JsfPropBoolean({
-            type : 'boolean'
+            type : 'boolean',
+            nullable: true,
           }),
           B24: new JsfPropBoolean({
             type     : 'boolean',
+            nullable: true,
             enabledIf: {
               $eval       : ` return $val.condForB24 === 'PASS'; `,
               dependencies: ['condForB24'],

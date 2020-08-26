@@ -203,7 +203,7 @@ export class JsfPropBuilderObject
         const x = this.properties[propertyName].getValue();
 
         if (!(
-          x === undefined
+          (x === undefined && !(this.properties[propertyName].prop as any).nullable)
           || (x === null && !(this.properties[propertyName].prop as any).nullable)
         )) {
           value[propertyName] = x;

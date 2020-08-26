@@ -7,6 +7,7 @@ const doc: JsfDocument = {
     type      : 'object',
     properties: {
       condForP3P4          : {
+        nullable: true,
         type: 'string'
       },
       rollerShadesPositions: new JsfPropObject({
@@ -15,6 +16,7 @@ const doc: JsfDocument = {
           p3p4: new JsfPropBoolean({
             type     : 'boolean',
             title    : 'P3 - P4',
+            nullable: true,
             enabledIf: {
               $eval       : ` return $val.condForP3P4 === 'PASS'; `,
               dependencies: ['condForP3P4'],
