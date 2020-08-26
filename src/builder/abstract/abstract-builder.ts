@@ -4,7 +4,7 @@ export abstract class JsfAbstractBuilder {
 
   abstract validate(options?: { force?: boolean }): Promise<boolean>;
 
-  abstract getJsonValue(): any;
+  abstract getJsonValue(opt?: { virtual?: boolean }): any;
 
   abstract getValue(): any;
 

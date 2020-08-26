@@ -58,11 +58,6 @@ export interface GetControlOptions {}
 
 export type SafeModeTypes = boolean; // 'minimum' | 'with-supported-handlers' | 'with-handlers'
 
-/**
- * Used for __id.
- */
-let uniqIdCount    = 0;
-const uniqIdPrefix = 'S' + (+new Date()) + '_';
 
 //   _____________________________________________________________
 //  /\                                                            \
@@ -917,26 +912,26 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
   abstract jsonToValue(jsonValue: PropJsonValue): PropValue;
 
 
-  getJsonValue(): PropJsonValue {
-    return this.valueToJson(this.getValue());
+  getJsonValue(opt?: { virtual?: boolean }): PropJsonValue {
+    return this.valueToJson(this.getValue(opt));
   }
 
-  getValueHash(): string {
-    return hash.MD5(this.valueToJson(this.getValue()) || null)
+  getValueHash(opt?: { virtual?: boolean }): string {
+    return hash.MD5(this.valueToJson(this.getValue(opt)) || null)
   }
 
-  getJsonValueWithHash(): {
+  getJsonValueWithHash(opt?: { virtual?: boolean }): {
     value: PropJsonValue,
     hash: string
   } {
-    const value = this.valueToJson(this.getValue() || null);
+    const value = this.valueToJson(this.getValue(opt) || null);
     return {
       value,
       hash: hash.MD5(value || {})
     };
   }
 
-  getValue(): PropValue {
+  getValue(opt?: { virtual?: boolean }): PropValue {
 
     // Here we have paradox: eval needs old / curr. val but we do not know what is it E/D - any/null
     if (this._enabledIfStatus === false) {
@@ -946,21 +941,21 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
     if (this.hasHandlerGetValue) {
       return this.handler.getValue();
     }
-    return this._getValueViaProp();
+    return this._getValueViaProp(opt);
   }
 
-  getValueWithHash(): {
+  getValueWithHash(opt?: { virtual?: boolean }): {
     value: PropValue,
     hash: string
   } {
-    const value = this.getValue();
+    const value = this.getValue(opt);
     return {
       value,
       hash: hash.MD5(value ? this.valueToJson(value) : {})
     };
   }
 
-  abstract _getValueViaProp(): PropValue;
+  abstract _getValueViaProp(opt?: { virtual?: boolean }): PropValue;
 
   setValueNoResolve(value: PropValue, options: SetValueOptionsInterface = {}): void {
     const x = this.setValue(value, { ...options, noResolve: true });

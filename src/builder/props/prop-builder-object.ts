@@ -181,7 +181,7 @@ export class JsfPropBuilderObject
     }
   }
 
-  _getValueViaProp() {
+  _getValueViaProp(opt?: { virtual?: boolean }) {
     if (!this.properties) {
       return this.properties;
     }
@@ -199,8 +199,11 @@ export class JsfPropBuilderObject
     for (let i = 0; i < this.propertyKeys.length; i++) {
       const propertyName = this.propertyKeys[i];
 
+      if (opt?.virtual === false && this.properties[propertyName].prop.virtual) {
+        continue;
+      }
       if (!this.properties[propertyName].disabled) {
-        const x = this.properties[propertyName].getValue();
+        const x = this.properties[propertyName].getValue(opt);
 
         if (!(
           (x === undefined && !(this.properties[propertyName].prop as any).nullable)

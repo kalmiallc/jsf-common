@@ -392,12 +392,12 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
     return this.rootComponent.jsfBuilder.validate();
   }
 
-  getJsonValue(): any {
-    return this.rootComponent && this.rootComponent.jsfBuilder ? this.rootComponent.jsfBuilder.getJsonValue() : null;
+  getJsonValue(opt?: { virtual?: boolean }): any {
+    return this.rootComponent && this.rootComponent.jsfBuilder ? this.rootComponent.jsfBuilder.getJsonValue(opt) : null;
   }
 
-  getValue(): any {
-    return this.rootComponent && this.rootComponent.jsfBuilder ? this.rootComponent.jsfBuilder.getValue() : null;
+  getValue(opt?: { virtual?: boolean }): any {
+    return this.rootComponent && this.rootComponent.jsfBuilder ? this.rootComponent.jsfBuilder.getValue(opt) : null;
   }
 
   lock(lockKey?: Symbol): Symbol {

@@ -245,12 +245,12 @@ None existing path: <${ path }>`);
     return this.items[itemIndex].getControl(path);
   }
 
-  _getValueViaProp() {
+  _getValueViaProp(opt?: { virtual?: boolean }) {
     if (!this.getItems()) {
       return this.getItems();
     }
 
-    return this.items.map(x => x.enabled ? x.getValue() : null);
+    return this.items.map(x => x.enabled ? x.getValue(opt) : null);
   }
 
   getItems() {

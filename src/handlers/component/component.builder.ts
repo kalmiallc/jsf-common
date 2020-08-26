@@ -81,18 +81,18 @@ export class JsfHandlerBuilderComponent extends JsfBasicHandlerBuilder<JsfPropBu
     return this.jsfComponentBuilder && this.jsfComponentBuilder.jsfBuilder && await this.jsfComponentBuilder.jsfBuilder.propBuilder.validate();
   }
 
-  getJsonValue() {
+  getJsonValue(opt?: { virtual?: boolean }) {
     if (!this.jsfComponentBuilder || !this.jsfComponentBuilder.jsfBuilder) {
       return this.tmpValueHolder;
     }
-    return this.jsfComponentBuilder && this.jsfComponentBuilder.getJsonValue();
+    return this.jsfComponentBuilder && this.jsfComponentBuilder.getJsonValue(opt);
   }
 
-  getValue() {
+  getValue(opt?: { virtual?: boolean }) {
     if (!this.jsfComponentBuilder || !this.jsfComponentBuilder.jsfBuilder) {
       return this.tmpValueHolder;
     }
-    return this.jsfComponentBuilder && this.jsfComponentBuilder.getValue();
+    return this.jsfComponentBuilder && this.jsfComponentBuilder.getValue(opt);
   }
 }
 

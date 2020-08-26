@@ -43,8 +43,8 @@ export class JsfPropBuilderRef extends JsfAbstractPropBuilder<JsfPropRef, JsfHan
     throw new Error('Not implemented!');
   }
 
-  _getValueViaProp() {
-    return this.builder.getValue();
+  _getValueViaProp(opt?: { virtual?: boolean }) {
+    return this.builder.getValue(opt);
   }
 
   valueToJson(value) {

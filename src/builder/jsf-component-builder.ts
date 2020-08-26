@@ -102,12 +102,12 @@ export class JsfComponentBuilder extends JsfAbstractBuilder {
     return this.jsfBuilder.patchValue(value, options);
   }
 
-  getJsonValue(): any {
-    return this.jsfBuilder ? this.jsfBuilder.getJsonValue() : null;
+  getJsonValue(opt?: { virtual?: boolean }): any {
+    return this.jsfBuilder ? this.jsfBuilder.getJsonValue(opt) : null;
   }
 
-  getValue(): any {
-    return this.jsfBuilder ? this.jsfBuilder.getValue() : null;
+  getValue(opt?: { virtual?: boolean }): any {
+    return this.jsfBuilder ? this.jsfBuilder.getValue(opt) : null;
   }
 
   lock(lockKey?: Symbol): Symbol {

@@ -815,6 +815,12 @@ export abstract class JsfAbstractProp<Type, TypeString, Handlers> extends JsfAbs
   })
   nullable?: boolean;
 
+  @DefProp({
+    title      : 'Make property virtual.',
+    type       : 'boolean'
+  })
+  virtual?: boolean;
+
   /**
    * The value of this keyword MAY be of any type, including null.
    *
