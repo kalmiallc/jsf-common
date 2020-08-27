@@ -6,6 +6,7 @@ import { JsfDocument }                                from '../../jsf-document';
 import { jsfForJsf }                                  from '../../jsf-for-jsf';
 import { HandlerCompatibilityInterface, JsfRegister } from '../../jsf-register';
 import { isObject }                                   from 'lodash';
+import { JsfUnknownPropEditor }                       from '../props';
 
 export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownProp> {
 
@@ -250,7 +251,7 @@ export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownPro
     newParent.addChild(instance, key);
   }
 
-  createChild(childDefinition: JsfProp, key?: number | string) {
+  createChild(childDefinition: JsfProp, key?: number | string): JsfAbstractPropEditor<any> {
     throw new Error('Prop does not support children.');
   }
 

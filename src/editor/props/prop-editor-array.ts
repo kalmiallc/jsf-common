@@ -70,6 +70,8 @@ export class JsfPropEditorArray extends JsfAbstractPropEditor<JsfPropArray & { i
       jsfEditor   : this.jsfEditor,
       parent      : this
     });
+
+    return this.item;
   }
 
   addChild(instance: JsfAbstractPropEditor<any>) {
@@ -175,6 +177,8 @@ export class JsfPropEditorFixedArray extends JsfAbstractPropEditor<JsfPropArray 
     });
 
     this.items.splice(+ index, 0, item);
+
+    return item;
   }
 
   addChild(instance: JsfAbstractPropEditor<any>, index?: number) {

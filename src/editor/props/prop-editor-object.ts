@@ -77,7 +77,7 @@ export class JsfPropEditorObject
     return true;
   }
 
-  createChild(childDefinition: JsfProp, key?: string) {
+  createChild(childDefinition: JsfProp, key?: string): JsfUnknownPropEditor {
     if (key === undefined) {
       key = this.getNewPropertyName();
     }
@@ -86,11 +86,14 @@ export class JsfPropEditorObject
       throw new Error(`Child "${ key }" with same name already exists on parent "${ this.id }:${ this.path }"`)
     }
 
-    this.properties.push(createJsfPropEditor(childDefinition, {
+    const propEditor = createJsfPropEditor(childDefinition, {
       propertyName: key.toString(),
       jsfEditor   : this.jsfEditor,
       parent      : this
-    }));
+    });
+    this.properties.push(propEditor);
+
+    return propEditor;
   }
 
   addChild(instance: JsfAbstractPropEditor<any>, key?: string) {
