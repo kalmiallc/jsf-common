@@ -61,6 +61,10 @@ export const evalService = new class {
    * Gets the eval context.
    */
   getEvalContext(builder: JsfBuilder, options: EvalContextOptions = {}): any {
+    if (options.propBuilder && options.layoutBuilder) {
+      throw new Error(`You cannot provide both propBuilder and layoutBuilder for the eval context.`)
+    }
+
     if (!builder.propBuilder) {
       throw new Error(`JsfBuilder.propBuilder === ${ builder.propBuilder } | Cannot generate eval context.`);
     }
@@ -75,6 +79,45 @@ export const evalService = new class {
       ...this.getAppEvalContext(builder, options),
 
       $linked: linkedContext,
+
+      $valueOf: (path) => {
+        if (!path) {
+          return builder.propBuilder.getJsonValue();
+        }
+        if (options.layoutBuilder) {
+          return options.layoutBuilder.getPropItem(path).getJsonValue();
+        }
+        if (options.propBuilder) {
+          return options.propBuilder.getSibling(path).getJsonValue();
+        }
+        return builder.propBuilder.getControlByPath(path).getJsonValue();
+      },
+
+      $indexOf: (path) => {
+        if (!path) {
+          throw new Error(`Cannot get index of root prop.`);
+        }
+        if (options.layoutBuilder) {
+          return options.layoutBuilder.getPropItem(path).index;
+        }
+        if (options.propBuilder) {
+          return options.propBuilder.getSibling(path).index;
+        }
+        return options.propBuilder.getControlByPath(path).index;
+      },
+
+      $instanceOf: (path) => {
+        if (!path) {
+          return builder.propBuilder;
+        }
+        if (options.layoutBuilder) {
+          return options.layoutBuilder.getPropItem(path);
+        }
+        if (options.propBuilder) {
+          return options.propBuilder.getSibling(path);
+        }
+        return options.propBuilder.getControlByPath(path);
+      },
 
       $val: new Proxy({}, {
         get: (target, name: string) => {
