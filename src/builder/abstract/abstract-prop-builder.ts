@@ -600,7 +600,7 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
       if (advancedDefault.$eval) {
         const ctx = this.rootBuilder.getEvalContext({
           propBuilder: this,
-          extraContextParams: { currentValue: value }
+          extraContextParams: { $currentValue: value }
         });
         value     = this.rootBuilder.runEvalWithContext((advancedDefault as any).$evalTranspiled || advancedDefault.$eval, ctx);
       }
