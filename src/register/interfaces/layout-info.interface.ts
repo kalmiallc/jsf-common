@@ -1,13 +1,24 @@
-export interface LayoutBuilderInfoInterface {
+export interface LayoutInfoInterface {
   /**
    * Type of layout.
    */
   type: string;
 
   /**
+   * Category.
+   */
+  category?: string;
+
+  /**
    * Nice title for builder UI. If not set type will be used.
    */
   title?: string;
+
+  /**
+   * Icon for builder UI (toolbox).
+   * @example layout-icons/span.svg
+   */
+  icon?: string;
 
   /**
    * Used in builder when creating new layout if not set it's automatically constructed.
@@ -68,12 +79,6 @@ export interface LayoutBuilderInfoInterface {
      */
     allowedTypes?: string[];
   }
-
-  /**
-   * Icon for builder UI (toolbox).
-   * @example layout-icons/span.svg
-   */
-  icon?: string;
 }
 
 //// DEV DRAFT 0.1 EXAMPLES

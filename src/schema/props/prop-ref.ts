@@ -1,16 +1,6 @@
-import { JsfAbstractBareProp }            from '../abstract/abstract-prop';
-import { JsfHandlerRef }                  from '../../handlers';
-import { DefExtends, DefLayout, DefProp, DefCategory } from '../../jsf-for-jsf/decorators';
+import { JsfAbstractBareProp } from '../abstract/abstract-prop';
+import { JsfHandlerRef }       from '../../handlers';
 
-@DefLayout({
-  type : 'div',
-  items: [
-    {
-      key: '$ref'
-    }
-  ]
-})
-@DefExtends('JsfAbstractBareProp')
 export class JsfPropRef extends JsfAbstractBareProp<'ref', JsfHandlerRef> {
 
   /**
@@ -21,10 +11,6 @@ export class JsfPropRef extends JsfAbstractBareProp<'ref', JsfHandlerRef> {
    * External import:
    * - /abc
    */
-  @DefProp({
-    type : 'string',
-    title: 'Ref'
-  })
   $ref: string;
 
   set?: {

@@ -1,14 +1,13 @@
-import { JsfAbstractSpecialLayout } from '../../abstract/abstract-layout';
-import { DefCategory, DefExtends }  from '../../../jsf-for-jsf/decorators';
-import { DefLayoutInfo } from '../../../jsf-register-decorators';
+import { LayoutInfoInterface }      from '../../../register/interfaces';
+import { JsfAbstractSpecialLayout } from '../../../layout';
 
-@DefLayoutInfo({
-  type: 'powered-by',
-  title: 'Powered by',
-  icon: 'layout-icons/powered-by.svg'
-})
-@DefExtends('JsfAbstractSpecialLayout')
-@DefCategory('Layout')
+const layoutInfo: LayoutInfoInterface = {
+  type    : 'powered-by',
+  title   : 'Powered by',
+  category: 'Layout',
+  icon    : 'layout-icons/powered-by.svg'
+};
+
 export class JsfLayoutPoweredBy extends JsfAbstractSpecialLayout<'powered-by'> {
 
   constructor(data: JsfLayoutPoweredBy) {

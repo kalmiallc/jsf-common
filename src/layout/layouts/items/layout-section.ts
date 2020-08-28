@@ -1,41 +1,20 @@
-import { JsfAbstractItemsLayout }         from '../../abstract/abstract-layout';
-import { DefLayout, DefProp, DefExtends, DefCategory } from '../../../jsf-for-jsf/decorators';
-import { DefLayoutInfo } from '../../../jsf-register-decorators';
+import { LayoutInfoInterface }    from '../../../register/interfaces';
+import { JsfAbstractItemsLayout } from '../../../layout';
 
-@DefLayoutInfo({
-  type: 'section',
-  title: 'Section',
-  icon: 'layout-icons/section.svg',
-  items: {
+const layoutInfo: LayoutInfoInterface = {
+  type    : 'section',
+  title   : 'Section',
+  category: 'Layout',
+  icon    : 'layout-icons/section.svg',
+  items   : {
     enabled: true
   }
-})
-@DefLayout({
-  type : 'div',
-  items: [
-    {
-      key: 'expandable'
-    },
-    {
-      key: 'expanded'
-    }
-  ]
-})
+};
 
-@DefExtends('JsfAbstractItemsLayout')
-@DefCategory('Layout')
 export class JsfLayoutSection extends JsfAbstractItemsLayout<'section'> {
 
-  @DefProp({
-    type : 'boolean',
-    title: 'Expandable',
-  })
   expandable?: boolean;
 
-  @DefProp({
-    type : 'boolean',
-    title: 'Expand',
-  })
   expanded?: boolean;
 
   constructor(data: JsfLayoutSection) {

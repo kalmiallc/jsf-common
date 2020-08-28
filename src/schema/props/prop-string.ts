@@ -1,6 +1,5 @@
-import { JsfAbstractPropPrimitive }       from '../abstract/abstract-prop-primitive';
-import { JsfHandlerString }               from '../../handlers';
-import { DefExtends, DefLayout, DefProp, DefCategory } from '../../jsf-for-jsf/decorators';
+import { JsfAbstractPropPrimitive } from '../abstract/abstract-prop-primitive';
+import { JsfHandlerString }         from '../../handlers';
 
 
 /**
@@ -47,30 +46,6 @@ export type JsfFormat =
   | 'phone';
 
 
-@DefLayout({
-  type : 'div',
-  items: [
-    {
-      key: 'format'
-    },
-    {
-      key: 'minLength'
-    },
-    {
-      key: 'maxLength'
-    },
-    {
-      key: 'pattern'
-    },
-    {
-      key: 'secret'
-    },
-    {
-      key: 'multiline'
-    }
-  ]
-})
-@DefExtends('JsfAbstractPropPrimitive')
 export class JsfPropString extends JsfAbstractPropPrimitive<string, 'string', JsfHandlerString> {
 
   /**
@@ -92,30 +67,6 @@ export class JsfPropString extends JsfAbstractPropPrimitive<string, 'string', Js
    * Implementations MAY add custom format attributes. Save for agreement between parties, schema authors SHALL NOT
    * expect a peer implementation to support this keyword and/or custom format attributes.
    */
-  @DefProp({
-    title      : 'String format',
-    // description: 'Format of the string.',
-    type       : 'string',
-    handler: {
-      type: 'common/dropdown',
-      values: [
-        { value: 'email', label: 'Email address' },
-        { value: 'hostname', label: 'Hostname' },
-        { value: 'uri', label: 'URI' },
-        { value: 'uri-reference', label: 'URI reference' },
-        { value: 'ipv4', label: 'IPv4 address' },
-        { value: 'ipv6', label: 'IPv6 address' },
-        { value: 'mac', label: 'MAC address' },
-        { value: 'date-time', label: 'Date and time' },
-        { value: 'date', label: 'Date' },
-        { value: 'time', label: 'Time' },
-        { value: 'regex', label: 'Regular expression' },
-        { value: 'color', label: 'Color' },
-        { value: 'credit-card', label: 'Credit card' },
-        { value: 'phone', label: 'Phone number' },
-      ]
-    }
-  })
   format?: JsfFormat;
 
   /**
@@ -128,11 +79,6 @@ export class JsfPropString extends JsfAbstractPropPrimitive<string, 'string', Js
    *
    * Omitting this keyword has the same behavior as a value of 0.
    */
-  @DefProp({
-    title      : 'Minimum length',
-    // description: 'The value of this keyword MUST be a non-negative integer.',
-    type       : 'integer'
-  })
   minLength?: number;
 
   /**
@@ -142,11 +88,6 @@ export class JsfPropString extends JsfAbstractPropPrimitive<string, 'string', Js
 
    The length of a string instance is defined as the number of its characters as defined by RFC 7159 [RFC7159].
    */
-  @DefProp({
-    title      : 'Maximum length',
-    // description: 'The value of this keyword MUST be a non-negative integer.',
-    type       : 'integer'
-  })
   maxLength?: number;
 
 
@@ -157,32 +98,13 @@ export class JsfPropString extends JsfAbstractPropPrimitive<string, 'string', Js
    * A string instance is considered valid if the regular expression matches the instance successfully. Recall: regular
    * expressions are not implicitly anchored.
    */
-  @DefProp({
-    title      : 'Pattern',
-    description: 'Regular expression that strings must match.',
-    type       : 'string'
-  })
   pattern?: string;
 
-  @DefProp({
-    title: 'Secret',
-    type : 'boolean'
-  })
   secret?: boolean;
 
   /**
    * Set to true for default, or provide number of rows to be displayed (this is not max rows!).
    */
-  @DefProp([
-    {
-      title: 'Multiline',
-      type : 'boolean'
-    },
-    {
-      type : 'number',
-      title: 'Multiline'
-    }
-  ])
   multiline?: boolean | number;
 
   constructor(data: JsfPropString) {

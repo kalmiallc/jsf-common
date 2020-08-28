@@ -7,7 +7,7 @@ import * as moment                                                              
 import { Moment }                                                                                            from 'moment';
 import { JsfUnknownPropBuilder }                                                                             from '../abstract';
 import { jsfClipboardClear, jsfClipboardClearAll, jsfClipboardClearMany, jsfClipboardGet, jsfClipboardKeys } from './clipboard';
-import { JsfRegister }                                                                                       from '../../jsf-register';
+import { JsfRegister }                                                                                       from '../../register/jsf-register';
 
 export interface EvalContextOptions {
   layoutBuilder?: JsfUnknownLayoutBuilder;

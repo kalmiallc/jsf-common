@@ -1,11 +1,13 @@
-import { JsfAbstractSpecialLayout }       from '../../abstract/abstract-layout';
-import { DefLayoutInfo } from '../../../jsf-register-decorators';
+import { LayoutInfoInterface }      from '../../../register/interfaces';
+import { JsfAbstractSpecialLayout } from '../../../layout';
 
-@DefLayoutInfo({
-  type: 'ref',
-  title: 'Ref',
-  icon: 'unknown.svg'
-})
+const layoutInfo: LayoutInfoInterface = {
+  type    : 'ref',
+  title   : 'Ref',
+  category: 'Misc',
+  icon    : 'unknown.svg'
+};
+
 export class JsfLayoutRef extends JsfAbstractSpecialLayout<'$ref'> {
 
   type: never;

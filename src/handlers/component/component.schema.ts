@@ -1,6 +1,5 @@
 import { JsfAbstractHandler }            from '../../schema/abstract/abstract-handler';
-import { JsfDefinition }                 from '../../jsf-definition';
-import { HandlerCompatibilityInterface } from '../../jsf-register';
+import { HandlerCompatibilityInterface } from '../../register/interfaces';
 
 export class JsfHandlerComponent extends JsfAbstractHandler<'component'> {
 
@@ -32,17 +31,17 @@ export const jsfHandlerComponentJsfDefinition: any = {
   schema    : {
     type      : 'object',
     properties: {
-      innerScroll       : {
+      innerScroll        : {
         type : 'boolean',
         title: 'Inner scroll'
       },
-      htmlClass         : {
+      htmlClass          : {
         type     : 'string',
         title    : 'HTML class',
         htmlClass: 'mt-2'
       },
       componentDefinition: {
-        type: 'object',
+        type      : 'object',
         properties: {
           dataSourcesFilters: {
             type : 'array',

@@ -1,25 +1,20 @@
-import { JsfAbstractItemsLayout } from '../../abstract/abstract-layout';
-import { JsfLayoutListItem }      from './layout-list-item';
-import { DefProp, DefExtends, DefCategory }    from '../../../jsf-for-jsf/decorators';
-import { DefLayoutInfo } from '../../../jsf-register-decorators';
+import { LayoutInfoInterface }                       from '../../../register/interfaces';
+import { JsfAbstractItemsLayout, JsfLayoutListItem } from '../../../layout';
 
-@DefLayoutInfo({
-  type: 'list',
+const layoutInfo: LayoutInfoInterface = {
+  type : 'list',
   title: 'List',
-  icon: 'layout-icons/list.svg',
+  icon : 'layout-icons/list.svg',
   items: {
     enabled: true,
-    fixed: ['list-item']
+    fixed  : ['list-item']
   }
-})
-@DefExtends('JsfAbstractItemsLayout')
-@DefCategory('Layout')
+};
+
 export class JsfLayoutList extends JsfAbstractItemsLayout<'list'> {
 
-  @DefProp('JsfLayoutListItem[]')
   items: JsfLayoutListItem[];
 
-  @DefProp('JsfLayoutListPreferences')
   preferences?: JsfLayoutListPreferences;
 
   constructor(data: JsfLayoutList) {

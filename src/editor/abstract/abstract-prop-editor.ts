@@ -3,10 +3,8 @@ import { JsfEditor }                                  from '../jsf-editor';
 import { JsfProp }                                    from '../../schema/props';
 import { JsfTranslatableMessage }                     from '../../translations';
 import { JsfDocument }                                from '../../jsf-document';
-import { jsfForJsf }                                  from '../../jsf-for-jsf';
-import { HandlerCompatibilityInterface, JsfRegister } from '../../jsf-register';
 import { isObject }                                   from 'lodash';
-import { JsfUnknownPropEditor }                       from '../props';
+import { HandlerCompatibilityInterface, JsfRegister } from '../../register';
 
 export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownProp> {
 
@@ -155,10 +153,7 @@ export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownPro
   }
 
   getPropertiesForm(): JsfDocument {
-    return jsfForJsf.getJsfComponent(
-      'JsfProp' + this._definition.type.charAt(0).toUpperCase() + this._definition.type.slice(1),
-      this.getDefinition()
-    ).jsfDoc;
+    return JsfRegister.getLayoutFormDefinition(this._definition.type);
   }
 
   setHandler(type: string) {

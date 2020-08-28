@@ -1,14 +1,13 @@
-import { JsfAbstractSpecialLayout } from '../../abstract/abstract-layout';
-import { DefExtends, DefCategory }               from '../../../jsf-for-jsf/decorators';
-import { DefLayoutInfo } from '../../../jsf-register-decorators';
+import { LayoutInfoInterface }      from '../../../register/interfaces';
+import { JsfAbstractSpecialLayout } from '../../../layout';
 
-@DefLayoutInfo({
-  type: 'hr',
-  title: 'Horizontal rule',
-  icon: 'layout-icons/hr.svg'
-})
-@DefExtends('JsfAbstractSpecialLayout')
-@DefCategory('Layout')
+const layoutInfo: LayoutInfoInterface = {
+  type    : 'hr',
+  title   : 'Horizontal rule',
+  category: 'Layout',
+  icon    : 'layout-icons/hr.svg'
+};
+
 export class JsfLayoutHr extends JsfAbstractSpecialLayout<'hr'> {
 
   constructor(data: JsfLayoutHr) {

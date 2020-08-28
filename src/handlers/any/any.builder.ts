@@ -1,4 +1,4 @@
-import { JsfRegister }                from '../../jsf-register';
+import { JsfRegister }                from '../../register/jsf-register';
 import { JsfBasicHandlerBuilder }     from '../../builder/abstract/abstract-basic-handler-builder';
 import { JsfPropBuilderObject }       from '../../builder/props';
 import {

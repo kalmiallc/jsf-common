@@ -1,47 +1,23 @@
-import { JsfAbstractItemsLayout }         from '../../abstract/abstract-layout';
-import { DefLayout, DefProp, DefExtends, DefCategory } from '../../../jsf-for-jsf/decorators';
-import { JsfUnknownLayout } from '../../index';
-import { DefLayoutInfo } from '../../../jsf-register-decorators';
+import { LayoutInfoInterface }                      from '../../../register/interfaces';
+import { JsfAbstractItemsLayout, JsfUnknownLayout } from '../../../layout';
 
-@DefLayoutInfo({
-  type: 'tab',
-  title: 'Tab',
-  icon: 'layout-icons/tab.svg',
-  items: {
+const layoutInfo: LayoutInfoInterface = {
+  type    : 'tab',
+  title   : 'Tab',
+  category: 'Layout',
+  icon    : 'layout-icons/tab.svg',
+  items   : {
     enabled: true
   }
-})
-@DefLayout({
-  type : 'div',
-  items: [
-    {
-      key: 'title'
-    },
-    {
-      key: 'selected'
-    },
-  ]
-})
+};
 
-@DefExtends('JsfAbstractItemsLayout')
-@DefCategory('Layout')
 export class JsfLayoutTab extends JsfAbstractItemsLayout<'tab'> {
-  @DefProp('JsfUnknownLayout[]')
   items: JsfUnknownLayout[];
 
-  @DefProp({
-    type : 'string',
-    title: 'Title'
-  })
   title?: string;
 
-  @DefProp({
-    type : 'boolean',
-    title: 'Selected'
-  })
   selected?: boolean;
 
-  @DefProp('JsfLayoutTabPreferences')
   preferences?: JsfLayoutTabPreferences;
 
   constructor(data: JsfLayoutTab) {

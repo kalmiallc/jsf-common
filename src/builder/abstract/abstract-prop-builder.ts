@@ -10,31 +10,31 @@ import {
 import {
   JsfAbstractProp,
   JsfUnknownProp
-}                                        from '../../schema/abstract/abstract-prop';
-import { JsfAbstractBuilder }            from './abstract-builder';
-import { EvalValidationError }           from '../validation-errors';
+}                                 from '../../schema/abstract/abstract-prop';
+import { JsfAbstractBuilder }     from './abstract-builder';
+import { EvalValidationError }    from '../validation-errors';
 import {
   Observable,
   Subject
-}                                        from 'rxjs';
+}                                 from 'rxjs';
 import {
   JsfTranslatableMessage,
   JsfTranslationServer
-}                                        from '../../translations';
-import { JsfRegister }                   from '../../jsf-register';
-import { JsfBuilder }                    from '../jsf-builder';
-import { JsfBasicHandlerBuilder }        from './abstract-basic-handler-builder';
-import { JsfEvalRuntimeError }           from '../../errors';
+}                                 from '../../translations';
+import { JsfRegister }            from '../../register/jsf-register';
+import { JsfBuilder }             from '../jsf-builder';
+import { JsfBasicHandlerBuilder } from './abstract-basic-handler-builder';
+import { JsfEvalRuntimeError }    from '../../errors';
 import {
   PropStatus
-}                                        from '../interfaces/prop-status.enum';
-import { ValueChangeInterface }          from '../interfaces/value-change.interface';
+}                                 from '../interfaces/prop-status.enum';
+import { ValueChangeInterface }   from '../interfaces/value-change.interface';
 import {
   AddOrRemoveItemValueOptionsInterface,
   ConsumeProviderValueOptionsInterface,
   PatchValueOptionsInterface,
   SetValueOptionsInterface
-}                                        from '../interfaces/set-value-options.interface';
+}                                 from '../interfaces/set-value-options.interface';
 import { canActivateFilterItem }         from '../../filters';
 import {
   isJsfProviderExecutor,
@@ -658,8 +658,8 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
       }
 
       if (this.prop.handler.type) {
-        if (JsfRegister.storage[this.prop.handler.type]) {
-          this.handler = new (JsfRegister.storage[this.prop.handler.type])(this);
+        if (JsfRegister.getHandlerBuilder(this.prop.handler.type)) {
+          this.handler = new (JsfRegister.getHandlerBuilder(this.prop.handler.type))(this);
         } else {
           throw new Error(`Handler type "${ this.prop.handler.type }" not registered.`);
         }

@@ -1,2 +1,2 @@
 export * from './layout-editor';
-export * from './layout-builder-info.interface';
+export * from '../../register/interfaces/layout-info.interface';

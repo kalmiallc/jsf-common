@@ -1,16 +1,7 @@
-import { JsfAbstractProp }                from './abstract-prop';
-import { JsfPropRef }                     from '../props';
-import { DefExtends, DefLayout, DefProp, DefCategory } from '../../jsf-for-jsf/decorators';
+import { JsfAbstractProp } from './abstract-prop';
+import { JsfPropRef }      from '../props';
 
-@DefLayout({
-  type : 'div',
-  items: [
-    {
-      key: 'required'
-    },
-  ]
-})
-@DefExtends('JsfAbstractProp')
+
 export abstract class JsfAbstractPropPrimitive<PrimitiveType, PrimitiveTypeString, Handlers>
   extends JsfAbstractProp<PrimitiveType, PrimitiveTypeString, Handlers> {
   /**
@@ -22,16 +13,11 @@ export abstract class JsfAbstractPropPrimitive<PrimitiveType, PrimitiveTypeStrin
    *
    * Elements in the array might be of any value, including null.
    */
-  @DefProp('PrimitiveType')
   enum?: (PrimitiveType | null)[];
 
   /**
    * If true property is valid if value is set.
    */
-  @DefProp({
-    type : 'boolean',
-    title: 'Required'
-  })
   required?: boolean;
 
   /**
@@ -40,7 +26,6 @@ export abstract class JsfAbstractPropPrimitive<PrimitiveType, PrimitiveTypeStrin
    * An instance validates successfully against this keyword if it validates successfully against all
    * schemas defined by this keyword's value.
    */
-  @DefProp('JsfAbstractPropPrimitive')
   allOf?: (JsfAbstractPropPrimitive<PrimitiveType, PrimitiveTypeString, Handlers> | JsfPropRef)[];
 
   /**
@@ -49,7 +34,6 @@ export abstract class JsfAbstractPropPrimitive<PrimitiveType, PrimitiveTypeStrin
    * An instance validates successfully against this keyword if it validates successfully against at least
    * one schema defined by this keyword's value.
    */
-  @DefProp('JsfAbstractPropPrimitive')
   anyOf?: (JsfAbstractPropPrimitive<PrimitiveType, PrimitiveTypeString, Handlers> | JsfPropRef)[];
 
   /**
@@ -58,7 +42,6 @@ export abstract class JsfAbstractPropPrimitive<PrimitiveType, PrimitiveTypeStrin
    * An instance validates successfully against this keyword if it validates successfully against exactly
    * one schema defined by this keyword's value.
    */
-  @DefProp('JsfAbstractPropPrimitive')
   oneOf?: (JsfAbstractPropPrimitive<PrimitiveType, PrimitiveTypeString, Handlers> | JsfPropRef)[];
 
   /**
@@ -67,6 +50,5 @@ export abstract class JsfAbstractPropPrimitive<PrimitiveType, PrimitiveTypeStrin
    * An instance is valid against this keyword if it fails to validate successfully against the schema defined by this
    * keyword.
    */
-  @DefProp('JsfAbstractPropPrimitive')
   not?: (JsfAbstractPropPrimitive<PrimitiveType, PrimitiveTypeString, Handlers> | JsfPropRef)[];
 }

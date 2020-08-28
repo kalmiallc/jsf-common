@@ -1,19 +1,5 @@
-import { JsfAbstractPropPrimitive }       from '../abstract/abstract-prop-primitive';
-import { JsfHandlerDate }                 from '../../handlers';
-import { DefExtends, DefLayout, DefProp, DefCategory } from '../../jsf-for-jsf/decorators';
-
-@DefLayout({
-  type : 'div',
-  items: [
-    {
-      key: 'minimum'
-    },
-    {
-      key: 'maximum'
-    }
-  ]
-})
-@DefExtends('JsfAbstractPropPrimitive')
+import { JsfAbstractPropPrimitive } from '../abstract/abstract-prop-primitive';
+import { JsfHandlerDate }           from '../../handlers';
 
 export class JsfPropDate extends JsfAbstractPropPrimitive<Date, 'date', JsfHandlerDate> {
 
@@ -23,11 +9,6 @@ export class JsfPropDate extends JsfAbstractPropPrimitive<Date, 'date', JsfHandl
    * If the instance is a date, then this keyword validates only if the instance is greater than or exactly equal to
    * "minimum".
    */
-  @DefProp({
-    title      : 'Earliest allowed date',
-    // description: 'The value of "minimum" MUST be a Date, representing an inclusive lower limit for a date instance.',
-    type       : 'date'
-  })
   minimum?: Date;
 
   /**
@@ -36,11 +17,6 @@ export class JsfPropDate extends JsfAbstractPropPrimitive<Date, 'date', JsfHandl
    * If the instance is a date, then this keyword validates only if the instance is less than or exactly equal to
    * "maximum".
    */
-  @DefProp({
-    title      : 'Latest allowed date',
-    // description: 'The value of "maximum" MUST be a date, representing an inclusive upper limit for a date instance.',
-    type       : 'date'
-  })
   maximum?: Date;
 
   constructor(data: JsfPropDate) {

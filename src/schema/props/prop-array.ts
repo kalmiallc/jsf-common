@@ -1,44 +1,16 @@
 import { JsfProp, JsfPropJsonValue, JsfPropValue } from './index';
 import { JsfAbstractProp }                         from '../abstract/abstract-prop';
 import { JsfHandlerArray }                         from '../../handlers';
-import { DefExtends, DefLayout, DefProp, DefCategory }          from '../../jsf-for-jsf/decorators';
 
 
 export interface JsfPropArrayValue extends Array<JsfPropValue> {} // TODO this is not working
 export interface JsfPropArrayJsonValue extends Array<JsfPropJsonValue> {}
 
-@DefLayout({
-  type : 'div',
-  items: [
-    {
-      key: 'default'
-    },
-    {
-      key: 'uniqueItems'
-    },
-    {
-      key: 'minItems'
-    },
-    {
-      key: 'maxItems'
-    }
-  ]
-})
-@DefExtends('JsfAbstractProp')
 export class JsfPropArray extends JsfAbstractProp<JsfPropArrayValue[] | null, 'array', JsfHandlerArray> {
 
   /**
    * Default items value for array.
    */
-  @DefProp({
-    title: 'Default items',
-    properties: {},
-    type : 'object',
-    description: 'Items that are already present in the array',
-    handler: {
-      type: 'any'
-    }
-  })
   default?: any; // FIXME any
 
   /**
@@ -56,7 +28,6 @@ export class JsfPropArray extends JsfAbstractProp<JsfPropArrayValue[] | null, 'a
    *
    *  Omitting this keyword has the same behavior as an empty schema.
    */
-  @DefProp('JsfProp | JsfProp[]')
   items: JsfProp | JsfProp[];
 
   /**
@@ -68,11 +39,6 @@ export class JsfPropArray extends JsfAbstractProp<JsfPropArrayValue[] | null, 'a
    *
    * Omitting this keyword has the same behavior as a value of false.
    */
-  @DefProp({
-    title: 'Unique items',
-    type : 'boolean',
-    description: 'Defines whether items in an array should be unique.'
-  })
   uniqueItems?: boolean;
 
   /**
@@ -82,11 +48,6 @@ export class JsfPropArray extends JsfAbstractProp<JsfPropArrayValue[] | null, 'a
    *
    * Omitting this keyword has the same behavior as a value of 0.
    */
-  @DefProp({
-    title      : 'Minimum items',
-    description: 'The value of this keyword MUST be a non-negative integer.',
-    type       : 'integer'
-  })
   minItems?: number;
 
   /**
@@ -94,11 +55,6 @@ export class JsfPropArray extends JsfAbstractProp<JsfPropArrayValue[] | null, 'a
    *
    * An array instance is valid against "maxItems" if its size is less than, or equal to, the value of this keyword.
    */
-  @DefProp({
-    title      : 'Maximum items',
-    description: 'The value of this keyword MUST be a non-negative integer.',
-    type       : 'integer'
-  })
   maxItems?: number;
 
   /**
@@ -114,10 +70,6 @@ export class JsfPropArray extends JsfAbstractProp<JsfPropArrayValue[] | null, 'a
    * If true array can be null.
    * @default false
    */
-  @DefProp({
-    title      : 'Allow null type',
-    type       : 'boolean'
-  })
   nullable?: boolean;
 
   /**

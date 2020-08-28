@@ -1,25 +1,21 @@
-import { JsfAbstractItemsLayout }         from '../../abstract/abstract-layout';
-import { JsfLayoutTab }                   from './layout-tab';
-import { DefExtends, DefLayout, DefProp, DefCategory } from '../../../jsf-for-jsf/decorators';
-import { DefLayoutInfo } from '../../../jsf-register-decorators';
+import { LayoutInfoInterface }                  from '../../../register/interfaces';
+import { JsfAbstractItemsLayout, JsfLayoutTab } from '../../../layout';
 
-@DefLayoutInfo({
-  type: 'tabset',
-  title: 'Tabset',
-  icon: 'unknown.svg',
-  items: {
-    enabled: true,
-    default: ['tab', 'tab', 'tab'],
+const layoutInfo: LayoutInfoInterface = {
+  type    : 'tabset',
+  title   : 'Tabset',
+  category: 'Layout',
+  icon    : 'unknown.svg',
+  items   : {
+    enabled     : true,
+    default     : ['tab', 'tab', 'tab'],
     allowedTypes: ['tab']
   }
-})
-@DefExtends('JsfAbstractItemsLayout')
-@DefCategory('Layout')
+};
+
 export class JsfLayoutTabSet extends JsfAbstractItemsLayout<'tabset'> {
-  @DefProp('JsfLayoutTab[]')
   items: JsfLayoutTab[];
 
-  @DefProp('JsfLayoutTabSetPreferences')
   preferences?: JsfLayoutTabSetPreferences;
 
   constructor(data: JsfLayoutTabSet) {

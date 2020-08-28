@@ -1,120 +1,9 @@
-import { JsfProp, JsfPropTypes }          from '../index';
-import { DefExtends, DefLayout, DefProp, DefCategory } from '../../jsf-for-jsf/decorators';
-import { JsfProviderExecutorInterface }   from '../../providers';
-import { JsfValueOptionsInterface } from '../../layout/interfaces/value-options.type';
+import { JsfProp, JsfPropTypes }        from '../index';
+import { JsfProviderExecutorInterface } from '../../providers';
+import { JsfValueOptionsInterface }     from '../../layout/interfaces/value-options.type';
 
 export type JsfUnknownProp = JsfAbstractBareProp<JsfPropTypes, any>;
 
-@DefLayout({
-  type : 'div',
-  items: [
-    {
-      key: '$comment'
-    },
-    {
-      key: '$group'
-    },
-    {
-      key: 'virtual'
-    },
-    {
-      type: 'div',
-      htmlClass: 'ml-2 mt-3',
-      items: [
-        {
-          type: 'heading',
-          title: 'Enabled if',
-          level: 5
-        },
-        {
-          key: 'enabledIf.$eval',
-          handler: {
-            type: 'common/code-editor',
-            options: {
-              language: 'javascript'
-            }
-          }
-        },
-        {
-          key: 'enabledIf.dependencies'
-        }
-      ]
-    },
-    {
-      type: 'div',
-      htmlClass: 'ml-2 mt-3',
-      items: [
-        {
-          type: 'heading',
-          title: 'On value change',
-          level: 5
-        },
-        {
-          key: 'onValueChange.noEmit'
-        },
-        {
-          type: 'div',
-          htmlClass: 'ml-2 mt-3',
-          items: [
-            {
-              type: 'heading',
-              title: 'Update dependency value',
-              level: 5
-            },
-            {
-              key: 'onValueChange.updateDependencyValue.mode'
-            },
-            {
-              key: 'onValueChange.updateDependencyValue.key'
-            },
-            {
-              key: 'onValueChange.updateDependencyValue.onLinked'
-            },
-            {
-              type: 'div',
-              htmlClass: 'ml-2 mt-3',
-              items: [
-                {
-                  type: 'heading',
-                  title: 'Condition',
-                  level: 5
-                },
-                {
-                  key: 'onValueChange.updateDependencyValue.condition.onLinked'
-                },
-                {
-                  key: 'onValueChange.updateDependencyValue.condition.$eval'
-                }
-              ]
-            },
-            {
-              type: 'div',
-              htmlClass: 'ml-2 mt-3',
-              items: [
-                {
-                  type: 'heading',
-                  title: 'Value',
-                  level: 5
-                },
-                {
-                  key: 'onValueChange.updateDependencyValue.value.onLinked'
-                },
-                {
-                  key: 'onValueChange.updateDependencyValue.value.$eval'
-                },
-                {
-                  key: 'onValueChange.updateDependencyValue.value.default'
-                }
-              ]
-            },
-          ]
-        }
-      ]
-    }
-
-
-  ]
-})
 export abstract class JsfAbstractBareProp<TypeString, Handlers> {
 
   /**
@@ -125,62 +14,31 @@ export abstract class JsfAbstractBareProp<TypeString, Handlers> {
   /**
    * Intended for notes to schema maintainers, as opposed to "description" which is suitable for display to end users.
    */
-  @DefProp({
-    type : 'string',
-    title: 'Comment'
-  })
   $comment?: string;
 
   /**
    * Intended for grouping props together.
    */
-  @DefProp([
-    {
-      type : 'string',
-      title: 'Group'
-    },
-    {
-      type : 'array',
-      title: 'Group',
-      items: [
-        {
-          type: 'string'
-        }
-      ]
-    }
-  ])
   $group?: string | string[];
 
   /**
    * Overwrites default behaviour.
    */
-  @DefProp('Handlers')
   handler?: Handlers;
 
   /**
    * If provider is set then it will be used to provide the value for this prop.
    */
-  @DefProp('JsfProviderExecutorInterface')
   provider?: JsfProviderExecutorInterface;
 
   /**
    * If true, API will ignore this field. Only similar behaviour is with JsfObject source property.
    */
-  @DefProp({
-    type : 'boolean',
-    title: 'Virtual'
-  })
   virtual?: boolean;
 
   /**
    * Intended for grouping props together.
    */
-  @DefProp({
-    type : 'object',
-    properties: {
-      type: { type: 'string'}
-    }
-  })
   onInit?: (
     /**
      * Sets default value. More advanced than 'default' field following JSON Schema  since it can set dynamic value.
@@ -213,7 +71,6 @@ export abstract class JsfAbstractBareProp<TypeString, Handlers> {
    *
    * An instance validates if and only if the instance is in any of the sets listed for this keyword.
    */
-  @DefProp('TypeString')
   type: TypeString;
 
   /**
@@ -224,36 +81,7 @@ export abstract class JsfAbstractBareProp<TypeString, Handlers> {
    * - $form
    * Expected output boolean.
    */
-  @DefProp([
-    {
-      type      : 'object',
-      title     : 'Enabled if',
-      properties: {
-        $eval       : {
-          type : 'string',
-          title: 'Eval',
-          handler: {
-            type: 'common/code-editor',
-            options: {
-              language: 'javascript'
-            }
-          }
-        },
-        dependencies: {
-          type : 'array',
-          title: 'Dependencies',
-          items: {
-            type: 'string'
-          }
-        }
-      }
-    },
-    {
-      type : 'string',
-      title: 'Enabled if'
-    }
-  ])
-  enabledIf ? : string | {
+  enabledIf ?: string | {
     /**
      * Eval function body
      */
@@ -276,81 +104,7 @@ export abstract class JsfAbstractBareProp<TypeString, Handlers> {
   /**
    * Change other prop value when this value changes
    */
-  @DefProp({
-    type      : 'object',
-    title     : 'On value change',
-    properties: {
-      noEmit               : {
-        type : 'boolean',
-        title: 'No emit'
-      },
-      updateDependencyValue: {
-        type      : 'object',
-        title     : 'Update dependency value',
-        properties: {
-          mode     : {
-            type       : 'string',
-            title      : 'Mode',
-            description: 'Choose set or patch'
-          },
-          key      : {
-            type : 'string',
-            title: 'Key'
-          },
-          onLinked : {
-            type : 'boolean',
-            title: 'On linked'
-          },
-          condition: {
-            type      : 'object',
-            title     : 'Condition',
-            properties: {
-              onLinked: {
-                type : 'boolean',
-                title: 'On linked'
-              },
-              $eval   : {
-                type : 'string',
-                title: 'Eval',
-                handler: {
-                  type: 'common/code-editor',
-                  options: {
-                    language: 'javascript'
-                  }
-                }
-              },
-            }
-          },
-          value    : {
-            type      : 'object',
-            title     : 'Condition',
-            properties: {
-              onLinked: {
-                type : 'boolean',
-                title: 'On linked'
-              },
-              $eval   : {
-                type : 'string',
-                title: 'Eval',
-                handler: {
-                  type: 'common/code-editor',
-                  options: {
-                    language: 'javascript'
-                  }
-                }
-              },
-              default : {
-                type : 'boolean',
-                title: 'Default',
-                const: true
-              }
-            }
-          }
-        }
-      }
-    }
-  })
-  onValueChange ? : {
+  onValueChange ?: {
     /**
      * Prevents all value change emits, meaning that you also effectively excluded this field from
      * dirty list ($dirtyList).
@@ -386,378 +140,13 @@ export abstract class JsfAbstractBareProp<TypeString, Handlers> {
   };
 }
 
-@DefLayout({
-  type : 'div',
-  items: [
-    {
-      key: 'title'
-    },
-    {
-      key: 'default',
-    },
-    {
-      type: 'div',
-      htmlClass: 'ml-2 mt-3',
-      items: [
-        {
-          type: 'heading',
-          title: 'Searchable',
-          level: 5
-        },
-        {
-          key: 'searchable.title'
-        },
-        {
-          type: 'div',
-          htmlClass: 'ml-2 mt-3',
-          items: [
-            {
-              type: 'heading',
-              title: 'By user',
-              level: 5
-            },
-            {
-              key: 'searchable.byUser.$mode'
-            },
-            {
-              key: 'searchable.byUser.enabled'
-            }
-          ]
-        },
-      ]
-    },
-
-    {
-      key: 'description'
-    },
-    {
-      key: 'readOnly'
-    },
-    {
-      key: 'writeOnly'
-    },
-    {
-      // EVAL VALIDATORS
-      type: 'div',
-      htmlClass: 'ml-2 mt-3',
-      items: [
-        {
-          type: 'heading',
-          title: 'Eval validators',
-          level: 5
-        },
-        // ERROR CODES
-        {
-          type: 'div',
-          htmlClass: 'ml-2 mt-3',
-          items: [
-            {
-              type: 'heading',
-              title: 'Error codes',
-              level: 5
-            },
-            {
-              type: 'array',
-              key: 'evalValidators.errorCodes',
-              items: [
-                {
-                  type: 'expansion-panel-content',
-                  items: [
-                    {
-                      type: 'hr'
-                    },
-                    {
-                      type: 'div',
-                      htmlClass: 'd-flex justify-content-between',
-                      items: [
-                        {
-                          type: 'div',
-                        },
-                        {
-                          type: 'button',
-                          icon: 'delete',
-                          color: 'accent',
-                          preferences: {
-                            variant: 'icon'
-                          },
-                          onClick: [
-                            {
-                              arrayItemRemove: {
-                                path: 'evalValidators.errorCodes',
-                                index: {
-                                  $eval: `return $getItemIndex('evalValidators.errorCodes[]')`
-                                }
-                              }
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      key: 'evalValidators.errorCodes[].code'
-                    },
-                    {
-                      key: 'evalValidators.errorCodes[].message'
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              type: 'div',
-              visibleIf: {
-                $eval: `return !$val.evalValidators.errorCodes.length`,
-                dependencies: ['evalValidators']
-              },
-              items: [
-                {
-                  type: 'span',
-                  htmlClass: 'd-block py-4 text-center',
-                  title: 'No error codes yet.'
-                }
-              ]
-            },
-            {
-              type: 'row',
-              horizontalAlign: 'center',
-              htmlClass: 'mt-2',
-              items: [
-                {
-                  type: 'button',
-                  title: 'Add error code',
-                  // htmlClass: 't-3',
-                  onClick: {
-                    arrayItemAdd: {
-                      path: 'evalValidators.errorCodes',
-                    }
-                  }
-                },
-              ]
-            }
-          ]
-        },
-        // EVALS
-        {
-          type: 'div',
-          htmlClass: 'ml-2 mt-3',
-          items: [
-            {
-              type: 'heading',
-              title: 'Evals',
-              level: 5
-            },
-            {
-              type: 'array',
-              key: 'evalValidators.$evals',
-              items: [
-                {
-                  type: 'expansion-panel-content',
-                  items: [
-                    {
-                      type: 'hr'
-                    },
-                    {
-                      type: 'div',
-                      htmlClass: 'd-flex justify-content-between',
-                      items: [
-                        {
-                          type: 'div',
-                        },
-                        {
-                          type: 'button',
-                          icon: 'delete',
-                          color: 'accent',
-                          preferences: {
-                            variant: 'icon'
-                          },
-                          onClick: [
-                            {
-                              arrayItemRemove: {
-                                path: 'evalValidators.$evals',
-                                index: {
-                                  $eval: `return $getItemIndex('evalValidators.$evals[]')`
-                                }
-                              }
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      key: 'evalValidators.$evals[]',
-                      handler: {
-                        type: 'common/code-editor',
-                        options: {
-                          language: 'javascript'
-                        }
-                      }
-                    },
-                  ]
-                }
-              ]
-            },
-            {
-              type: 'div',
-              visibleIf: {
-                $eval: `return !$val.evalValidators.$evals.length`,
-                dependencies: ['evalValidators']
-              },
-              items: [
-                {
-                  type: 'span',
-                  htmlClass: 'd-block py-4 text-center',
-                  title: 'No evals yet.'
-                }
-              ]
-            },
-            {
-              type: 'row',
-              horizontalAlign: 'center',
-              htmlClass: 'mt-2',
-              items: [
-                {
-                  type: 'button',
-                  title: 'Add validator eval',
-                  // htmlClass: 't-3',
-                  onClick: {
-                    arrayItemAdd: {
-                      path: 'evalValidators.$evals',
-                    }
-                  }
-                },
-              ]
-            }
-          ]
-        },
-        // Dependencies
-        {
-          type: 'div',
-          htmlClass: 'ml-2 mt-3',
-          items: [
-            {
-              type: 'heading',
-              title: 'Dependencies',
-              level: 5
-            },
-            {
-              type: 'array',
-              key: 'evalValidators.dependencies',
-              items: [
-                {
-                  type: 'expansion-panel-content',
-                  items: [
-                    {
-                      type: 'hr'
-                    },
-                    {
-                      type: 'div',
-                      htmlClass: 'd-flex justify-content-between',
-                      items: [
-                        {
-                          type: 'div',
-                        },
-                        {
-                          type: 'button',
-                          icon: 'delete',
-                          color: 'accent',
-                          preferences: {
-                            variant: 'icon'
-                          },
-                          onClick: [
-                            {
-                              arrayItemRemove: {
-                                path: 'evalValidators.dependencies',
-                                index: {
-                                  $eval: `return $getItemIndex('evalValidators.dependencies[]')`
-                                }
-                              }
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      key: 'evalValidators.dependencies[]'
-                    },
-                  ]
-                }
-              ]
-            },
-            {
-              type: 'div',
-              visibleIf: {
-                $eval: `return !$val.evalValidators.dependencies.length`,
-                dependencies: ['evalValidators']
-              },
-              items: [
-                {
-                  type: 'span',
-                  htmlClass: 'd-block py-4 text-center',
-                  title: 'No dependencies yet.'
-                }
-              ]
-            },
-            {
-              type: 'row',
-              horizontalAlign: 'center',
-              htmlClass: 'mt-2',
-              items: [
-                {
-                  type: 'button',
-                  title: 'Add dependency',
-                  // htmlClass: 't-3',
-                  onClick: {
-                    arrayItemAdd: {
-                      path: 'evalValidators.dependencies',
-                    }
-                  }
-                },
-              ]
-            }
-          ]
-        },
-      ]
-    }
-  ]
-})
-
-@DefExtends('JsfAbstractBareProp')
 export abstract class JsfAbstractProp<Type, TypeString, Handlers> extends JsfAbstractBareProp<TypeString, Handlers> {
 
   /**
    * property serves as label for the input
    */
-  @DefProp({
-    type : 'string',
-    title: 'Title'
-  })
   title?: string;
 
-  @DefProp({
-    type      : 'object',
-    title     : 'Searchable',
-    properties: {
-      title : {
-        type : 'string',
-        title: 'Title'
-      },
-      byUser: {
-        type      : 'object',
-        title     : 'By user',
-        properties: {
-          $mode  : {
-            type : 'string',
-            title: 'Mode'
-          },
-          enabled: {
-            type : 'boolean',
-            title: 'Enabled',
-            const: true
-          }
-        }
-      }
-    }
-  })
   searchable?: {
 
     title?: string;
@@ -779,22 +168,14 @@ export abstract class JsfAbstractProp<Type, TypeString, Handlers> extends JsfAbs
   /**
    * property is displayed next to the input field to guide user input
    */
-  @DefProp({
-    type : 'string',
-    title: 'Description'
-  })
   description?: string;
 
   /**
    * Property sets the initial value of a field
    */
-  @DefProp({
-    type: 'CHANGE_ME' as any, // will be changed in jsf4jsf
-    title: 'Default value'
-  })
   default?: Type | null;
 
-  advancedDefault?:  {
+  advancedDefault?: {
     /**
      * Used to help builder UI
      */
@@ -809,16 +190,8 @@ export abstract class JsfAbstractProp<Type, TypeString, Handlers> extends JsfAbs
    * properties whole section will be converted into
    * @default false
    */
-  @DefProp({
-    title      : 'Allow null as value.',
-    type       : 'boolean'
-  })
   nullable?: boolean;
 
-  @DefProp({
-    title      : 'Make property virtual.',
-    type       : 'boolean'
-  })
   virtual?: boolean;
 
   /**
@@ -826,7 +199,6 @@ export abstract class JsfAbstractProp<Type, TypeString, Handlers> extends JsfAbs
    *
    * An instance validates successfully against this keyword if its value is equal to the value of the keyword.
    */
-  @DefProp('Type')
   const?: Type | null;
 
   /**
@@ -837,37 +209,6 @@ export abstract class JsfAbstractProp<Type, TypeString, Handlers> extends JsfAbs
    * An instance document that is marked as "readOnly for the entire document MAY be ignored if sent to the owning
    * authority, or MAY result in an error, at the authority's discretion.
    */
-  @DefProp([
-    {
-      type : 'boolean',
-      title: 'Read only'
-    },
-    {
-      type      : 'object',
-      title     : 'Read only',
-      properties: {
-        $eval       : {
-          type : 'string',
-          title: 'Eval',
-          handler: {
-            type: 'common/code-editor',
-            options: {
-              language: 'javascript'
-            }
-          }
-        },
-        dependencies: {
-          type : 'array',
-          title: 'Dependencies',
-          items: [
-            {
-              type: 'string'
-            }
-          ]
-        },
-      }
-    }
-  ])
   readOnly?: boolean | {
     /**
      * Eval function body
@@ -890,59 +231,12 @@ export abstract class JsfAbstractProp<Type, TypeString, Handlers> extends JsfAbs
    * For example, "readOnly" would be used to mark a database-generated serial number as read-only, while "writeOnly"
    * would be used to mark a password input field.
    */
-  @DefProp({
-    type : 'boolean',
-    title: 'Write only'
-  })
   writeOnly?: boolean;
 
 
   /**
    * Option for custom validator. Lambdas are executed in sandbox.
    */
-  @DefProp({
-    type      : 'object',
-    title     : 'Eval validators',
-    properties: {
-      errorCodes  : {
-        type      : 'array',
-        title     : 'Error codes',
-        items: {
-          type: 'object',
-          properties: {
-            code   : {
-              type : 'string',
-              title: 'Code'
-            },
-            message: {
-              type : 'string',
-              title: 'Message'
-            }
-          }
-        }
-      },
-      $evals      : {
-        type : 'array',
-        title: 'Evals',
-        items: {
-          type: 'string',
-          handler: {
-            type: 'common/code-editor',
-            language: 'javascript'
-          }
-        }
-      },
-      dependencies: {
-        type : 'array',
-        title: 'Dependencies',
-        items:
-          {
-            type: 'string'
-          }
-
-      }
-    }
-  })
   evalValidators?: {
     errorCodes: {
       code: string;

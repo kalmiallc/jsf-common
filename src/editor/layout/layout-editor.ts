@@ -1,13 +1,11 @@
-import { JsfEditor }                  from '../jsf-editor';
-import { JsfTranslatableMessage }     from '../../translations';
-import { JsfDocument }                from '../../jsf-document';
-import { jsfForJsf }                  from '../../jsf-for-jsf';
-import { JsfUnknownLayout }           from '../../layout';
-import { LayoutBuilderInfoInterface } from './layout-builder-info.interface';
-import { createJsfLayoutEditor }      from '../util';
-import { JsfRegister }                from '../../jsf-register';
-import { Subject }                    from 'rxjs';
-import { isNil, isObject }                      from 'lodash';
+import { JsfEditor }                        from '../jsf-editor';
+import { JsfTranslatableMessage }           from '../../translations';
+import { JsfDocument }                      from '../../jsf-document';
+import { JsfUnknownLayout }                 from '../../layout';
+import { createJsfLayoutEditor }            from '../util';
+import { Subject }                          from 'rxjs';
+import { isNil, isObject }                  from 'lodash';
+import { JsfRegister, LayoutInfoInterface } from '../../register';
 
 export class JsfLayoutEditor {
 
@@ -42,7 +40,7 @@ export class JsfLayoutEditor {
     return this.getDefinition();
   }
 
-  get info(): LayoutBuilderInfoInterface {
+  get info(): LayoutInfoInterface {
     return JsfRegister.getLayoutInfo(this.realType) || {
       type: this.type
     };
@@ -195,10 +193,7 @@ export class JsfLayoutEditor {
   }
 
   getPropertiesForm(): JsfDocument {
-    return jsfForJsf.getJsfComponent(
-      'JsfLayout' + this._definition.type.charAt(0).toUpperCase() + this._definition.type.slice(1),
-      this.getDefinition()
-    ).jsfDoc;
+    return JsfRegister.getLayoutFormDefinition(this._definition.type);
   }
 
   private register(recursive = true) {

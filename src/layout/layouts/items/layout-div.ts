@@ -1,103 +1,23 @@
-import { JsfAbstractItemsLayout }                      from '../../abstract/abstract-layout';
-import { DefCategory, DefExtends, DefProp, DefLayout } from '../../../jsf-for-jsf/decorators';
-import { JsfUnknownLayout }                            from '../../index';
-import { DefLayoutInfo }                               from '../../../jsf-register-decorators';
+import { LayoutInfoInterface }                      from '../../../register/interfaces';
+import { JsfAbstractItemsLayout, JsfUnknownLayout } from '../../../layout';
+import { JsfRegister }                              from '../../../register';
+import { EditorInterfaceLayoutFactory }             from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { EditorInterfaceSchemaFactory }             from '../../../editor/helpers/editor-factory/editor-interface-schema-factory';
+import { CodeEditorKeyIconType }                    from '../../../editor/helpers/editor-factory/layout/code-editor-key';
 
-@DefLayoutInfo({
+const layoutInfo: LayoutInfoInterface = {
   type: 'div',
   title: 'Div',
+  category: 'Layout',
   icon: 'layout-icons/div.svg',
   items: {
     enabled: true
   }
-})
-@DefLayout({
-  type: 'div',
-  items: [
-    {
-      type: 'row',
-      items: [
-        {
-          type: 'col',
-          xs: 6,
-          items: [
-            {
-              type: 'heading',
-              level: 5,
-              title: 'Vertical Scroll'
-            },
-            {
-              key: 'scroll.vertical',
-              preferences: {
-                variant: 'slider'
-              },
-              htmlClass: 'h5'
-            }
-          ]
-        },
-        {
-          type: 'col',
-          xs: 6,
-          items: [
-            {
-              type: 'heading',
-              level: 5,
-              title: 'Horizontal Scroll'
-            },
-            {
-              key: 'scroll.horizontal',
-              preferences: {
-                variant: 'slider'
-              },
-              htmlClass: 'h5'
-            }
-          ]
-        }
-      ]
-    },
-    {
-      type: 'heading',
-      level: 5,
-      title: 'Custom code - on scroll stop',
-      htmlClass: 'mt-3'
-    },
-    {
-      key: 'scroll.onScrollStop.$eval'
-    }
-  ]
-})
-@DefExtends('JsfAbstractItemsLayout')
-@DefCategory('Layout')
+};
+
 export class JsfLayoutDiv extends JsfAbstractItemsLayout<'div'> {
-  @DefProp('JsfUnknownLayout[]')
   items: JsfUnknownLayout[];
 
-  @DefProp({
-    type: 'object',
-    properties: {
-      vertical: {
-        type: 'boolean'
-      },
-      horizontal: {
-        type: 'boolean'
-      },
-      onScrollStop: {
-        type: 'object',
-        properties: {
-          $eval: {
-            type: 'string',
-            title: 'Eval',
-            handler: {
-              type: 'common/code-editor',
-              options: {
-                language: 'javascript'
-              }
-            }
-          }
-        }
-      }
-    }
-  })
   scroll?: {
     vertical?: boolean;
     horizontal?: boolean;
@@ -112,3 +32,46 @@ export class JsfLayoutDiv extends JsfAbstractItemsLayout<'div'> {
     Object.assign(this, data);
   }
 }
+
+export const layoutDivJsfDefinition = {
+  schema: {
+    type: 'object',
+    properties: {
+      scroll: {
+        type: 'object',
+        properties: {
+          vertical: {
+            type: 'boolean',
+            title: 'Vertical',
+            default: false
+          },
+          horizontal: {
+            type: 'boolean',
+            title: 'Horizontal',
+            default: false
+          },
+          onScrollStop: {
+            type: 'object',
+            properties: {
+              ... EditorInterfaceSchemaFactory.createEvalProperty()
+            }
+          }
+        }
+      }
+    }
+  },
+  layout: {
+    type: 'div',
+    items: [
+      ... EditorInterfaceLayoutFactory.createPanel('Scroll', [
+        ... EditorInterfaceLayoutFactory.outputKey('scroll.vertical'),
+        ... EditorInterfaceLayoutFactory.outputKey('scroll.horizontal'),
+        ... EditorInterfaceLayoutFactory.createVerticalSpacer([
+          ... EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('scroll.onScrollStop.$eval', 'Event: Scroll stop', CodeEditorKeyIconType.EventCallback)
+        ])
+      ])
+    ]
+  }
+};
+
+JsfRegister.layout('div', layoutInfo, layoutDivJsfDefinition);

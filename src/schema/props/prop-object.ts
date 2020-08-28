@@ -1,7 +1,6 @@
 import { JsfProp, JsfPropJsonValue, JsfPropValue } from './index';
 import { JsfAbstractProp }                         from '../abstract/abstract-prop';
 import { JsfHandlerObject }                        from '../../handlers';
-import { DefExtends, DefLayout, DefProp, DefCategory }          from '../../jsf-for-jsf/decorators';
 
 
 export interface JsfPropObjectValue {
@@ -12,100 +11,6 @@ export interface JsfPropObjectJsonValue {
   [propertyName: string]: JsfPropJsonValue;
 }
 
-@DefLayout({
-  type : 'div',
-  items: [
-    // {
-    //   key: 'properties'
-    // },
-    {
-      type: 'div',
-      items: [
-        {
-          type: 'heading',
-          title: 'Required properties',
-          level: 6
-        },
-        {
-          type: 'array',
-          key: 'required',
-          items: [
-            {
-              type: 'expansion-panel-content',
-              items: [
-                {
-                  type: 'hr'
-                },
-                {
-                  type: 'div',
-                  htmlClass: 'd-flex justify-content-between',
-                  items: [
-                    {
-                      type: 'div',
-                    },
-                    {
-                      type: 'button',
-                      icon: 'delete',
-                      color: 'accent',
-                      preferences: {
-                        variant: 'icon'
-                      },
-                      onClick: [
-                        {
-                          arrayItemRemove: {
-                            path: 'required',
-                            index: {
-                              $eval: `return $getItemIndex('required[]')`
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  key: 'required[]'
-                },
-              ]
-            }
-          ]
-        },
-        {
-          type: 'div',
-          visibleIf: {
-            $eval: `return !$val.required.length`,
-            dependencies: ['required']
-          },
-          items: [
-            {
-              type: 'span',
-              htmlClass: 'd-block py-4 text-center',
-              title: 'No required properties yet.'
-            }
-          ]
-        },
-        {
-          type: 'row',
-          horizontalAlign: 'center',
-          htmlClass: 'mt-2',
-          items: [
-            {
-              type: 'button',
-              title: 'Add required property',
-              // htmlClass: 't-3',
-              onClick: {
-                arrayItemAdd: {
-                  path: 'required',
-                }
-              }
-            },
-          ]
-        }
-      ]
-    }
-  ]
-})
-@DefExtends('JsfAbstractProp')
 export class JsfPropObject extends JsfAbstractProp<JsfPropObjectValue, 'object', JsfHandlerObject> {
 
 
@@ -120,7 +25,6 @@ export class JsfPropObject extends JsfAbstractProp<JsfPropObjectValue, 'object',
    *
    * Omitting this keyword has the same behavior as an empty object.
    */
-  @DefProp('[propertyName: string]: JsfProp')
   properties?: { [propertyName: string]: JsfProp };
 
   /**
@@ -131,13 +35,6 @@ export class JsfPropObject extends JsfAbstractProp<JsfPropObjectValue, 'object',
    *
    * Omitting this keyword has the same behavior as an empty array.
    */
-  @DefProp({
-    type : 'array',
-    title: 'Required',
-    items: {
-      type: 'string'
-    }
-  })
   required?: string[];
 
   constructor(data: JsfPropObject) {

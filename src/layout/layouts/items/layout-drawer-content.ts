@@ -1,21 +1,19 @@
-import { JsfAbstractItemsLayout } from '../../abstract/abstract-layout';
-import { DefProp, DefExtends, DefCategory }    from '../../../jsf-for-jsf/decorators';
-import { JsfUnknownLayout } from '../../index';
-import { DefLayoutInfo } from '../../../jsf-register-decorators';
+import { LayoutInfoInterface }                      from '../../../register/interfaces';
+import { JsfAbstractItemsLayout, JsfUnknownLayout } from '../../../layout';
 
-@DefLayoutInfo({
-  type: 'drawer-content',
-  title: 'Drawer content',
-  icon: 'unknown.svg',
-  items: {
+const layoutInfo: LayoutInfoInterface = {
+  type    : 'drawer-content',
+  title   : 'Drawer content',
+  category: 'Layout',
+  icon    : 'unknown.svg',
+  items   : {
     enabled: true
   }
-})
-@DefExtends('JsfAbstractItemsLayout')
-@DefCategory('Layout')
+};
+
 export class JsfLayoutDrawerContent extends JsfAbstractItemsLayout<'drawer-content'> {
-  @DefProp('JsfUnknownLayout[]')
   items: JsfUnknownLayout[];
+
   constructor(data: JsfLayoutDrawerContent) {
     super();
     Object.assign(this, data);

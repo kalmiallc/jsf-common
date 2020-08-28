@@ -4,6 +4,7 @@ import {
   JsfLayoutAppPageTitle,
   JsfLayoutArrayItemAdd,
   JsfLayoutArrayItemRemove,
+  JsfLayoutBadge,
   JsfLayoutButton,
   JsfLayoutChartJS,
   JsfLayoutCol,
@@ -57,12 +58,11 @@ import {
   JsfLayoutTabSet
 }                                                 from './layouts';
 import { JsfItemsStylesBase, JsfItemsStylesFlex } from './styles';
-import { JsfLayoutBadge }                         from './layouts/special/layout-badge';
 
 export * from './jsf-layout-util';
-export * from './abstract/abstract-layout';
-export * from './layouts/index';
-export * from './styles/index';
+export * from './abstract';
+export * from './layouts';
+export * from './styles';
 export * from './interfaces';
 
 export type JsfItemsLayout =

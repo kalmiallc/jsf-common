@@ -1,57 +1,28 @@
-import { JsfAbstractPropLayout }                                       from '../../abstract/abstract-layout';
-import { JsfUnknownLayout }                                            from '../../index';
-import { DefExtends, DefLayout, DefProp, DefCategory, DefSpecialProp } from '../../../jsf-for-jsf/decorators';
-import { DefLayoutInfo }                                               from '../../../jsf-register-decorators';
+import { LayoutInfoInterface }                     from '../../../register/interfaces';
+import { JsfAbstractPropLayout, JsfUnknownLayout } from '../../../layout';
 
-@DefLayoutInfo({
-  type: 'array',
-  title: 'Array',
-  icon: 'layout-icons/array.svg',
+const layoutInfo: LayoutInfoInterface = {
+  type       : 'array',
+  title      : 'Array',
+  category   : 'List',
+  icon       : 'layout-icons/array.svg',
   formControl: {
     enabled: true
   },
-  items: {
+  items      : {
     enabled: true
   }
-})
-@DefLayout({
-  type : 'div',
-  items: [
-    // { key: 'type' },
-    { key: 'addable' },
-    { key: 'orderable' },
-    { key: 'removable' },
-  ]
-})
-@DefExtends('JsfAbstractPropLayout')
-@DefCategory('List')
+};
+
 export class JsfLayoutPropArray extends JsfAbstractPropLayout {
-  @DefProp({
-    type : 'string',
-    title: 'Type',
-    const: 'array'
-  })
   type: 'array';
 
-  @DefSpecialProp('JsfUnknownLayout[]')
   items: JsfUnknownLayout[];
 
-  @DefProp({
-    type : 'boolean',
-    title: 'Addable'
-  })
   addable?: boolean;
 
-  @DefProp({
-    type : 'boolean',
-    title: 'Orderable'
-  })
   orderable?: boolean;
 
-  @DefProp({
-    type : 'boolean',
-    title: 'Removable'
-  })
   removable?: boolean;
 
   constructor(data: JsfLayoutPropArray) {
