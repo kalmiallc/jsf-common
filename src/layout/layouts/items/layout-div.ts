@@ -1,16 +1,21 @@
-import { LayoutInfoInterface }                      from '../../../register/interfaces';
-import { JsfAbstractItemsLayout, JsfUnknownLayout } from '../../../layout';
-import { JsfRegister }                              from '../../../register';
-import { EditorInterfaceLayoutFactory }             from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
-import { EditorInterfaceSchemaFactory }             from '../../../editor/helpers/editor-factory/editor-interface-schema-factory';
-import { CodeEditorKeyIconType }                    from '../../../editor/helpers/editor-factory/layout/code-editor-key';
+import { LayoutInfoInterface }          from '../../../register/interfaces';
+import {
+  JsfAbstractItemsLayout,
+  jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
+  jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+  JsfUnknownLayout
+}                                       from '../../../layout';
+import { JsfRegister }                  from '../../../register';
+import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { EditorInterfaceSchemaFactory } from '../../../editor/helpers/editor-factory/editor-interface-schema-factory';
+import { CodeEditorKeyIconType }        from '../../../editor/helpers/editor-factory/layout/code-editor-key';
 
 const layoutInfo: LayoutInfoInterface = {
-  type: 'div',
-  title: 'Div',
+  type    : 'div',
+  title   : 'Div',
   category: 'Layout',
-  icon: 'layout-icons/div.svg',
-  items: {
+  icon    : 'layout-icons/div.svg',
+  items   : {
     enabled: true
   }
 };
@@ -35,25 +40,27 @@ export class JsfLayoutDiv extends JsfAbstractItemsLayout<'div'> {
 
 export const layoutDivJsfDefinition = {
   schema: {
-    type: 'object',
+    type      : 'object',
     properties: {
+      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+
       scroll: {
-        type: 'object',
+        type      : 'object',
         properties: {
-          vertical: {
-            type: 'boolean',
-            title: 'Vertical',
+          vertical    : {
+            type   : 'boolean',
+            title  : 'Vertical',
             default: false
           },
-          horizontal: {
-            type: 'boolean',
-            title: 'Horizontal',
+          horizontal  : {
+            type   : 'boolean',
+            title  : 'Horizontal',
             default: false
           },
           onScrollStop: {
-            type: 'object',
+            type      : 'object',
             properties: {
-              ... EditorInterfaceSchemaFactory.createEvalProperty()
+              ...EditorInterfaceSchemaFactory.createEvalProperty()
             }
           }
         }
@@ -61,15 +68,19 @@ export const layoutDivJsfDefinition = {
     }
   },
   layout: {
-    type: 'div',
+    type : 'div',
     items: [
-      ... EditorInterfaceLayoutFactory.createPanel('Scroll', [
-        ... EditorInterfaceLayoutFactory.outputKey('scroll.vertical'),
-        ... EditorInterfaceLayoutFactory.outputKey('scroll.horizontal'),
-        ... EditorInterfaceLayoutFactory.createVerticalSpacer([
-          ... EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('scroll.onScrollStop.$eval', 'Event: Scroll stop', CodeEditorKeyIconType.EventCallback)
-        ])
-      ])
+      ...EditorInterfaceLayoutFactory.createPanelGroup([
+        ...EditorInterfaceLayoutFactory.createPanel('Scroll', [
+          ...EditorInterfaceLayoutFactory.outputKey('scroll.vertical'),
+          ...EditorInterfaceLayoutFactory.outputKey('scroll.horizontal'),
+          ...EditorInterfaceLayoutFactory.createVerticalSpacer([
+            ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('scroll.onScrollStop.$eval', 'Event: Scroll stop', CodeEditorKeyIconType.EventCallback)
+          ])
+        ]),
+
+        ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
+      ]),
     ]
   }
 };

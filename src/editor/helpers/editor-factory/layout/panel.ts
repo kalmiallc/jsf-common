@@ -2,7 +2,7 @@ export function panel(title: string, panelItems: any[]) {
   return [
     {
       type : 'div',
-      htmlClass: 'p-1 border rounded-sm',
+      htmlClass: 'p-1 border rounded-sm mb-3',
       items: [
         {
           type : 'div',

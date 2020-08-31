@@ -15,7 +15,8 @@ export function codeEditorKey(key: string, label: string, iconType: CodeEditorKe
       htmlClass: 'pl-1'
     },
     {
-      key
+      key,
+      htmlClass: 'mb-3',
     }
   ]
 }

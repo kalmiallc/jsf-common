@@ -1,4 +1,7 @@
 import { JsfLayoutOnClickInterface, JsfStyles, JsfUnknownLayout } from '../index';
+import { EditorInterfaceSchemaFactory }                           from '../../editor/helpers/editor-factory/editor-interface-schema-factory';
+import { EditorInterfaceLayoutFactory }                           from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { CodeEditorKeyIconType }                                  from '../../editor/helpers/editor-factory/layout/code-editor-key';
 
 /**********************************
  * JSF Abstract Layout
@@ -60,13 +63,6 @@ export abstract class JsfAbstractLayout {
   /**
    * Handler preferences overrides.
    */
-  // @DefProp({
-  //   title: 'Handler preferences',
-  //   type: 'object', // FIXME: proper type
-  //   handler: {
-  //     type: 'any'
-  //   }
-  // })
   handlerPreferences?: any;
 
 
@@ -79,7 +75,7 @@ export abstract class JsfAbstractLayout {
    * Expected output boolean.
    */
   visibleIf?: string | {
-    /**ay
+    /**
      * Eval function body
      */
     $eval: string;
@@ -156,133 +152,65 @@ export abstract class JsfAbstractLayout {
     track: Array<string | { event: string, as: string }>
   };
 }
+
 export const jsfAbstractLayoutJsfDefinitionSchemaProperties = {
   $comment          : {
     type     : 'string',
     multiline: 3
   },
   $mode             : {
-    type : 'array',
-    title: 'Mode',
-    items: {
+    type   : 'array',
+    title  : 'Mode',
+    handler: {
+      type: 'common/chip-list'
+    },
+    items  : {
       type: 'string'
     }
   },
   id                : {
-    type : 'string',
-    title: 'ID'
+    type: 'string'
   },
   htmlOuterClass    : {
-    type : 'string',
-    title: 'HTML outer class'
+    type: 'string'
   },
   htmlClass         : {
-    type : 'string',
-    title: 'HTML class'
-  },
-  labelHtmlClass    : {
-    type : 'string',
-    title: 'Label HTML class'
-  },
-  fieldHtmlClass    : {
-    type : 'string',
-    title: 'Field HTML class'
-  },
-  preferences       : {
-    title     : 'Theme preferences',
-    type      : 'object',
-    handler   : {
-      type: 'any'
-    },
-    properties: {},
-    'default' : {}
+    type: 'string'
   },
   visibleIf         : {
     type      : 'object',
-    title     : 'Visible if',
     properties: {
-      $eval             : {
-        type   : 'string',
-        title  : 'Eval',
-        handler: {
-          type       : 'common/code-editor',
-          preferences: {
-            language: 'javascript'
-          }
-        }
-      },
-      dependencies      : {
-        type : 'array',
-        title: 'Dependencies',
-        items: {
-          type: 'string'
-        }
-      },
-      layoutDependencies: {
-        type : 'array',
-        title: 'Layout dependencies',
-        items: {
-          type: 'string'
-        }
-      }
+      ...EditorInterfaceSchemaFactory.createEvalPropertyWithDependenciesAndLayoutDependencies()
     }
   },
   buildIf           : {
     title     : 'Build if',
     type      : 'object',
     properties: {
-      $eval: {
-        type   : 'string',
-        title  : 'Eval',
-        handler: {
-          type   : 'common/code-editor',
-          options: {
-            language: 'javascript'
-          }
-        }
-      }
+      ...EditorInterfaceSchemaFactory.createEvalProperty()
     }
   },
   translatableFields: {
-    type : 'array',
-    title: 'Translatable fields',
-    items: {
+    type   : 'array',
+    handler: {
+      type: 'common/chip-list'
+    },
+    items  : {
       type: 'string'
     }
-  },
-  onClick           : {
-    title: 'On click',
-    type : 'string'
   },
   tooltip           : {
     type      : 'object',
     title     : 'Tooltip',
     properties: {
       title                  : {
-        type : 'string',
-        title: 'Title'
+        type: 'string'
       },
       templateData           : {
         type      : 'object',
         title     : 'Template data',
         properties: {
-          $eval       : {
-            type   : 'string',
-            title  : 'Eval',
-            handler: {
-              type   : 'common/code-editor',
-              options: {
-                language: 'javascript'
-              }
-            }
-          },
-          dependencies: {
-            type : 'array',
-            title: 'Dependencies',
-            items: {
-              type: 'string'
-            }
-          }
+          ...EditorInterfaceSchemaFactory.createEvalPropertyWithDependencies()
         }
       },
       position               : {
@@ -308,7 +236,7 @@ export const jsfAbstractLayoutJsfDefinitionSchemaProperties = {
               label: 'Right'
             },
             {
-              value: 'above',
+              value: 'before',
               label: 'Before'
             },
             {
@@ -316,43 +244,53 @@ export const jsfAbstractLayoutJsfDefinitionSchemaProperties = {
               label: 'After'
             }
           ]
-        }
+        },
+        default: 'Above'
       },
       displayAsTitleAttribute: {
-        type : 'boolean',
-        title: 'Display as title attribute'
+        type   : 'boolean',
+        title  : 'Display as title attribute',
+        default: false
       }
     }
   },
-  analytics         : {
-    title     : 'Analytics',
-    type      : 'object',
-    properties: {
-      category: {
-        type : 'string',
-        title: 'Category'
-      },
-      track   : {
-        type : 'array',
-        title: 'Track',
-        items: {
-          type      : 'object',
-          properties: {
-            event: {
-              type : 'string',
-              title: 'Event'
-            },
-            'as' : {
-              type : 'string',
-              title: 'Track as'
-            }
-          }
-        }
-      }
-    }
+  // TODO
+  onClick           : {
+    title: 'On click',
+    type : 'string'
   }
 };
 
+export const jsfAbstractLayoutJsfDefinitionLayoutItems = [{
+  type : 'div',
+  items: [
+    ...EditorInterfaceLayoutFactory.createPanel('Common', [
+      ...EditorInterfaceLayoutFactory.outputKey('htmlClass', 'HTML class'),
+      ...EditorInterfaceLayoutFactory.outputKey('htmlOuterClass', 'HTML outer class'),
+    ]),
+    ...EditorInterfaceLayoutFactory.createPanel('Visibility', [
+      ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('visibleIf.$eval', 'Visibility condition', CodeEditorKeyIconType.Eval),
+      ...EditorInterfaceLayoutFactory.outputKey('visibleIf.dependencies', 'Dependencies'),
+      ...EditorInterfaceLayoutFactory.outputKey('visibleIf.layoutDependencies', 'Layout dependencies')
+    ]),
+    ...EditorInterfaceLayoutFactory.createPanel('Click Actions', [
+      // TODO
+    ]),
+    ...EditorInterfaceLayoutFactory.createPanel('Tooltip', [
+      ...EditorInterfaceLayoutFactory.outputKey('tooltip.title', 'Tooltip title'),
+      ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('tooltip.templateData.$eval', 'Tooltip template data'),
+      ...EditorInterfaceLayoutFactory.outputKey('tooltip.templateData.dependencies', 'Dependencies'),
+      ...EditorInterfaceLayoutFactory.outputKey('tooltip.position', 'Position'),
+      ...EditorInterfaceLayoutFactory.outputKey('tooltip.displayAsTitleAttribute')
+    ]),
+    ...EditorInterfaceLayoutFactory.createPanel('Misc', [
+      ...EditorInterfaceLayoutFactory.outputKey('$mode', 'Modes'),
+      ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('buildIf.$eval', 'Build condition', CodeEditorKeyIconType.Eval),
+      ...EditorInterfaceLayoutFactory.outputKey('id', 'Layout ID'),
+      ...EditorInterfaceLayoutFactory.outputKey('$comment', 'Developer comments')
+    ])
+  ]
+}];
 
 /**********************************
  * JSF Abstract Special Layout
@@ -365,16 +303,31 @@ export abstract class JsfAbstractSpecialLayout<Type> extends JsfAbstractLayout {
   key?: never;
 }
 
+export const jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties = jsfAbstractLayoutJsfDefinitionSchemaProperties;
+export const jsfAbstractSpecialLayoutJsfDefinitionLayoutItems      = jsfAbstractLayoutJsfDefinitionLayoutItems;
+
 /**********************************
  * JSF Abstract Prop Layout
  **********************************/
 export abstract class JsfAbstractPropLayout extends JsfAbstractLayout {
   key: string;
 
+  // FIXME: Does anyone even use this?
   notitle?: boolean;
 
   placeholder?: string;
 }
+
+export const jsfAbstractPropLayoutJsfDefinitionSchemaProperties = jsfAbstractLayoutJsfDefinitionSchemaProperties;
+export const jsfAbstractPropLayoutJsfDefinitionLayoutItems      = [{
+  type : 'div',
+  items: [
+    ...EditorInterfaceLayoutFactory.createPanel('Placeholder', [
+      ...EditorInterfaceLayoutFactory.outputKey('placeholder', 'Placeholder')
+    ]),
+    ...jsfAbstractLayoutJsfDefinitionLayoutItems[0].items
+  ]
+}];
 
 /**********************************
  * JSF Abstract Items Layout
@@ -386,6 +339,6 @@ export abstract class JsfAbstractItemsLayout<Type> extends JsfAbstractLayout {
 
   items: JsfUnknownLayout[];
 }
-export const jsfAbstractItemsLayoutJsfDefinitionSchemaProperties = {
-};
-export const jsfAbstractItemsLayoutJsfDefinitionLayoutItems = [];
+
+export const jsfAbstractItemsLayoutJsfDefinitionSchemaProperties = jsfAbstractLayoutJsfDefinitionSchemaProperties;
+export const jsfAbstractItemsLayoutJsfDefinitionLayoutItems      = jsfAbstractLayoutJsfDefinitionLayoutItems;
