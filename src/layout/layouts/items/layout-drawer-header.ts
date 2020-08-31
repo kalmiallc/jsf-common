@@ -1,5 +1,12 @@
-import { LayoutInfoInterface }                      from '../../../register/interfaces';
-import { JsfAbstractItemsLayout, JsfUnknownLayout } from '../../../layout';
+import { LayoutInfoInterface }          from '../../../register/interfaces';
+import {
+  JsfAbstractItemsLayout,
+  jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
+  jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+  JsfUnknownLayout
+}                                       from '../../../layout';
+import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
   type    : 'drawer-header',
@@ -19,3 +26,24 @@ export class JsfLayoutDrawerHeader extends JsfAbstractItemsLayout<'drawer-header
     Object.assign(this, data);
   }
 }
+
+export const layoutDrawerHeaderJsfDefinition = {
+  schema: {
+    type      : 'object',
+    properties: {
+      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+
+    }
+  },
+  layout: {
+    type : 'div',
+    items: [
+      ...EditorInterfaceLayoutFactory.createPanelGroup([
+
+        ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
+      ]),
+    ]
+  }
+};
+
+JsfRegister.layout('drawer-header', layoutInfo, layoutDrawerHeaderJsfDefinition);

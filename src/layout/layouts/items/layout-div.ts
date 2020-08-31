@@ -49,12 +49,12 @@ export const layoutDivJsfDefinition = {
         properties: {
           vertical    : {
             type   : 'boolean',
-            title  : 'Vertical',
+            title  : 'Vertical scroll',
             default: false
           },
           horizontal  : {
             type   : 'boolean',
-            title  : 'Horizontal',
+            title  : 'Horizontal scroll',
             default: false
           },
           onScrollStop: {
@@ -71,7 +71,7 @@ export const layoutDivJsfDefinition = {
     type : 'div',
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
-        ...EditorInterfaceLayoutFactory.createPanel('Scroll', [
+        ...EditorInterfaceLayoutFactory.createPanel('Div', [
           ...EditorInterfaceLayoutFactory.outputKey('scroll.vertical'),
           ...EditorInterfaceLayoutFactory.outputKey('scroll.horizontal'),
           ...EditorInterfaceLayoutFactory.createVerticalSpacer([

@@ -1,5 +1,11 @@
-import { LayoutInfoInterface }    from '../../../register/interfaces';
-import { JsfAbstractItemsLayout } from '../../../layout';
+import { LayoutInfoInterface }          from '../../../register/interfaces';
+import {
+  JsfAbstractItemsLayout,
+  jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
+  jsfAbstractItemsLayoutJsfDefinitionSchemaProperties
+}                                       from '../../../layout';
+import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
   type    : 'section',
@@ -22,3 +28,45 @@ export class JsfLayoutSection extends JsfAbstractItemsLayout<'section'> {
     Object.assign(this, data);
   }
 }
+
+export const layoutSectionJsfDefinition = {
+  schema: {
+    type      : 'object',
+    properties: {
+      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+
+      expandable: {
+        type : 'boolean',
+        title: 'Expandable'
+      },
+      expanded  : {
+        type : 'boolean',
+        title: 'Expand'
+      }
+    }
+  },
+  layout: {
+    type : 'div',
+    items: [
+      ...EditorInterfaceLayoutFactory.createPanelGroup([
+        ...EditorInterfaceLayoutFactory.createPanel('Section', [
+          {
+            type : 'div',
+            items: [
+              {
+                key: 'expandable'
+              },
+              {
+                key: 'expanded'
+              }
+            ]
+          }
+        ]),
+
+        ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems
+      ])
+    ]
+  }
+};
+
+JsfRegister.layout('section', layoutInfo, layoutSectionJsfDefinition);

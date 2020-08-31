@@ -1,5 +1,12 @@
-import { LayoutInfoInterface }                      from '../../../register/interfaces';
-import { JsfAbstractItemsLayout, JsfUnknownLayout } from '../../../layout';
+import { LayoutInfoInterface }          from '../../../register/interfaces';
+import {
+  JsfAbstractItemsLayout,
+  jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
+  jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+  JsfUnknownLayout
+}                                       from '../../../layout';
+import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
   type    : 'tab',
@@ -37,3 +44,46 @@ export interface JsfLayoutTabPreferences {
    */
   prefixLabel?: string;
 }
+
+export const layoutTabJsfDefinition = {
+  schema: {
+    type      : 'object',
+    properties: {
+      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+
+      title   : {
+        type : 'string',
+        title: 'Title'
+      },
+      selected: {
+        type : 'boolean',
+        title: 'Selected'
+      }
+    }
+  },
+  layout: {
+    type : 'div',
+    items: [
+      ...EditorInterfaceLayoutFactory.createPanelGroup([
+        ...EditorInterfaceLayoutFactory.createPanel('Tab', [
+          {
+            type : 'div',
+            items: [
+              {
+                key: 'title'
+              },
+              {
+                key: 'selected'
+              }
+            ]
+          }
+        ]),
+
+        ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems
+      ])
+    ]
+  }
+};
+
+JsfRegister.layout('tab', layoutInfo, layoutTabJsfDefinition);
+

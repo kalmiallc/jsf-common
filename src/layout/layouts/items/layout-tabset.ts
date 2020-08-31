@@ -1,5 +1,14 @@
-import { LayoutInfoInterface }                  from '../../../register/interfaces';
-import { JsfAbstractItemsLayout, JsfLayoutTab } from '../../../layout';
+import { LayoutInfoInterface }          from '../../../register/interfaces';
+import {
+  JsfAbstractItemsLayout,
+  jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
+  jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+  JsfLayoutTab
+}                                       from '../../../layout';
+import { EditorInterfaceSchemaFactory } from '../../../editor/helpers/editor-factory/editor-interface-schema-factory';
+import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { CodeEditorKeyIconType }        from '../../../editor/helpers/editor-factory/layout/code-editor-key';
+import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
   type    : 'tabset',
@@ -61,3 +70,24 @@ export interface JsfLayoutTabSetPreferences {
    */
   headerType?: 'default' | 'round';
 }
+
+export const layoutTabsetJsfDefinition = {
+  schema: {
+    type      : 'object',
+    properties: {
+      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+
+    }
+  },
+  layout: {
+    type : 'div',
+    items: [
+      ...EditorInterfaceLayoutFactory.createPanelGroup([
+
+        ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
+      ]),
+    ]
+  }
+};
+
+JsfRegister.layout('tabset', layoutInfo, layoutTabsetJsfDefinition);

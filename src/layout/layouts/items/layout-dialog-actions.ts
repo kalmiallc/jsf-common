@@ -1,12 +1,19 @@
-import { LayoutInfoInterface }                      from '../../../register/interfaces';
-import { JsfAbstractItemsLayout, JsfUnknownLayout } from '../../../layout';
+import { LayoutInfoInterface }          from '../../../register/interfaces';
+import {
+  JsfAbstractItemsLayout,
+  jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
+  jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+  JsfUnknownLayout
+}                                       from '../../../layout';
+import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type: 'dialog-actions',
-  title: 'Dialog actions',
+  type    : 'dialog-actions',
+  title   : 'Dialog actions',
   category: 'Popups & Modals',
-  icon: 'layout-icons/dialog-actions.svg',
-  items: {
+  icon    : 'layout-icons/dialog-actions.svg',
+  items   : {
     enabled: true
   }
 };
@@ -21,3 +28,51 @@ export class JsfLayoutDialogActions extends JsfAbstractItemsLayout<'dialog-actio
     Object.assign(this, data);
   }
 }
+
+export const layoutDialogActionsJsfDefinition = {
+  schema: {
+    type      : 'object',
+    properties: {
+      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+
+      align: {
+        type   : 'string',
+        title  : 'Align',
+        handler: {
+          type  : 'common/dropdown',
+          values: [
+            {
+              value: 'center',
+              label: 'Center'
+            },
+            {
+              value: 'end',
+              label: 'End'
+            }
+          ]
+        }
+      }
+    }
+  },
+  layout: {
+    type : 'div',
+    items: [
+      ...EditorInterfaceLayoutFactory.createPanelGroup([
+        ...EditorInterfaceLayoutFactory.createPanel('Dialog Actions', [
+          {
+            type : 'div',
+            items: [
+              {
+                key: 'align'
+              }
+            ]
+          }
+        ]),
+
+        ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems
+      ])
+    ]
+  }
+};
+
+JsfRegister.layout('dialog-actions', layoutInfo, layoutDialogActionsJsfDefinition);

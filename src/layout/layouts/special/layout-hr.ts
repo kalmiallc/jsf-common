@@ -1,5 +1,11 @@
-import { LayoutInfoInterface }      from '../../../register/interfaces';
-import { JsfAbstractSpecialLayout } from '../../../layout';
+import { LayoutInfoInterface }          from '../../../register/interfaces';
+import {
+  JsfAbstractSpecialLayout,
+  jsfAbstractSpecialLayoutJsfDefinitionLayoutItems,
+  jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties
+}                                       from '../../../layout';
+import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
   type    : 'hr',
@@ -16,3 +22,24 @@ export class JsfLayoutHr extends JsfAbstractSpecialLayout<'hr'> {
   }
 
 }
+
+export const layoutHrJsfDefinition = {
+  schema: {
+    type      : 'object',
+    properties: {
+      ...jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties
+
+    }
+  },
+  layout: {
+    type : 'div',
+    items: [
+      ...EditorInterfaceLayoutFactory.createPanelGroup([
+
+        ...jsfAbstractSpecialLayoutJsfDefinitionLayoutItems
+      ])
+    ]
+  }
+};
+
+JsfRegister.layout('hr', layoutInfo, layoutHrJsfDefinition);

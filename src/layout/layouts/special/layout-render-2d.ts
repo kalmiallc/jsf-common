@@ -1,5 +1,11 @@
-import { LayoutInfoInterface }      from '../../../register/interfaces';
-import { JsfAbstractSpecialLayout } from '../../../layout';
+import { LayoutInfoInterface }          from '../../../register/interfaces';
+import {
+  JsfAbstractSpecialLayout,
+  jsfAbstractSpecialLayoutJsfDefinitionLayoutItems,
+  jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties
+}                                       from '../../../layout';
+import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
   type    : 'render-2d',
@@ -149,3 +155,194 @@ export interface JsfLayoutRender2DEvalObject {
   dependencies?: [];
   layoutDependencies?: [];
 }
+
+export const layoutRender2DJsfDefinition = {
+  schema: {
+    type      : 'object',
+    properties: {
+      ...jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties,
+
+      viewport      : {
+        type      : 'object',
+        title     : 'Viewport',
+        properties: {
+          width          : {
+            type   : 'integer',
+            title  : 'Width',
+            minimum: 1
+          },
+          height         : {
+            type   : 'integer',
+            title  : 'Height',
+            minimum: 1
+          },
+          transparent    : {
+            type : 'boolean',
+            title: 'Transparent'
+          },
+          backgroundColor: {
+            type  : 'string',
+            title : 'Background color',
+            format: 'color'
+          },
+          resolution     : {
+            type : 'number',
+            title: 'Resolution'
+          },
+          frameRate      : {
+            type   : 'integer',
+            title  : 'Maximum frame rate',
+            minimum: 1
+          }
+        }
+      },
+      screenshot    : {
+        type      : 'object',
+        title     : 'Screenshot',
+        properties: {
+          key: {
+            type : 'string',
+            title: 'Key'
+          }
+        }
+      },
+      ssr           : {
+        type      : 'object',
+        title     : 'Server side rendering',
+        properties: {
+          enabled       : {
+            type : 'boolean',
+            title: 'Enabled'
+          },
+          dffKey        : {
+            type : 'string',
+            title: 'DFF key'
+          },
+          alwaysUseSSR  : {
+            type : 'boolean',
+            title: 'Always use SSR'
+          },
+          preloadWithSSR: {
+            type : 'boolean',
+            title: 'Preload with SSR'
+          }
+        }
+      },
+      resourceLoader: {
+        type      : 'object',
+        title     : 'Resource loader',
+        properties: {
+          sharedInstance            : {
+            type : 'boolean',
+            title: 'Use shared instance'
+          },
+          uploadDynamicTexturesToGPU: {
+            type : 'boolean',
+            title: 'Upload dynamic textures to GPU'
+          }
+        }
+      }
+    }
+  },
+  layout: {
+    type : 'div',
+    items: [
+      ...EditorInterfaceLayoutFactory.createPanelGroup([
+        ...EditorInterfaceLayoutFactory.createPanel('Render 2D', [
+          {
+            type : 'div',
+            items: [
+              {
+                type     : 'div',
+                htmlClass: 'ml-2 mt-3',
+                items    : [
+                  {
+                    type : 'heading',
+                    title: 'Viewport',
+                    level: 5
+                  },
+                  {
+                    key: 'viewport.width'
+                  },
+                  {
+                    key: 'viewport.height'
+                  },
+                  {
+                    key: 'viewport.transparent'
+                  },
+                  {
+                    key: 'viewport.backgroundColor'
+                  },
+                  {
+                    key: 'viewport.resolution'
+                  },
+                  {
+                    key: 'viewport.frameRate'
+                  }
+                ]
+              },
+              {
+                type     : 'div',
+                htmlClass: 'ml-2 mt-3',
+                items    : [
+                  {
+                    type : 'heading',
+                    title: 'Screenshot',
+                    level: 5
+                  },
+                  {
+                    key: 'screenshot.key'
+                  }
+                ]
+              },
+              {
+                type     : 'div',
+                htmlClass: 'ml-2 mt-3',
+                items    : [
+                  {
+                    type : 'heading',
+                    title: 'Server side rendering',
+                    level: 5
+                  },
+                  {
+                    key: 'ssr.enabled'
+                  },
+                  {
+                    key: 'ssr.dffKey'
+                  },
+                  {
+                    key: 'ssr.alwaysUseSSR'
+                  },
+                  {
+                    key: 'ssr.preloadWithSSR'
+                  }
+                ]
+              },
+              {
+                type     : 'div',
+                htmlClass: 'ml-2 mt-3',
+                items    : [
+                  {
+                    type : 'heading',
+                    title: 'Resource loader',
+                    level: 5
+                  },
+                  {
+                    key: 'resourceLoader.sharedInstance'
+                  },
+                  {
+                    key: 'resourceLoader.uploadDynamicTexturesToGPU'
+                  }
+                ]
+              }
+            ]
+          }
+        ]),
+
+        ...jsfAbstractSpecialLayoutJsfDefinitionLayoutItems
+      ])
+    ]
+  }
+};
+
+JsfRegister.layout('render-2d', layoutInfo, layoutRender2DJsfDefinition);

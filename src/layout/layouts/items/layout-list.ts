@@ -1,5 +1,12 @@
-import { LayoutInfoInterface }                       from '../../../register/interfaces';
-import { JsfAbstractItemsLayout, JsfLayoutListItem } from '../../../layout';
+import { LayoutInfoInterface }          from '../../../register/interfaces';
+import {
+  JsfAbstractItemsLayout,
+  jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
+  jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+  JsfLayoutListItem
+}                                       from '../../../layout';
+import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
   type : 'list',
@@ -30,3 +37,24 @@ export interface JsfLayoutListPreferences {
    */
   type: 'ordered' | 'unordered';
 }
+
+export const layoutListJsfDefinition = {
+  schema: {
+    type      : 'object',
+    properties: {
+      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+
+    }
+  },
+  layout: {
+    type : 'div',
+    items: [
+      ...EditorInterfaceLayoutFactory.createPanelGroup([
+
+        ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
+      ]),
+    ]
+  }
+};
+
+JsfRegister.layout('list', layoutInfo, layoutListJsfDefinition);

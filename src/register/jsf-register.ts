@@ -34,6 +34,9 @@ export class JsfRegister {
    * @param definition
    */
   static layout(type: string, layoutInfo: LayoutInfoInterface, definition: any) {
+    if (JsfRegister.layoutStore[type]) {
+      throw new Error(`Duplicate layout "${ type }"`);
+    }
     JsfRegister.layoutStore[type] = definition;
     JsfRegister.layoutBuilderInfo[type] = layoutInfo;
   }

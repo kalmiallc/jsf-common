@@ -1,5 +1,12 @@
-import { LayoutInfoInterface }                                            from '../../../register/interfaces';
-import { JsfAbstractItemsLayout, JsfLayoutExpansionPanelStandalonePanel } from '../../../layout';
+import { LayoutInfoInterface }          from '../../../register/interfaces';
+import {
+  JsfAbstractItemsLayout,
+  jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
+  jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+  JsfLayoutExpansionPanelStandalonePanel
+}                                       from '../../../layout';
+import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
   type    : 'expansion-panel-standalone',
@@ -28,3 +35,32 @@ export class JsfLayoutExpansionPanelStandalone extends JsfAbstractItemsLayout<'e
     Object.assign(this, data);
   }
 }
+
+export const layoutExpansionPanelStandaloneJsfDefinition = {
+  schema: {
+    type      : 'object',
+    properties: {
+      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+
+      multi: {
+        type : 'boolean',
+        title: 'Allow independent expansion state'
+      }
+    }
+  },
+  layout: {
+    type : 'div',
+    items: [
+      ...EditorInterfaceLayoutFactory.createPanelGroup([
+        ...EditorInterfaceLayoutFactory.createPanel('Expansion Panel', [
+          EditorInterfaceLayoutFactory.outputKey('multi')
+        ]),
+
+        ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems
+      ])
+    ]
+  }
+};
+
+JsfRegister.layout('expansion-panel-standalone', layoutInfo, layoutExpansionPanelStandaloneJsfDefinition);
+

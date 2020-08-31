@@ -1,12 +1,19 @@
-import { LayoutInfoInterface }                      from '../../../register/interfaces';
-import { JsfAbstractItemsLayout, JsfUnknownLayout } from '../../../layout';
+import { LayoutInfoInterface }          from '../../../register/interfaces';
+import {
+  JsfAbstractItemsLayout,
+  jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
+  jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+  JsfUnknownLayout
+}                                       from '../../../layout';
+import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type : 'expansion-panel-standalone-header',
-  title: 'Expansion panel standalone header',
+  type    : 'expansion-panel-standalone-header',
+  title   : 'Expansion panel standalone header',
   category: 'Layout',
-  icon : 'unknown.svg',
-  items: {
+  icon    : 'unknown.svg',
+  items   : {
     enabled: true
   }
 };
@@ -19,3 +26,24 @@ export class JsfLayoutExpansionPanelStandaloneHeader extends JsfAbstractItemsLay
     Object.assign(this, data);
   }
 }
+
+export const layoutExpansionPanelStandaloneHeaderJsfDefinition = {
+  schema: {
+    type      : 'object',
+    properties: {
+      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties
+
+    }
+  },
+  layout: {
+    type : 'div',
+    items: [
+      ...EditorInterfaceLayoutFactory.createPanelGroup([
+
+        ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems
+      ])
+    ]
+  }
+};
+
+JsfRegister.layout('expansion-panel-standalone-header', layoutInfo, layoutExpansionPanelStandaloneHeaderJsfDefinition);

@@ -1,5 +1,11 @@
-import { LayoutInfoInterface }      from '../../../register/interfaces';
-import { JsfAbstractSpecialLayout } from '../../../layout';
+import { LayoutInfoInterface }          from '../../../register/interfaces';
+import {
+  JsfAbstractSpecialLayout,
+  jsfAbstractSpecialLayoutJsfDefinitionLayoutItems,
+  jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties
+}                                       from '../../../layout';
+import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
   type    : 'app-breadcrumbs',
@@ -18,3 +24,38 @@ export class JsfLayoutAppBreadcrumbs extends JsfAbstractSpecialLayout<'app-bread
   }
 
 }
+
+export const layoutAppBreadcrumbsJsfDefinition = {
+  schema: {
+    type      : 'object',
+    properties: {
+      ...jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties,
+
+      separator: {
+        type : 'string',
+        title: 'Separator'
+      }
+    }
+  },
+  layout: {
+    type : 'div',
+    items: [
+      ...EditorInterfaceLayoutFactory.createPanelGroup([
+        ...EditorInterfaceLayoutFactory.createPanel('App Breadcrumbs', [
+          {
+            type : 'div',
+            items: [
+              {
+                key: 'separator'
+              }
+            ]
+          }
+        ]),
+
+        ...jsfAbstractSpecialLayoutJsfDefinitionLayoutItems
+      ])
+    ]
+  }
+};
+
+JsfRegister.layout('app-breadcrumbs', layoutInfo, layoutAppBreadcrumbsJsfDefinition);

@@ -264,7 +264,7 @@ export const jsfAbstractLayoutJsfDefinitionSchemaProperties = {
 export const jsfAbstractLayoutJsfDefinitionLayoutItems = [{
   type : 'div',
   items: [
-    ...EditorInterfaceLayoutFactory.createPanel('Common', [
+    ...EditorInterfaceLayoutFactory.createPanel('Styling', [
       ...EditorInterfaceLayoutFactory.outputKey('htmlClass', 'HTML class'),
       ...EditorInterfaceLayoutFactory.outputKey('htmlOuterClass', 'HTML outer class'),
     ]),
