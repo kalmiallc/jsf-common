@@ -208,14 +208,12 @@ export const jsfAbstractLayoutJsfDefinitionSchemaProperties = {
       },
       templateData           : {
         type      : 'object',
-        title     : 'Template data',
         properties: {
           ...EditorInterfaceSchemaFactory.createEvalPropertyWithDependencies()
         }
       },
       position               : {
         type   : 'string',
-        title  : 'Tooltip position',
         handler: {
           type  : 'common/dropdown',
           values: [

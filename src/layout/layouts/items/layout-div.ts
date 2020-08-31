@@ -74,13 +74,12 @@ export const layoutDivJsfDefinition = {
         ...EditorInterfaceLayoutFactory.createPanel('Div', [
           ...EditorInterfaceLayoutFactory.outputKey('scroll.vertical'),
           ...EditorInterfaceLayoutFactory.outputKey('scroll.horizontal'),
-          ...EditorInterfaceLayoutFactory.createVerticalSpacer([
-            ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('scroll.onScrollStop.$eval', 'Event: Scroll stop', CodeEditorKeyIconType.EventCallback)
-          ])
+          ...EditorInterfaceLayoutFactory.createDivider(),
+          ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('scroll.onScrollStop.$eval', 'Event: Scroll stop', CodeEditorKeyIconType.EventCallback)
         ]),
 
-        ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
-      ]),
+        ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems
+      ])
     ]
   }
 };

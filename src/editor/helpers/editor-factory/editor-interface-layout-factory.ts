@@ -23,20 +23,6 @@ export abstract class EditorInterfaceLayoutFactory {
   static outputKeyWithCodeEditor = codeEditorKey;
 
   /**
-   * Creates a div that spaces out the content inside from the top
-   * @param items
-   */
-  static createVerticalSpacer(items: any[]) {
-    return [
-      {
-        type     : 'div',
-        htmlClass: 'mt-4',
-        items
-      }
-    ];
-  }
-
-  /**
    * Outputs a key with an optional label above it.
    * @param key
    * @param label
@@ -50,5 +36,29 @@ export abstract class EditorInterfaceLayoutFactory {
     ];
   };
 
+  /**
+   * Creates a divider.
+   */
+  static createDivider() {
+    return [
+      {
+        type     : 'hr',
+        htmlClass: 'my-1'
+      }
+    ];
+  }
 
+  /**
+   * Creates a div that spaces out the content inside from the top
+   * @param items
+   */
+  static createVerticalSpacer(items: any[]) {
+    return [
+      {
+        type     : 'div',
+        htmlClass: 'mt-4',
+        items
+      }
+    ];
+  }
 }
