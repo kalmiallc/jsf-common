@@ -1,6 +1,6 @@
 import { JsfAbstractHandlerBuilder, JsfUnknownPropBuilder } from '../builder/abstract';
 import { JsfDefinition }                                    from '../jsf-definition';
-import { JsfProp, JsfPropObject, JsfPropTypes }             from '../schema/props';
+import { JsfProp, JsfPropObject }                           from '../schema/props';
 import { LayoutInfoInterface }                              from '../editor/layout';
 import { EvalContextOptions, JsfBuilder }                   from '../builder';
 import { HandlerCompatibilityInterface }                    from './interfaces/handler-compatibility.interface';
@@ -13,7 +13,7 @@ export class JsfRegister {
   private static layoutBuilderInfo: { [layoutKey: string]: LayoutInfoInterface } = {};
 
   private static handlerBuilderStore: { [propBuilderKey: string]: (new (builder: JsfUnknownPropBuilder) => JsfAbstractHandlerBuilder<any>) } = {};
-  private static handlerCompatibility: { [handlerKey: string]: HandlerCompatibilityInterface }                                          = {};
+  private static handlerCompatibility: { [handlerKey: string]: HandlerCompatibilityInterface }                                               = {};
 
   static getAppEvalContextLambda(): (builder: JsfBuilder, options?: EvalContextOptions) => any {
     return JsfRegister.appEvalContextLambda;
@@ -26,7 +26,6 @@ export class JsfRegister {
   /**************************************
    * Layouts
    **************************************/
-
   /**
    * Register a layout.
    * @param type
@@ -37,17 +36,20 @@ export class JsfRegister {
     if (JsfRegister.layoutStore[type]) {
       throw new Error(`Duplicate layout "${ type }"`);
     }
-    JsfRegister.layoutStore[type] = definition;
-    JsfRegister.layoutBuilderInfo[type] = layoutInfo;
-  }
-
-
-  static setLayoutInfo(info: LayoutInfoInterface) {
-    JsfRegister.layoutBuilderInfo[info.type] = info;
+    if (definition) {
+      JsfRegister.layoutStore[type] = definition;
+    }
+    if (layoutInfo) {
+      JsfRegister.layoutBuilderInfo[type] = layoutInfo;
+    }
   }
 
   static getLayoutInfo(type: string) {
     return JsfRegister.layoutBuilderInfo[type];
+  }
+
+  static listLayouts() {
+    return Object.keys(JsfRegister.layoutBuilderInfo);
   }
 
   static getLayoutInfoOrThrow(type: string) {
@@ -55,6 +57,10 @@ export class JsfRegister {
       throw new Error(`Layout info for ${ type } not found.`);
     }
     return JsfRegister.layoutBuilderInfo[type];
+  }
+
+  static setLayoutInfo(info: LayoutInfoInterface) {
+    JsfRegister.layoutBuilderInfo[info.type] = info;
   }
 
   static getLayoutFormDefinition(type: string) {
@@ -67,13 +73,9 @@ export class JsfRegister {
       return x.defaultDefinition;
     }
     return {
-      type: type === 'prop' ? undefined : type,
+      type : type === 'prop' ? undefined : type,
       items: x.items?.enabled ? [] : undefined
     };
-  }
-
-  static listLayouts() {
-    return Object.keys(JsfRegister.layoutStore);
   }
 
 
@@ -97,8 +99,8 @@ export class JsfRegister {
     }
 
     return compatibleType.formDefinitionTransform
-           ? compatibleType.formDefinitionTransform(JSON.parse(JSON.stringify(JsfRegister.handlerCompatibility[type].formDefinition)), prop)
-           : JsfRegister.handlerCompatibility[type].formDefinition;
+      ? compatibleType.formDefinitionTransform(JSON.parse(JSON.stringify(JsfRegister.handlerCompatibility[type].formDefinition)), prop)
+      : JsfRegister.handlerCompatibility[type].formDefinition;
   }
 
   static getHandlerCompatibility(type: string) {
@@ -134,7 +136,7 @@ export class JsfRegister {
         const: type,
         title: 'Type'
       };
-      JsfRegister.handlerCompatibility[type]                                           = compatibility;
+      JsfRegister.handlerCompatibility[type]                                    = compatibility;
     }
   }
 }

@@ -251,6 +251,10 @@ export class JsfLayoutEditor {
 
     const targetInfo = JsfRegister.getLayoutInfo(itemDefinition.type || 'prop');
 
+    if (!targetInfo) {
+      throw new Error(`Unknown layout "${ itemDefinition.type || 'prop' }"`);
+    }
+
     // Check fixed
     if (this.info.items?.fixed) {
       const idx = this.info.items.fixed.indexOf(targetInfo.type);

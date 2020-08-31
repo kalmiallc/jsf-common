@@ -1,11 +1,19 @@
-import { LayoutInfoInterface }                                                                  from '../../../register/interfaces';
-import { JsfAbstractPropLayout, JsfLayoutExpansionPanelContent, JsfLayoutExpansionPanelHeader } from '../../../layout';
+import { LayoutInfoInterface }          from '../../../register/interfaces';
+import {
+  JsfAbstractPropLayout,
+  jsfAbstractPropLayoutJsfDefinitionLayoutItems,
+  jsfAbstractPropLayoutJsfDefinitionSchemaProperties,
+  JsfLayoutExpansionPanelContent,
+  JsfLayoutExpansionPanelHeader
+}                                       from '../../../layout';
+import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { JsfRegister }                  from '../../../register';
 
 export class JsfLayoutPropExpansionPanelPreferences {}
 
 const layoutInfo: LayoutInfoInterface = {
   type       : 'expansion-panel',
-  title      : 'Expansion-panel',
+  title      : 'Expansion Panel',
   category   : 'Layout',
   icon       : 'layout-icons/expansion-panel.svg',
   formControl: {
@@ -35,3 +43,31 @@ export class JsfLayoutPropExpansionPanel extends JsfAbstractPropLayout {
     Object.assign(this, data);
   }
 }
+
+export const layoutExpansionPanelJsfDefinition = {
+  schema: {
+    type      : 'object',
+    properties: {
+      ...jsfAbstractPropLayoutJsfDefinitionSchemaProperties,
+
+      multi: {
+        type : 'boolean',
+        title: 'Allow independent expansion state'
+      }
+    }
+  },
+  layout: {
+    type : 'div',
+    items: [
+      ...EditorInterfaceLayoutFactory.createPanelGroup([
+        ...EditorInterfaceLayoutFactory.createPanel('Expansion Panel', [
+          ...EditorInterfaceLayoutFactory.outputKey('multi')
+        ]),
+
+        ...jsfAbstractPropLayoutJsfDefinitionLayoutItems
+      ])
+    ]
+  }
+};
+
+JsfRegister.layout('expansion-panel', layoutInfo, layoutExpansionPanelJsfDefinition);

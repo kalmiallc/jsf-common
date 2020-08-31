@@ -1,5 +1,12 @@
-import { LayoutInfoInterface }                     from '../../../register/interfaces';
-import { JsfAbstractPropLayout, JsfUnknownLayout } from '../../../layout';
+import { LayoutInfoInterface }          from '../../../register/interfaces';
+import {
+  JsfAbstractPropLayout,
+  jsfAbstractPropLayoutJsfDefinitionLayoutItems,
+  jsfAbstractPropLayoutJsfDefinitionSchemaProperties,
+  JsfUnknownLayout
+}                                       from '../../../layout';
+import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
   type       : 'array',
@@ -30,3 +37,52 @@ export class JsfLayoutPropArray extends JsfAbstractPropLayout {
     Object.assign(this, data);
   }
 }
+
+export const layoutArrayJsfDefinition = {
+  schema: {
+    type      : 'object',
+    properties: {
+      ...jsfAbstractPropLayoutJsfDefinitionSchemaProperties,
+
+      addable  : {
+        type : 'boolean',
+        title: 'Addable'
+      },
+      orderable: {
+        type : 'boolean',
+        title: 'Orderable'
+      },
+      removable: {
+        type : 'boolean',
+        title: 'Removable'
+      }
+    }
+  },
+  layout: {
+    type : 'div',
+    items: [
+      ...EditorInterfaceLayoutFactory.createPanelGroup([
+        ...EditorInterfaceLayoutFactory.createPanel('Array', [
+          {
+            type : 'div',
+            items: [
+              {
+                key: 'addable'
+              },
+              {
+                key: 'orderable'
+              },
+              {
+                key: 'removable'
+              }
+            ]
+          }
+        ]),
+
+        ...jsfAbstractPropLayoutJsfDefinitionLayoutItems
+      ])
+    ]
+  }
+};
+
+JsfRegister.layout('array', layoutInfo, layoutArrayJsfDefinition);

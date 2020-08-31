@@ -259,36 +259,33 @@ export const jsfAbstractLayoutJsfDefinitionSchemaProperties = {
   }
 };
 
-export const jsfAbstractLayoutJsfDefinitionLayoutItems = [{
-  type : 'div',
-  items: [
-    ...EditorInterfaceLayoutFactory.createPanel('Styling', [
-      ...EditorInterfaceLayoutFactory.outputKey('htmlClass', 'HTML class'),
-      ...EditorInterfaceLayoutFactory.outputKey('htmlOuterClass', 'HTML outer class'),
-    ]),
-    ...EditorInterfaceLayoutFactory.createPanel('Visibility', [
-      ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('visibleIf.$eval', 'Visibility condition', CodeEditorKeyIconType.Eval),
-      ...EditorInterfaceLayoutFactory.outputKey('visibleIf.dependencies', 'Dependencies'),
-      ...EditorInterfaceLayoutFactory.outputKey('visibleIf.layoutDependencies', 'Layout dependencies')
-    ]),
-    ...EditorInterfaceLayoutFactory.createPanel('Click Actions', [
-      // TODO
-    ]),
-    ...EditorInterfaceLayoutFactory.createPanel('Tooltip', [
-      ...EditorInterfaceLayoutFactory.outputKey('tooltip.title', 'Tooltip title'),
-      ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('tooltip.templateData.$eval', 'Tooltip template data'),
-      ...EditorInterfaceLayoutFactory.outputKey('tooltip.templateData.dependencies', 'Dependencies'),
-      ...EditorInterfaceLayoutFactory.outputKey('tooltip.position', 'Position'),
-      ...EditorInterfaceLayoutFactory.outputKey('tooltip.displayAsTitleAttribute')
-    ]),
-    ...EditorInterfaceLayoutFactory.createPanel('Misc', [
-      ...EditorInterfaceLayoutFactory.outputKey('$mode', 'Modes'),
-      ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('buildIf.$eval', 'Build condition', CodeEditorKeyIconType.Eval),
-      ...EditorInterfaceLayoutFactory.outputKey('id', 'Layout ID'),
-      ...EditorInterfaceLayoutFactory.outputKey('$comment', 'Developer comments')
-    ])
-  ]
-}];
+export const jsfAbstractLayoutJsfDefinitionLayoutItems = [
+  ...EditorInterfaceLayoutFactory.createPanel('Styling', [
+    ...EditorInterfaceLayoutFactory.outputKey('htmlClass', 'HTML class'),
+    ...EditorInterfaceLayoutFactory.outputKey('htmlOuterClass', 'HTML outer class')
+  ]),
+  ...EditorInterfaceLayoutFactory.createPanel('Visibility', [
+    ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('visibleIf.$eval', 'Visibility condition', CodeEditorKeyIconType.Eval),
+    ...EditorInterfaceLayoutFactory.outputKey('visibleIf.dependencies', 'Dependencies'),
+    ...EditorInterfaceLayoutFactory.outputKey('visibleIf.layoutDependencies', 'Layout dependencies')
+  ]),
+  ...EditorInterfaceLayoutFactory.createPanel('Click Actions', [
+    // TODO
+  ]),
+  ...EditorInterfaceLayoutFactory.createPanel('Tooltip', [
+    ...EditorInterfaceLayoutFactory.outputKey('tooltip.title', 'Tooltip title'),
+    ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('tooltip.templateData.$eval', 'Tooltip template data'),
+    ...EditorInterfaceLayoutFactory.outputKey('tooltip.templateData.dependencies', 'Dependencies'),
+    ...EditorInterfaceLayoutFactory.outputKey('tooltip.position', 'Position'),
+    ...EditorInterfaceLayoutFactory.outputKey('tooltip.displayAsTitleAttribute')
+  ]),
+  ...EditorInterfaceLayoutFactory.createPanel('Other', [
+    ...EditorInterfaceLayoutFactory.outputKey('$mode', 'Modes'),
+    ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('buildIf.$eval', 'Build condition', CodeEditorKeyIconType.Eval),
+    ...EditorInterfaceLayoutFactory.outputKey('id', 'Layout ID'),
+    ...EditorInterfaceLayoutFactory.outputKey('$comment', 'Developer comments')
+  ])
+];
 
 /**********************************
  * JSF Abstract Special Layout
@@ -316,16 +313,19 @@ export abstract class JsfAbstractPropLayout extends JsfAbstractLayout {
   placeholder?: string;
 }
 
-export const jsfAbstractPropLayoutJsfDefinitionSchemaProperties = jsfAbstractLayoutJsfDefinitionSchemaProperties;
-export const jsfAbstractPropLayoutJsfDefinitionLayoutItems      = [{
-  type : 'div',
-  items: [
-    ...EditorInterfaceLayoutFactory.createPanel('Placeholder', [
-      ...EditorInterfaceLayoutFactory.outputKey('placeholder', 'Placeholder')
-    ]),
-    ...jsfAbstractLayoutJsfDefinitionLayoutItems[0].items
-  ]
-}];
+export const jsfAbstractPropLayoutJsfDefinitionSchemaProperties = {
+  ...jsfAbstractLayoutJsfDefinitionSchemaProperties,
+
+  placeholder: {
+    type: 'string'
+  }
+};
+export const jsfAbstractPropLayoutJsfDefinitionLayoutItems      = [
+  ...EditorInterfaceLayoutFactory.createPanel('Placeholder', [
+    ...EditorInterfaceLayoutFactory.outputKey('placeholder', 'Placeholder')
+  ]),
+  ...jsfAbstractLayoutJsfDefinitionLayoutItems
+];
 
 /**********************************
  * JSF Abstract Items Layout

@@ -52,8 +52,8 @@ export const layoutExpansionPanelStandaloneJsfDefinition = {
     type : 'div',
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
-        ...EditorInterfaceLayoutFactory.createPanel('Expansion Panel', [
-          EditorInterfaceLayoutFactory.outputKey('multi')
+        ...EditorInterfaceLayoutFactory.createPanel('Expansion Panel Standalone', [
+          ...EditorInterfaceLayoutFactory.outputKey('multi')
         ]),
 
         ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems

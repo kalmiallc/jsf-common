@@ -13,6 +13,8 @@ export * from './layout-array';
 export * from './layout-table';
 export * from './layout-expansion-panel';
 
+export * from './editor-layouts';
+
 
 export interface JsfLayoutPropPreferencesInterface {
   // array?: never; // Not implemented
