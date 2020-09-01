@@ -124,19 +124,19 @@ export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownPro
 
   getDefinition(opt: { skipItems?: boolean } = {}) { // TODO PropDefinition error TS2577: Return type annotation circularly references itself.
     /// AUTO RECOVERY SECTION (ideally we don't need this, but builder UI is still in beta)
-    if ((this._definition as any).onInit?.type === null) {
+    if (!(this._definition as any).onInit?.type) {
       delete this._definition.onInit;
     }
-    if ((this._definition as any).title === null) {
+    if (!(this._definition as any).title) {
       delete (this._definition as any).title;
     }
-    if ((this._definition as any).required === null) {
+    if (!(this._definition as any).required) {
       delete (this._definition as any).required;
     }
-    if (isObject(this._definition.enabledIf) && this._definition.enabledIf.$eval === null) {
+    if (isObject(this._definition.enabledIf) && !this._definition.enabledIf.$eval) {
       delete this._definition.enabledIf;
     }
-    if (isObject((this._definition as any).evalValidators) && (this._definition as any).evalValidators?.$evals === null) {
+    if (isObject((this._definition as any).evalValidators) && !(this._definition as any).evalValidators?.$evals) {
       delete (this._definition as any).evalValidators;
     }
 

@@ -157,19 +157,19 @@ export class JsfLayoutEditor {
 
   getDefinition(opt: { skipItems?: boolean } = {}): JsfUnknownLayout {
     /// AUTO RECOVERY SECTION (ideally we don't need this, but builder UI is still in beta)
-    if (this._definition.$mode === null) {
+    if (!this._definition.$mode) {
       delete this._definition.$mode;
     }
-    if (isObject(this._definition.visibleIf) && this._definition.visibleIf.$eval === null) {
+    if (isObject(this._definition.visibleIf) && !this._definition.visibleIf.$eval) {
       delete this._definition.visibleIf;
     }
-    if (this._definition.buildIf?.$eval === null) {
+    if (!this._definition.buildIf?.$eval) {
       delete this._definition.buildIf;
     }
-    if (isObject(this._definition.tooltip) && this._definition.tooltip?.title === null) {
+    if (isObject(this._definition.tooltip) && !this._definition.tooltip?.title) {
       delete this._definition.tooltip;
     }
-    if (this._definition.analytics?.category === null) {
+    if (!this._definition.analytics?.category) {
       delete this._definition.analytics;
     }
     if ((this._definition as any).templateData) {
