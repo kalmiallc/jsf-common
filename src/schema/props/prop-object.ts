@@ -1,6 +1,13 @@
 import { JsfProp, JsfPropJsonValue, JsfPropValue } from './index';
-import { JsfAbstractProp }                         from '../abstract/abstract-prop';
+import {
+  JsfAbstractProp,
+  jsfAbstractPropJsfDefinitionLayoutItems,
+  jsfAbstractPropJsfDefinitionSchemaProperties,
+  jsfAbstractPropJsfDefinitionValidationLayoutItems
+}                                                  from '../abstract/abstract-prop';
 import { JsfHandlerObject }                        from '../../handlers';
+import { EditorInterfaceLayoutFactory }            from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { JsfRegister, PropInfoInterface }          from '../../register';
 
 
 export interface JsfPropObjectValue {
@@ -10,6 +17,13 @@ export interface JsfPropObjectValue {
 export interface JsfPropObjectJsonValue {
   [propertyName: string]: JsfPropJsonValue;
 }
+
+const propInfo: PropInfoInterface = {
+  type : 'object',
+  title: 'Object',
+  color: '#f29e4c'
+};
+
 
 export class JsfPropObject extends JsfAbstractProp<JsfPropObjectValue, 'object', JsfHandlerObject> {
 
@@ -42,3 +56,38 @@ export class JsfPropObject extends JsfAbstractProp<JsfPropObjectValue, 'object',
     Object.assign(this, data);
   }
 }
+
+export const propObjectJsfDefinition = {
+  schema: {
+    type      : 'object',
+    properties: {
+      ...jsfAbstractPropJsfDefinitionSchemaProperties,
+
+      required: {
+        type   : 'array',
+        handler: {
+          type: 'common/chip-list'
+        },
+        items  : {
+          type: 'string'
+        }
+      }
+    }
+  },
+  layout: {
+    type : 'div',
+    items: [
+      ...EditorInterfaceLayoutFactory.createPanelGroup([
+        ...EditorInterfaceLayoutFactory.createPanel('Validation', [
+          ...EditorInterfaceLayoutFactory.outputKey('required', 'Required properties'),
+
+          ...jsfAbstractPropJsfDefinitionValidationLayoutItems
+        ]),
+
+        ...jsfAbstractPropJsfDefinitionLayoutItems
+      ])
+    ]
+  }
+};
+
+JsfRegister.prop('object', propInfo, propObjectJsfDefinition);

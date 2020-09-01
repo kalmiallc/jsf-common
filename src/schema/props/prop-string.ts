@@ -1,6 +1,21 @@
-import { JsfAbstractPropPrimitive } from '../abstract/abstract-prop-primitive';
-import { JsfHandlerString }         from '../../handlers';
+import {
+  JsfAbstractPropPrimitive, jsfAbstractPropPrimitiveJsfDefinitionLayoutItems,
+  jsfAbstractPropPrimitiveJsfDefinitionSchemaProperties,
+  jsfAbstractPropPrimitiveJsfDefinitionValidationLayoutItems
+} from '../abstract/abstract-prop-primitive';
+import { JsfHandlerString }                                                                                    from '../../handlers';
+import { PropInfoInterface }                                                                                   from '../../register/interfaces';
+import { JsfRegister }                                                                                         from '../../register';
+import { jsfAbstractItemsLayoutJsfDefinitionLayoutItems, jsfAbstractItemsLayoutJsfDefinitionSchemaProperties } from '../../layout/abstract';
+import { EditorInterfaceSchemaFactory }                                                                        from '../../editor/helpers/editor-factory/editor-interface-schema-factory';
+import { EditorInterfaceLayoutFactory }                                                                        from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { CodeEditorKeyIconType }                                                                               from '../../editor/helpers/editor-factory/layout/code-editor-key';
 
+const propInfo: PropInfoInterface = {
+  type: 'string',
+  title: 'String',
+  color: '#83e377'
+};
 
 /**
  * date-time:     A string instance is valid against this attribute if it is a valid
@@ -112,3 +127,134 @@ export class JsfPropString extends JsfAbstractPropPrimitive<string, 'string', Js
     Object.assign(this, data);
   }
 }
+
+export const propStringJsfDefinition = {
+  schema: {
+    type      : 'object',
+    properties: {
+      ...jsfAbstractPropPrimitiveJsfDefinitionSchemaProperties,
+
+      format   : {
+        type   : 'string',
+        handler: {
+          type  : 'common/dropdown',
+          values: [
+            {
+              value: 'email',
+              label: 'Email address'
+            },
+            {
+              value: 'hostname',
+              label: 'Hostname'
+            },
+            {
+              value: 'uri',
+              label: 'URI'
+            },
+            {
+              value: 'uri-reference',
+              label: 'URI reference'
+            },
+            {
+              value: 'ipv4',
+              label: 'IPv4 address'
+            },
+            {
+              value: 'ipv6',
+              label: 'IPv6 address'
+            },
+            {
+              value: 'mac',
+              label: 'MAC address'
+            },
+            {
+              value: 'date-time',
+              label: 'Date and time'
+            },
+            {
+              value: 'date',
+              label: 'Date'
+            },
+            {
+              value: 'time',
+              label: 'Time'
+            },
+            {
+              value: 'regex',
+              label: 'Regular expression'
+            },
+            {
+              value: 'color',
+              label: 'Color'
+            },
+            {
+              value: 'credit-card',
+              label: 'Credit card'
+            },
+            {
+              value: 'phone',
+              label: 'Phone number'
+            }
+          ]
+        }
+      },
+
+      minLength: {
+        type : 'integer'
+      },
+      maxLength: {
+        type : 'integer'
+      },
+      pattern  : {
+        description: 'Regular expression that strings must match.',
+        type       : 'string'
+      },
+      secret   : {
+        type : 'boolean',
+        title: 'Secret'
+      },
+      multiline: {
+        type : 'boolean',
+        title: 'Multiline'
+      }
+    }
+  },
+  layout: {
+    type : 'div',
+    items: [
+      ...EditorInterfaceLayoutFactory.createPanelGroup([
+        ...EditorInterfaceLayoutFactory.createPanel('Validation', [
+          ...EditorInterfaceLayoutFactory.outputKey('format', 'Format'),
+          {
+            type: 'row',
+            items: [
+              {
+                type: 'col',
+                xs: 6,
+                items: [
+                  ...EditorInterfaceLayoutFactory.outputKey('minLength', 'Min. length'),
+                ]
+              },
+              {
+                type: 'col',
+                xs: 6,
+                items: [
+                  ...EditorInterfaceLayoutFactory.outputKey('maxLength', 'Max. length'),
+                ]
+              }
+            ]
+          },
+          ...EditorInterfaceLayoutFactory.outputKey('pattern', 'Pattern'),
+          ...EditorInterfaceLayoutFactory.outputKey('secret'),
+          ...EditorInterfaceLayoutFactory.outputKey('multiline'),
+
+          ...jsfAbstractPropPrimitiveJsfDefinitionValidationLayoutItems,
+        ]),
+
+        ...jsfAbstractPropPrimitiveJsfDefinitionLayoutItems,
+      ])
+    ]
+  }
+};
+
+JsfRegister.prop('string', propInfo, propStringJsfDefinition);

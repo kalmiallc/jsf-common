@@ -1,8 +1,27 @@
 /**
  * for numbers, including floating numbers
  */
-import { JsfAbstractPropPrimitive }            from '../abstract/abstract-prop-primitive';
+import {
+  JsfAbstractPropPrimitive,
+  jsfAbstractPropPrimitiveJsfDefinitionLayoutItems,
+  jsfAbstractPropPrimitiveJsfDefinitionSchemaProperties,
+  jsfAbstractPropPrimitiveJsfDefinitionValidationLayoutItems
+}                                              from '../abstract/abstract-prop-primitive';
 import { JsfHandlerInteger, JsfHandlerNumber } from '../../handlers';
+import { EditorInterfaceLayoutFactory }        from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { JsfRegister, PropInfoInterface }      from '../../register';
+
+const propInfoNumber: PropInfoInterface = {
+  type : 'number',
+  title: 'Number',
+  color: '#048ba8'
+};
+
+const propInfoInteger: PropInfoInterface = {
+  type : 'integer',
+  title: 'Integer',
+  color: '#0db39e'
+};
 
 abstract class JsfAbstractNumberBase<TypeString, Handler> extends JsfAbstractPropPrimitive<number, TypeString, Handler> {
 
@@ -30,6 +49,48 @@ abstract class JsfAbstractNumberBase<TypeString, Handler> extends JsfAbstractPro
   maximum?: number;
 
 }
+
+export const jsfAbstractNumberBaseJsfDefinitionSchemaProperties      = {
+  ...jsfAbstractPropPrimitiveJsfDefinitionSchemaProperties,
+
+  multipleOf: {
+    type: 'number'
+  },
+  minimum   : {
+    type: 'number'
+  },
+  maximum   : {
+    type: 'number'
+  }
+};
+export const jsfAbstractNumberBaseJsfDefinitionValidationLayoutItems = [
+  ...EditorInterfaceLayoutFactory.outputKey('multipleOf', 'Multiple of'),
+  {
+    type : 'row',
+    items: [
+      {
+        type : 'col',
+        xs   : 6,
+        items: [
+          ...EditorInterfaceLayoutFactory.outputKey('minimum', 'Min. value')
+        ]
+      },
+      {
+        type : 'col',
+        xs   : 6,
+        items: [
+          ...EditorInterfaceLayoutFactory.outputKey('maximum', 'Max. value')
+        ]
+      }
+    ]
+  },
+
+  ...jsfAbstractPropPrimitiveJsfDefinitionValidationLayoutItems
+];
+export const jsfAbstractNumberBaseJsfDefinitionLayoutItems           = [
+  ...jsfAbstractPropPrimitiveJsfDefinitionLayoutItems
+];
+
 
 export class JsfPropNumber extends JsfAbstractNumberBase<'number', JsfHandlerNumber> {
 
@@ -76,6 +137,81 @@ export class JsfPropNumber extends JsfAbstractNumberBase<'number', JsfHandlerNum
   }
 }
 
+export const propNumberJsfDefinition = {
+  schema: {
+    type      : 'object',
+    properties: {
+      ...jsfAbstractNumberBaseJsfDefinitionSchemaProperties,
+
+      exclusiveMinimum: {
+        type: 'number'
+      },
+      exclusiveMaximum: {
+        type: 'number'
+      },
+      minDecimalDigits: {
+        type : 'number'
+      },
+      maxDecimalDigits: {
+        type : 'number'
+      }
+    }
+  },
+  layout: {
+    type : 'div',
+    items: [
+      ...EditorInterfaceLayoutFactory.createPanelGroup([
+        ...EditorInterfaceLayoutFactory.createPanel('Validation', [
+          {
+            type : 'row',
+            items: [
+              {
+                type : 'col',
+                xs   : 6,
+                items: [
+                  ...EditorInterfaceLayoutFactory.outputKey('exclusiveMinimum', 'Exclusive min. value')
+                ]
+              },
+              {
+                type : 'col',
+                xs   : 6,
+                items: [
+                  ...EditorInterfaceLayoutFactory.outputKey('exclusiveMaximum', 'Exclusive max. value')
+                ]
+              }
+            ]
+          },
+          {
+            type : 'row',
+            items: [
+              {
+                type : 'col',
+                xs   : 6,
+                items: [
+                  ...EditorInterfaceLayoutFactory.outputKey('minDecimalDigits', 'Min. decimal digits')
+                ]
+              },
+              {
+                type : 'col',
+                xs   : 6,
+                items: [
+                  ...EditorInterfaceLayoutFactory.outputKey('maxDecimalDigits', 'Max. decimal digits')
+                ]
+              }
+            ]
+          },
+
+          ...jsfAbstractNumberBaseJsfDefinitionValidationLayoutItems
+        ]),
+
+        ...jsfAbstractNumberBaseJsfDefinitionLayoutItems
+      ])
+    ]
+  }
+};
+JsfRegister.prop('number', propInfoNumber, propNumberJsfDefinition);
+
+
 /**
  * For integers
  */
@@ -100,3 +236,39 @@ export class JsfPropInteger extends JsfAbstractNumberBase<'integer', JsfHandlerI
     Object.assign(this, data);
   }
 }
+
+
+export const propIntegerJsfDefinition = {
+  schema: {
+    type      : 'object',
+    properties: {
+      ...jsfAbstractNumberBaseJsfDefinitionSchemaProperties,
+
+      even: {
+        title: 'Must be even',
+        type : 'boolean'
+      },
+      odd : {
+        title: 'Must be odd',
+        type : 'boolean'
+      }
+    }
+  },
+  layout: {
+    type : 'div',
+    items: [
+      ...EditorInterfaceLayoutFactory.createPanelGroup([
+        ...EditorInterfaceLayoutFactory.createPanel('Validation', [
+          ...EditorInterfaceLayoutFactory.outputKey('even'),
+          ...EditorInterfaceLayoutFactory.outputKey('odd'),
+
+          ...jsfAbstractNumberBaseJsfDefinitionValidationLayoutItems
+        ]),
+
+        ...jsfAbstractNumberBaseJsfDefinitionLayoutItems
+      ])
+    ]
+  }
+};
+
+JsfRegister.prop('integer', propInfoInteger, propIntegerJsfDefinition);

@@ -1,5 +1,20 @@
-import { JsfAbstractProp } from '../abstract/abstract-prop';
-import { JsfHandlerNull }  from '../../handlers';
+import {
+  JsfAbstractProp,
+  jsfAbstractPropJsfDefinitionLayoutItems,
+  jsfAbstractPropJsfDefinitionSchemaProperties,
+  jsfAbstractPropJsfDefinitionValidationLayoutItems
+}                                       from '../abstract/abstract-prop';
+import { JsfHandlerNull }               from '../../handlers';
+import { PropInfoInterface }            from '../../register/interfaces';
+import { EditorInterfaceLayoutFactory } from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { JsfRegister }                  from '../../register';
+
+const propInfo: PropInfoInterface = {
+  type : 'null',
+  title: 'Null',
+  color: '#858585'
+};
+
 
 /**
  * Value MUST be null.  Note this is mainly for purpose of
@@ -13,3 +28,27 @@ export class JsfPropNull extends JsfAbstractProp<null, 'null', JsfHandlerNull> {
     Object.assign(this, data);
   }
 }
+
+export const propNullJsfDefinition = {
+  schema: {
+    type      : 'object',
+    properties: {
+      ...jsfAbstractPropJsfDefinitionSchemaProperties
+    }
+  },
+  layout: {
+    type : 'div',
+    items: [
+      ...EditorInterfaceLayoutFactory.createPanelGroup([
+        ...EditorInterfaceLayoutFactory.createPanel('Validation', [
+
+          ...jsfAbstractPropJsfDefinitionValidationLayoutItems
+        ]),
+
+        ...jsfAbstractPropJsfDefinitionLayoutItems
+      ])
+    ]
+  }
+};
+
+JsfRegister.prop('null', propInfo, propNullJsfDefinition);

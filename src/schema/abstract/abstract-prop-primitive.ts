@@ -1,5 +1,10 @@
-import { JsfAbstractProp } from './abstract-prop';
-import { JsfPropRef }      from '../props';
+import {
+  JsfAbstractProp, jsfAbstractPropJsfDefinitionLayoutItems,
+  jsfAbstractPropJsfDefinitionSchemaProperties,
+  jsfAbstractPropJsfDefinitionValidationLayoutItems
+} from './abstract-prop';
+import { JsfPropRef }                                                    from '../props';
+import { EditorInterfaceLayoutFactory }                                  from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
 
 
 export abstract class JsfAbstractPropPrimitive<PrimitiveType, PrimitiveTypeString, Handlers>
@@ -52,3 +57,22 @@ export abstract class JsfAbstractPropPrimitive<PrimitiveType, PrimitiveTypeStrin
    */
   not?: (JsfAbstractPropPrimitive<PrimitiveType, PrimitiveTypeString, Handlers> | JsfPropRef)[];
 }
+
+export const jsfAbstractPropPrimitiveJsfDefinitionSchemaProperties = {
+  ...jsfAbstractPropJsfDefinitionSchemaProperties,
+
+  required: {
+    type : 'boolean',
+    title: 'Required'
+  }
+};
+
+export const jsfAbstractPropPrimitiveJsfDefinitionValidationLayoutItems = [
+  ...EditorInterfaceLayoutFactory.outputKey('required'),
+
+  ...jsfAbstractPropJsfDefinitionValidationLayoutItems
+];
+
+export const jsfAbstractPropPrimitiveJsfDefinitionLayoutItems = [
+  ...jsfAbstractPropJsfDefinitionLayoutItems
+];

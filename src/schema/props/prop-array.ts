@@ -1,10 +1,23 @@
 import { JsfProp, JsfPropJsonValue, JsfPropValue } from './index';
-import { JsfAbstractProp }                         from '../abstract/abstract-prop';
+import {
+  JsfAbstractProp, jsfAbstractPropJsfDefinitionLayoutItems,
+  jsfAbstractPropJsfDefinitionSchemaProperties,
+  jsfAbstractPropJsfDefinitionValidationLayoutItems
+}                                                  from '../abstract/abstract-prop';
 import { JsfHandlerArray }                         from '../../handlers';
-
+import { PropInfoInterface }                       from '../../register/interfaces';
+import { EditorInterfaceLayoutFactory }            from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { JsfRegister }                             from '../../register';
 
 export interface JsfPropArrayValue extends Array<JsfPropValue> {} // TODO this is not working
 export interface JsfPropArrayJsonValue extends Array<JsfPropJsonValue> {}
+
+const propInfo: PropInfoInterface = {
+  type : 'array',
+  title: 'Array',
+  color: '#f94144'
+};
+
 
 export class JsfPropArray extends JsfAbstractProp<JsfPropArrayValue[] | null, 'array', JsfHandlerArray> {
 
@@ -118,3 +131,58 @@ export class JsfPropArray extends JsfAbstractProp<JsfPropArrayValue[] | null, 'a
     Object.assign(this, data);
   }
 }
+
+export const propArrayJsfDefinition = {
+  schema: {
+    type      : 'object',
+    properties: {
+      ...jsfAbstractPropJsfDefinitionSchemaProperties,
+
+      uniqueItems: {
+        title      : 'Unique items',
+        type       : 'boolean',
+      },
+      minItems   : {
+        type       : 'integer'
+      },
+      maxItems   : {
+        type       : 'integer'
+      },
+    }
+  },
+  layout: {
+    type : 'div',
+    items: [
+      ...EditorInterfaceLayoutFactory.createPanelGroup([
+        ...EditorInterfaceLayoutFactory.createPanel('Validation', [
+          {
+            type : 'row',
+            items: [
+              {
+                type : 'col',
+                xs   : 6,
+                items: [
+                  ...EditorInterfaceLayoutFactory.outputKey('minItems', 'Min. items')
+                ]
+              },
+              {
+                type : 'col',
+                xs   : 6,
+                items: [
+                  ...EditorInterfaceLayoutFactory.outputKey('maxItems', 'Max. items')
+                ]
+              }
+            ]
+          },
+          ...EditorInterfaceLayoutFactory.outputKey('uniqueItems'),
+
+          ...jsfAbstractPropJsfDefinitionValidationLayoutItems
+        ]),
+
+        ...jsfAbstractPropJsfDefinitionLayoutItems
+      ])
+    ]
+  }
+};
+
+JsfRegister.prop('array', propInfo, propArrayJsfDefinition);

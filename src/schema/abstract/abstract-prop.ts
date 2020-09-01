@@ -1,6 +1,7 @@
 import { JsfProp, JsfPropTypes }        from '../index';
 import { JsfProviderExecutorInterface } from '../../providers';
 import { JsfValueOptionsInterface }     from '../../layout/interfaces/value-options.type';
+import { EditorInterfaceLayoutFactory } from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
 
 export type JsfUnknownProp = JsfAbstractBareProp<JsfPropTypes, any>;
 
@@ -51,7 +52,7 @@ export abstract class JsfAbstractBareProp<TypeString, Handlers> {
       type: 'eval',
       $eval: string
     }
-    )[];
+  )[];
 
   /**
    * The "definitions" keywords provides a standardized location for schema authors to inline re-usable JSON Schemas
@@ -140,6 +141,178 @@ export abstract class JsfAbstractBareProp<TypeString, Handlers> {
   };
 }
 
+export const jsfAbstractBarePropJsfDefinitionSchemaProperties      = {
+  $comment     : {
+    type : 'string',
+  },
+  $group       : {
+    type : 'array',
+    handler: {
+      type: 'common/chip-list',
+    },
+    items: {
+      type: 'string'
+    }
+  },
+  virtual      : {
+    type : 'boolean',
+    title: 'Virtual'
+  },
+  // TODO onInit
+  onInit       : {
+    type      : 'object',
+    properties: {
+      type: {
+        type: 'string'
+      }
+    }
+  },
+  // TODO providers
+
+  enabledIf    : {
+    type      : 'object',
+    title     : 'Enabled if',
+    properties: {
+      $eval       : {
+        type   : 'string',
+        title  : 'Eval',
+        handler: {
+          type   : 'common/code-editor',
+          options: {
+            language: 'javascript'
+          }
+        }
+      },
+      dependencies: {
+        type : 'array',
+        title: 'Dependencies',
+        handler: {
+          type: 'common/chip-list'
+        },
+        items: {
+          type: 'string'
+        }
+      }
+    }
+  },
+  onValueChange: {
+    type      : 'object',
+    title     : 'On value change',
+    properties: {
+      noEmit               : {
+        type : 'boolean',
+        title: 'Do not emit value change events'
+      },
+      updateDependencyValue: {
+        type: 'array',
+        items: {
+          type      : 'object',
+          properties: {
+            mode     : {
+              type       : 'string',
+              handler: {
+                type  : 'common/dropdown',
+                values: [
+                  { value: 'set', label: 'Set' },
+                  { value: 'patch', label: 'Patch' },
+                ]
+              },
+              onInit: [
+                {
+                  type: 'set',
+                  value: {
+                    const: 'set'
+                  }
+                }
+              ]
+            },
+            key      : {
+              type : 'string',
+            },
+            onLinked : {
+              type : 'boolean',
+              title: 'Update value on linked builder'
+            },
+            condition: {
+              type      : 'object',
+              properties: {
+                onLinked: {
+                  type : 'boolean',
+                  title: 'Check condition on linked builder'
+                },
+                $eval   : {
+                  type   : 'string',
+                  handler: {
+                    type   : 'common/code-editor',
+                    options: {
+                      language: 'javascript'
+                    }
+                  }
+                }
+              }
+            },
+            value    : {
+              type      : 'object',
+              properties: {
+                onLinked : {
+                  type : 'boolean',
+                  title: 'Get value on linked builder'
+                },
+                $eval    : {
+                  type   : 'string',
+                  handler: {
+                    type   : 'common/code-editor',
+                    options: {
+                      language: 'javascript'
+                    }
+                  }
+                },
+                default: {
+                  type   : 'boolean',
+                  title  : 'Reset to default',
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+};
+export const jsfAbstractBarePropJsfDefinitionValidationLayoutItems = [];
+
+export const jsfAbstractBarePropJsfDefinitionLayoutItems = [
+  ...EditorInterfaceLayoutFactory.createPanel('Enabled', [
+    ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('enabledIf.$eval', 'Enabled condition'),
+    ...EditorInterfaceLayoutFactory.outputKey('enabledIf.dependencies', 'Dependencies'),
+  ]),
+
+  ...EditorInterfaceLayoutFactory.createPanel('On value change', [
+    ...EditorInterfaceLayoutFactory.outputKey('onValueChange.noEmit'),
+    ...EditorInterfaceLayoutFactory.createLabel('Update dependency values'),
+    ...EditorInterfaceLayoutFactory.outputArrayCardListKey('onValueChange.updateDependencyValue',
+      { $eval: `return { value: 'Update dependency value' }`, dependencies: [] },
+      [
+        ...EditorInterfaceLayoutFactory.outputKey('onValueChange.updateDependencyValue[].mode', 'Mode'),
+        ...EditorInterfaceLayoutFactory.outputKey('onValueChange.updateDependencyValue[].key', 'Key'),
+        ...EditorInterfaceLayoutFactory.outputKey('onValueChange.updateDependencyValue[].onLinked'),
+        ...EditorInterfaceLayoutFactory.createDivider(),
+        ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('onValueChange.updateDependencyValue[].condition.$eval', 'Condition eval'),
+        ...EditorInterfaceLayoutFactory.outputKey('onValueChange.updateDependencyValue[].condition.onLinked'),
+        ...EditorInterfaceLayoutFactory.createDivider(),
+        ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('onValueChange.updateDependencyValue[].value.$eval', 'Value eval'),
+        ...EditorInterfaceLayoutFactory.outputKey('onValueChange.updateDependencyValue[].value.onLinked'),
+        ...EditorInterfaceLayoutFactory.outputKey('onValueChange.updateDependencyValue[].value.default'),
+      ]
+    ),
+  ]),
+
+  ...EditorInterfaceLayoutFactory.createPanel('Other', [
+    ...EditorInterfaceLayoutFactory.outputKey('$group', 'Groups'),
+    ...EditorInterfaceLayoutFactory.outputKey('$comment', 'Developer comments')
+  ]),
+];
+
 export abstract class JsfAbstractProp<Type, TypeString, Handlers> extends JsfAbstractBareProp<TypeString, Handlers> {
 
   /**
@@ -191,8 +364,6 @@ export abstract class JsfAbstractProp<Type, TypeString, Handlers> extends JsfAbs
    * @default false
    */
   nullable?: boolean;
-
-  virtual?: boolean;
 
   /**
    * The value of this keyword MAY be of any type, including null.
@@ -269,3 +440,154 @@ export abstract class JsfAbstractProp<Type, TypeString, Handlers> extends JsfAbs
     dependencies?: string[];
   };
 }
+
+export const jsfAbstractPropJsfDefinitionSchemaProperties = {
+  ...jsfAbstractBarePropJsfDefinitionSchemaProperties,
+
+  title         : {
+    type: 'string'
+  },
+  description   : {
+    type: 'string'
+  },
+  nullable      : {
+    type : 'boolean',
+    title: 'Allow null value'
+  },
+  readOnly      : {
+    type : 'boolean',
+    title: 'Read-only'
+  },
+  writeOnly     : {
+    type : 'boolean',
+    title: 'Write-only'
+  },
+  default       : {
+    type : '@@PROP_TYPE',
+  },
+  // TODO advancedDefault
+  // TODO const
+
+  searchable    : {
+    type      : 'object',
+    title     : 'Searchable',
+    properties: {
+      title : {
+        type: 'string'
+      },
+      byUser: {
+        type      : 'object',
+        title     : 'By user',
+        properties: {
+          $mode  : {
+            type: 'string'
+          },
+          enabled: {
+            type : 'boolean',
+            title: 'Searchable enabled'
+          }
+        }
+      }
+    }
+  },
+  evalValidators: {
+    type      : 'object',
+    properties: {
+      errorCodes  : {
+        type : 'array',
+        items: {
+          type      : 'object',
+          properties: {
+            code   : {
+              type : 'string',
+              title: 'Code'
+            },
+            message: {
+              type : 'string',
+              title: 'Message'
+            }
+          }
+        }
+      },
+      $evals      : {
+        type : 'array',
+        items: {
+          type   : 'string',
+          handler: {
+            type    : 'common/code-editor',
+            language: 'javascript'
+          }
+        }
+      },
+      dependencies: {
+        type   : 'array',
+        handler: {
+          type: 'common/chip-list'
+        },
+        items  : {
+          type: 'string'
+        }
+      }
+    }
+  }
+};
+
+export const jsfAbstractPropJsfDefinitionValidationLayoutItems = [
+
+  ...jsfAbstractBarePropJsfDefinitionValidationLayoutItems
+];
+
+export const jsfAbstractPropJsfDefinitionLayoutItems = [
+  ...EditorInterfaceLayoutFactory.createPanel('Form Property', [
+    ...EditorInterfaceLayoutFactory.outputKey('title', 'Title'),
+    ...EditorInterfaceLayoutFactory.outputKey('description', 'Description'),
+    {
+      type : 'row',
+      items: [
+        {
+          type : 'col',
+          xs   : 6,
+          items: [
+            ...EditorInterfaceLayoutFactory.outputKey('nullable'),
+            ...EditorInterfaceLayoutFactory.outputKey('virtual')
+          ]
+        },
+        {
+          type : 'col',
+          xs   : 6,
+          items: [
+            ...EditorInterfaceLayoutFactory.outputKey('readOnly'),
+            ...EditorInterfaceLayoutFactory.outputKey('writeOnly')
+          ]
+        }
+      ]
+    },
+    ...EditorInterfaceLayoutFactory.outputKey('default', 'Default value'),
+    ...EditorInterfaceLayoutFactory.outputKey('searchable.byUser.enabled'),
+    ...EditorInterfaceLayoutFactory.outputKey('searchable.title', 'Searchable title'),
+    ...EditorInterfaceLayoutFactory.outputKey('searchable.byUser.$mode', 'Searchable mode')
+  ]),
+
+  ...EditorInterfaceLayoutFactory.createPanel('Custom validation', [
+    ...EditorInterfaceLayoutFactory.createLabel('Error codes'),
+    ...EditorInterfaceLayoutFactory.outputArrayCardListKey(
+      'evalValidators.errorCodes',
+      { $eval: `return { value: 'Code' }`, dependencies: [] },
+      [
+        ...EditorInterfaceLayoutFactory.outputKey('evalValidators.errorCodes[].code', 'Code'),
+        ...EditorInterfaceLayoutFactory.outputKey('evalValidators.errorCodes[].message', 'Message')
+      ]
+    ),
+    ...EditorInterfaceLayoutFactory.createLabel('Evals'),
+    ...EditorInterfaceLayoutFactory.outputArrayCardListKey(
+      'evalValidators.$evals',
+      { $eval: `return { value: 'Eval' }`, dependencies: [] },
+      [
+        ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('evalValidators.$evals[]', 'Eval')
+      ]
+    ),
+    ...EditorInterfaceLayoutFactory.outputKey('evalValidators.dependencies', 'Dependencies')
+  ]),
+
+  ...jsfAbstractBarePropJsfDefinitionLayoutItems
+];

@@ -153,7 +153,7 @@ export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownPro
   }
 
   getPropertiesForm(): JsfDocument {
-    return JsfRegister.getLayoutFormDefinition(this._definition.type);
+    return JsfRegister.getPropFormDefinition(this._definition.type);
   }
 
   setHandler(type: string) {

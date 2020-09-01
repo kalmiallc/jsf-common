@@ -4,6 +4,7 @@ import { JsfProp, JsfPropObject }                           from '../schema/prop
 import { LayoutInfoInterface }                              from '../editor/layout';
 import { EvalContextOptions, JsfBuilder }                   from '../builder';
 import { HandlerCompatibilityInterface }                    from './interfaces/handler-compatibility.interface';
+import { PropInfoInterface }                                from './interfaces';
 
 export class JsfRegister {
 
@@ -11,6 +12,9 @@ export class JsfRegister {
 
   private static layoutStore: { [layoutKey: string]: JsfDefinition }             = {};
   private static layoutBuilderInfo: { [layoutKey: string]: LayoutInfoInterface } = {};
+
+  private static propStore: { [propKey: string]: JsfDefinition }           = {};
+  private static propBuilderInfo: { [propKey: string]: PropInfoInterface } = {};
 
   private static handlerBuilderStore: { [propBuilderKey: string]: (new (builder: JsfUnknownPropBuilder) => JsfAbstractHandlerBuilder<any>) } = {};
   private static handlerCompatibility: { [handlerKey: string]: HandlerCompatibilityInterface }                                               = {};
@@ -22,6 +26,54 @@ export class JsfRegister {
   static setAppEvalContextLambda(x: (builder: JsfBuilder, options?: EvalContextOptions) => any) {
     JsfRegister.appEvalContextLambda = x;
   }
+
+  /**************************************
+   * Props
+   **************************************/
+  /**
+   * Register a prop.
+   * @param type
+   * @param propInfo
+   * @param definition
+   */
+  static prop(type: string, propInfo: PropInfoInterface, definition: any) {
+    if (JsfRegister.propStore[type]) {
+      throw new Error(`Duplicate prop "${ type }"`);
+    }
+    if (definition) {
+      JsfRegister.propStore[type] = definition;
+    }
+    if (propInfo) {
+      JsfRegister.propBuilderInfo[type] = propInfo;
+    }
+  }
+
+  static getPropInfo(type: string) {
+    return JsfRegister.propBuilderInfo[type];
+  }
+
+  static listProps() {
+    return Object.keys(JsfRegister.propBuilderInfo);
+  }
+
+  static getPropFormDefinition(type: string) {
+    return JsfRegister.propStore[type] && JSON.parse(
+      JSON.stringify(JsfRegister.propStore[type])
+        .replace('@@PROP_TYPE', type)
+    );
+  }
+
+  static getNewPropDefinition(type: string) {
+    const x = JsfRegister.getLayoutInfoOrThrow(type);
+    if (x.defaultDefinition) {
+      return x.defaultDefinition;
+    }
+    return {
+      type : type === 'prop' ? undefined : type,
+      items: x.items?.enabled ? [] : undefined
+    };
+  }
+
 
   /**************************************
    * Layouts

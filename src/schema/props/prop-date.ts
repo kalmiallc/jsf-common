@@ -1,5 +1,19 @@
-import { JsfAbstractPropPrimitive } from '../abstract/abstract-prop-primitive';
-import { JsfHandlerDate }           from '../../handlers';
+import {
+  JsfAbstractPropPrimitive, jsfAbstractPropPrimitiveJsfDefinitionLayoutItems,
+  jsfAbstractPropPrimitiveJsfDefinitionSchemaProperties,
+  jsfAbstractPropPrimitiveJsfDefinitionValidationLayoutItems
+}                                       from '../abstract/abstract-prop-primitive';
+import { JsfHandlerDate }               from '../../handlers';
+import { PropInfoInterface }            from '../../register/interfaces';
+import { EditorInterfaceLayoutFactory } from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { JsfRegister }                  from '../../register';
+
+const propInfo: PropInfoInterface = {
+  type: 'date',
+  title: 'Date',
+  color: '#16db93'
+};
+
 
 export class JsfPropDate extends JsfAbstractPropPrimitive<Date, 'date', JsfHandlerDate> {
 
@@ -25,3 +39,53 @@ export class JsfPropDate extends JsfAbstractPropPrimitive<Date, 'date', JsfHandl
   }
 
 }
+
+export const propDateJsfDefinition = {
+  schema: {
+    type      : 'object',
+    properties: {
+      ...jsfAbstractPropPrimitiveJsfDefinitionSchemaProperties,
+
+      minimum: {
+        type : 'date'
+      },
+      maximum: {
+        type : 'date'
+      }
+    }
+  },
+  layout: {
+    type : 'div',
+    items: [
+      ...EditorInterfaceLayoutFactory.createPanelGroup([
+        ...EditorInterfaceLayoutFactory.createPanel('Validation', [
+          {
+            type : 'row',
+            items: [
+              {
+                type : 'col',
+                xs   : 6,
+                items: [
+                  ...EditorInterfaceLayoutFactory.outputKey('minimum', 'Min. allowed date')
+                ]
+              },
+              {
+                type : 'col',
+                xs   : 6,
+                items: [
+                  ...EditorInterfaceLayoutFactory.outputKey('maximum', 'Max. allowed date')
+                ]
+              }
+            ]
+          },
+
+          ...jsfAbstractPropPrimitiveJsfDefinitionValidationLayoutItems,
+        ]),
+
+        ...jsfAbstractPropPrimitiveJsfDefinitionLayoutItems,
+      ])
+    ]
+  }
+};
+
+JsfRegister.prop('date', propInfo, propDateJsfDefinition);

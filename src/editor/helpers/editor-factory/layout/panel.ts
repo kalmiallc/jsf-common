@@ -1,22 +1,31 @@
 export function panel(title: string, panelItems: any[]) {
-  return [
+  return !panelItems.length ? [] : [
     {
-      type : 'div',
-      htmlClass: 'p-1 border rounded-sm mb-3 __shadow-float--black',
+      type : 'expansion-panel-standalone-panel',
       items: [
         {
-          type : 'div',
-          htmlClass: '__background-color--grey-light-50 rounded-sm px-2 py-2 mt-n1 mx-n1 mb-1',
+          type : 'expansion-panel-standalone-header',
           items: [
             {
-              type : 'heading',
-              level: 6,
-              htmlClass: 'my-0 __color--primary',
-              title
+              type     : 'badge',
+              htmlClass: 'my-0 font-weight-bold',
+              title,
+              color    : 'primary'
             }
           ]
         },
-        ...panelItems
+        {
+          type : 'expansion-panel-standalone-content',
+          items: [
+            {
+              type     : 'div',
+              htmlClass: 'pb-4',
+              items    : [
+                ...panelItems
+              ]
+            }
+          ]
+        }
       ]
     }
   ];
