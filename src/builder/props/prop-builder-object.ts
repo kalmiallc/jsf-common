@@ -1,14 +1,15 @@
 import { GetControlOptions, JsfAbstractPropBuilder, JsfUnknownPropBuilder } from '../abstract/abstract-prop-builder';
 import { JsfPropObject, JsfPropObjectJsonValue, JsfPropObjectValue }        from '../../schema/props/index';
 import { JsfHandlerBuilderObject }                                          from '../../handlers/index';
-import { JsfPropBuilderFactory }                                            from '../util/prop-builder-factory';
-import { RequiredValidationError }                                          from '../validation-errors';
-import { JsfTranslatableMessage }                                           from '../../translations';
+import { JsfPropBuilderFactory }   from '../util/prop-builder-factory';
+import { RequiredValidationError } from '../validation-errors';
+import { JsfTranslatableMessage }  from '../../translations';
 import {
   PatchValueOptionsInterface,
   SetValueOptionsInterface
-}                                                                           from '../interfaces/set-value-options.interface';
-import { jsfEnv }                                                           from '../../jsf-env';
+}                                  from '../interfaces/set-value-options.interface';
+import { jsfEnv }                  from '../../jsf-env';
+import { ValueChangeInterface }    from '../interfaces';
 
 export class JsfPropBuilderObject
   extends JsfAbstractPropBuilder<JsfPropObject, JsfHandlerBuilderObject, JsfPropObjectValue, JsfPropObjectJsonValue> {
@@ -99,16 +100,18 @@ export class JsfPropBuilderObject
           safeMode   : this.safeMode
         });
 
-        // acc[propertyName].valueChange.subscribe(next => this.onChildPropValueChange(next));
+        this.properties[propertyName].valueChange.subscribe(next => this.onChildPropValueChange(next));
       }
     }
 
     super.onChildPropsInit();
   }
 
-  // onChildPropValueChange(data: ValueChangeInterface) {
-  //   this.emitValueChange(data);
-  // }
+  onChildPropValueChange(data: ValueChangeInterface) {
+    this.onValueChange({
+      oldValue: data.oldValue
+    });
+  }
 
   async _validateViaProp() {
     this.errors = [];

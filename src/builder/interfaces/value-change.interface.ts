@@ -5,4 +5,6 @@ export interface ValueChangeInterface {
   value: any;
 
   path: string;
+
+  oldValue?: any;
 }

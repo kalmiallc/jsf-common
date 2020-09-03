@@ -768,7 +768,9 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
   /**
    * Note: parent bubble up of value change event is done via status change.
    */
-  protected emitValueChange(): void {
+  protected emitValueChange(data?: {
+      oldValue: any
+    }): void {
     const value = this.getValue();
     this.rootBuilder.masterEmitValueChange(this.abstractPath, { value });
 
@@ -778,7 +780,9 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
 
     this._valueChange.next({
       path : this.path,
-      value: this.getValue()
+      value: this.getValue(),
+
+      ... (data ? { oldValue: data.oldValue } : {})
     });
   }
 
@@ -804,7 +808,7 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
   }) {
     await this.changeOtherPropValues(data);
 
-    this.emitValueChange();
+    this.emitValueChange(data);
   }
 
   /**
