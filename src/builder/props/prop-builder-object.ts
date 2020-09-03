@@ -209,8 +209,8 @@ export class JsfPropBuilderObject
         const x = this.properties[propertyName].getValue(opt);
 
         if (!(
-          (x === undefined && !(this.properties[propertyName].prop as any).nullable)
-          || (x === null && !(this.properties[propertyName].prop as any).nullable)
+          (x === undefined && !this.properties[propertyName].isNullable)
+          || (x === null && !this.properties[propertyName].isNullable)
         )) {
           value[propertyName] = x;
           valuePropCount++;
@@ -222,7 +222,7 @@ export class JsfPropBuilderObject
       if (this.prop.required) {
         return {};
       } else {
-        return this.prop.nullable ? null : undefined;
+        return this.isNullable ? null : undefined;
       }
     }
 

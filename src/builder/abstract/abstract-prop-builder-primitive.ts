@@ -31,9 +31,11 @@ export abstract class JsfAbstractPropBuilderPrimitive<PropType extends JsfUnknow
     propName: string,
     safeMode?: SafeModeTypes
   }) {
-    if ((data.prop as any).nullable) {
+    this.prop       = data.prop;
+    if (this.isNullable) {
       this.value = null;
     }
+
     return super.onInit(data);
   }
 

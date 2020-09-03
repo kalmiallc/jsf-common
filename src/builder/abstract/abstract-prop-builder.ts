@@ -1,56 +1,36 @@
-import { ValidationError }               from './abstract-validation-error';
+import { ValidationError }                                                                                     from './abstract-validation-error';
 import {
   JsfAbstractHandlerBuilder,
   JsfUnknownHandlerBuilder
-}                                        from './abstract-handler-builder';
-import {
-  isPropBuilderArray,
-  JsfPropBuilder
-}                                        from '../props';
+}                                                                                                              from './abstract-handler-builder';
+import { isPropBuilderArray, JsfPropBuilder }                                                                  from '../props';
 import {
   JsfAbstractProp,
   JsfUnknownProp
-}                                 from '../../schema/abstract/abstract-prop';
-import { JsfAbstractBuilder }     from './abstract-builder';
-import { EvalValidationError }    from '../validation-errors';
+}                                                                                                              from '../../schema/abstract/abstract-prop';
+import { JsfAbstractBuilder }                                                                                  from './abstract-builder';
+import { EvalValidationError }                                                                                 from '../validation-errors';
+import { Observable, Subject }                                                                                 from 'rxjs';
+import { JsfTranslatableMessage, JsfTranslationServer }                                                        from '../../translations';
+import { JsfRegister }                                                                                         from '../../register/jsf-register';
+import { JsfBuilder }                                                                                          from '../jsf-builder';
+import { JsfBasicHandlerBuilder }                                                                              from './abstract-basic-handler-builder';
+import { JsfEvalRuntimeError }                                                                                 from '../../errors';
+import { PropStatus }                                                                                          from '../interfaces/prop-status.enum';
+import { ValueChangeInterface }                                                                                from '../interfaces/value-change.interface';
 import {
-  Observable,
-  Subject
-}                                 from 'rxjs';
-import {
-  JsfTranslatableMessage,
-  JsfTranslationServer
-}                                 from '../../translations';
-import { JsfRegister }            from '../../register/jsf-register';
-import { JsfBuilder }             from '../jsf-builder';
-import { JsfBasicHandlerBuilder } from './abstract-basic-handler-builder';
-import { JsfEvalRuntimeError }    from '../../errors';
-import {
-  PropStatus
-}                                 from '../interfaces/prop-status.enum';
-import { ValueChangeInterface }   from '../interfaces/value-change.interface';
-import {
-  AddOrRemoveItemValueOptionsInterface,
   ConsumeProviderValueOptionsInterface,
   PatchValueOptionsInterface,
   SetValueOptionsInterface
-}                                 from '../interfaces/set-value-options.interface';
-import { canActivateFilterItem }         from '../../filters';
-import {
-  isJsfProviderExecutor,
-  JsfProviderConsumerInterface,
-  JsfProviderExecutor,
-  JsfProviderExecutorStatus
-}                                        from '../../providers';
-import { takeUntil }                     from 'rxjs/operators';
-import { ProviderPendingError }          from '../../providers/errors/provider-pending.error';
-import { ProviderFailedError }           from '../../providers/errors/provider-failed.error';
-import { getEvalValidatorsDependencies } from '../util/abstarct-prop-util';
-import { safeModeCompatibleHandlers }    from '../../handlers';
-import { jsfEnv }                        from '../../jsf-env';
-import { isString }                      from 'lodash';
-import * as hash                         from 'object-hash';
-import { layoutClickHandlerService }     from '../util';
+}                                                                                                              from '../interfaces/set-value-options.interface';
+import { canActivateFilterItem }                                                                               from '../../filters';
+import { isJsfProviderExecutor, JsfProviderConsumerInterface, JsfProviderExecutor, JsfProviderExecutorStatus } from '../../providers';
+import { takeUntil }                                                                                           from 'rxjs/operators';
+import { getEvalValidatorsDependencies }                                                                       from '../util/abstarct-prop-util';
+import { safeModeCompatibleHandlers }                                                                          from '../../handlers';
+import { isNil, isString }                                                                                     from 'lodash';
+import * as hash                                                                                               from 'object-hash';
+import { layoutClickHandlerService }                                                                           from '../util';
 
 export type JsfUnknownPropBuilder = JsfAbstractPropBuilder<JsfUnknownProp, JsfUnknownHandlerBuilder, any, any>;
 
@@ -373,6 +353,17 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
 
 
   // ══════════════════════
+  // HELPER GETTERS
+  // ══════════════════════
+  /**
+   * Returns true if prop is nullable. Defaults to true if no value is provided by the user.
+   */
+  get isNullable() {
+    return this.prop && (isNil((this.prop as any).nullable) ? true : !!(this.prop as any).nullable);
+  }
+
+
+  // ══════════════════════
   // HANDLER
   // ══════════════════════
   /**
@@ -500,9 +491,9 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
       switch (x.type) {
         case 'set':
           this.setValue(layoutClickHandlerService.getValue(x.value, {
-            propBuilder: this,
-            rootBuilder: this.rootBuilder
-          }))
+              propBuilder: this,
+              rootBuilder: this.rootBuilder
+            }))
             .catch(console.error);
           break;
         case 'eval':
@@ -578,7 +569,7 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
       if (advancedDefault.query) {
         if ((window as any)) {
           const query = (window as any).location.search.substring(1);
-          const vars = query.split('&');
+          const vars  = query.split('&');
           for (let i = 0; i < vars.length; i++) {
             const pair = vars[i].split('=');
             if (decodeURIComponent(pair[0]) === advancedDefault.query) {
@@ -599,7 +590,7 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
 
       if (advancedDefault.$eval) {
         const ctx = this.rootBuilder.getEvalContext({
-          propBuilder: this,
+          propBuilder       : this,
           extraContextParams: { $currentValue: value }
         });
         value     = this.rootBuilder.runEvalWithContext((advancedDefault as any).$evalTranspiled || advancedDefault.$eval, ctx);
@@ -769,8 +760,8 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
    * Note: parent bubble up of value change event is done via status change.
    */
   protected emitValueChange(data?: {
-      oldValue: any
-    }): void {
+    oldValue: any
+  }): void {
     const value = this.getValue();
     this.rootBuilder.masterEmitValueChange(this.abstractPath, { value });
 
@@ -782,7 +773,7 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
       path : this.path,
       value: this.getValue(),
 
-      ... (data ? { oldValue: data.oldValue } : {})
+      ...(data ? { oldValue: data.oldValue } : {})
     });
   }
 
@@ -794,7 +785,7 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
     this.rootBuilder.masterEmitStatusChange(
       {
         abstractPath: this.abstractPath,
-        path        : this.path,
+        path        : this.path
       }, {
         status: this.status
       }
@@ -921,7 +912,7 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
   }
 
   getValueHash(opt?: { virtual?: boolean }): string {
-    return hash.MD5(this.valueToJson(this.getValue(opt)) || null)
+    return hash.MD5(this.valueToJson(this.getValue(opt)) || null);
   }
 
   getJsonValueWithHash(opt?: { virtual?: boolean }): {
@@ -1107,11 +1098,11 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
     // PROVIDER FEEDBACK
     if (valid && this.hasProvider) {
       /*
-      this.setErrorIf(this.providerExecutor.status === JsfProviderExecutorStatus.Pending,
-        new ProviderPendingError());
-      this.setErrorIf(this.providerExecutor.status === JsfProviderExecutorStatus.Failed,
-        new ProviderFailedError());
-     */
+       this.setErrorIf(this.providerExecutor.status === JsfProviderExecutorStatus.Pending,
+       new ProviderPendingError());
+       this.setErrorIf(this.providerExecutor.status === JsfProviderExecutorStatus.Failed,
+       new ProviderFailedError());
+       */
 
       // Notice: object can return valid:false even if errors=[]
       valid = valid && this.errorsNotExist;

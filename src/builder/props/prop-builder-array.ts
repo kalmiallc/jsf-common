@@ -390,7 +390,7 @@ None existing path: <${ path }>`);
 
   private setNull() {
     const removedItems = this.items || [];
-    if (this.prop.nullable) {
+    if (this.isNullable) {
       this.items = null;
     } else {
       this.items = [];

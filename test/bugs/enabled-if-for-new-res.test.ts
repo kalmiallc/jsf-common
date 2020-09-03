@@ -8,11 +8,9 @@ const doc: JsfDocument = {
     properties: {
       A: {
         type : 'string',
-        nullable: true,
       },
       B: new JsfPropBoolean({
         type: 'boolean',
-        nullable: true,
         enabledIf: {
           $eval: `return $val.A === 'PASS';`,
           dependencies: ['A'],
@@ -20,7 +18,6 @@ const doc: JsfDocument = {
       }),
       C: {
         type : 'string',
-        nullable: true,
         enabledIf: {
           $eval: `return !!$val.B`,
           dependencies: ['B'],
