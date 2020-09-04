@@ -1,3 +1,13 @@
+export function panelGroup(panelItems: any[]) {
+  return [{
+    type : 'expansion-panel-standalone',
+    multi: true,
+    items: [
+      ...panelItems
+    ]
+  }];
+}
+
 export function panel(title: string, panelItems: any[]) {
   return !panelItems.length ? [] : [
     {

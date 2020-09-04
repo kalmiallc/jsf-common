@@ -1,6 +1,9 @@
 import { JsfLayoutOnClickInterface, JsfStyles, JsfUnknownLayout } from '../index';
 import { EditorInterfaceSchemaFactory }                           from '../../editor/helpers/editor-factory/editor-interface-schema-factory';
-import { EditorInterfaceLayoutFactory }                           from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import {
+  EditorInterfaceLayoutFactory,
+  wrapKeyDynamic
+}                                                                 from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { CodeEditorKeyIconType }                                  from '../../editor/helpers/editor-factory/layout/code-editor-key';
 
 /**********************************
@@ -154,20 +157,36 @@ export abstract class JsfAbstractLayout {
 }
 
 export const jsfAbstractLayoutJsfDefinitionSchemaProperties = {
-  $comment          : {
+  $comment: {
     type     : 'string',
     multiline: 3
   },
-  $mode             : {
-    type   : 'array',
-    title  : 'Mode',
-    handler: {
-      type: 'common/chip-list'
+  ...EditorInterfaceSchemaFactory.createDynamicSwitchableProperty('', '$mode', [
+    {
+      typeKey       : 'list',
+      typeName      : 'List',
+      propDefinition: {
+        type   : 'array',
+        handler: {
+          type: 'common/chip-list'
+        },
+        items  : {
+          type: 'string'
+        }
+      }
     },
-    items  : {
-      type: 'string'
+    {
+      typeKey       : 'eval',
+      typeName      : 'Eval',
+      propDefinition: {
+        type      : 'object',
+        properties: {
+          ...EditorInterfaceSchemaFactory.createEvalProperty()
+        }
+      }
     }
-  },
+  ]),
+
   id                : {
     type: 'string'
   },
@@ -280,7 +299,26 @@ export const jsfAbstractLayoutJsfDefinitionLayoutItems = [
     ...EditorInterfaceLayoutFactory.outputKey('tooltip.displayAsTitleAttribute')
   ]),
   ...EditorInterfaceLayoutFactory.createPanel('Other', [
-    ...EditorInterfaceLayoutFactory.outputKey('$mode', 'Modes'),
+    ...EditorInterfaceLayoutFactory.outputDynamicSwitchablePropKey('', '$mode', 'Modes', [
+      {
+        typeKey         : 'list',
+        layoutDefinition: {
+          type : 'div',
+          items: [
+            ...EditorInterfaceLayoutFactory.outputKey(wrapKeyDynamic('list'), 'Modes')
+          ]
+        }
+      },
+      {
+        typeKey         : 'eval',
+        layoutDefinition: {
+          type : 'div',
+          items: [
+            ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor(wrapKeyDynamic('eval.$eval'), 'Modes eval')
+          ]
+        }
+      }
+    ]),
     ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('buildIf.$eval', 'Build condition', CodeEditorKeyIconType.Eval),
     ...EditorInterfaceLayoutFactory.outputKey('id', 'Layout ID'),
     ...EditorInterfaceLayoutFactory.outputKey('$comment', 'Developer comments')

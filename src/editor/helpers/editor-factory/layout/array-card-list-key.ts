@@ -7,7 +7,7 @@ export function arrayCardListKey(key: string, cardTitleTemplateData: { $eval: st
         {
           type: 'div',
           visibleIf: {
-            $eval: `return !$getItemValue('${ key }').length`,
+            $eval: `return !$getItemValue('${ key }') || !$getItemValue('${ key }').length`,
             dependencies: [key]
           },
           htmlClass: '__background-color--grey-light-50 rounded-sm px-2 py-2 text-center mb-1',

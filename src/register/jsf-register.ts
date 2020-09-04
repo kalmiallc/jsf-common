@@ -59,7 +59,7 @@ export class JsfRegister {
   static getPropFormDefinition(type: string) {
     return JsfRegister.propStore[type] && JSON.parse(
       JSON.stringify(JsfRegister.propStore[type])
-        .replace('@@PROP_TYPE', type)
+        .replace(/@@PROP_TYPE/g, type)
     );
   }
 

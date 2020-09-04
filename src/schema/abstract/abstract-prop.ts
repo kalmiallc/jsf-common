@@ -2,6 +2,7 @@ import { JsfProp, JsfPropTypes }        from '../index';
 import { JsfProviderExecutorInterface } from '../../providers';
 import { JsfValueOptionsInterface }     from '../../layout/interfaces/value-options.type';
 import { EditorInterfaceLayoutFactory } from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { EditorInterfaceSchemaFactory } from '../../editor/helpers/editor-factory/editor-interface-schema-factory';
 
 export type JsfUnknownProp = JsfAbstractBareProp<JsfPropTypes, any>;
 
@@ -158,12 +159,25 @@ export const jsfAbstractBarePropJsfDefinitionSchemaProperties      = {
     type : 'boolean',
     title: 'Virtual'
   },
-  // TODO onInit
   onInit       : {
-    type      : 'object',
-    properties: {
-      type: {
-        type: 'string'
+    type      : 'array',
+    items: {
+      type: 'object',
+      properties: {
+        type: {
+          type: 'string',
+          required: true,
+          handler: {
+            type: 'common/dropdown',
+            values: [
+              { label: 'Set', value: 'set' },
+              { label: 'Eval', value: 'eval' },
+            ]
+          },
+          default: 'set'
+        },
+        ... EditorInterfaceSchemaFactory.createJsfValueOptionsProperty('onInit[]', 'value'),
+        ... EditorInterfaceSchemaFactory.createEvalProperty()
       }
     }
   },
@@ -285,6 +299,34 @@ export const jsfAbstractBarePropJsfDefinitionLayoutItems = [
   ...EditorInterfaceLayoutFactory.createPanel('Enabled', [
     ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('enabledIf.$eval', 'Enabled condition'),
     ...EditorInterfaceLayoutFactory.outputKey('enabledIf.dependencies', 'Dependencies'),
+  ]),
+
+  ...EditorInterfaceLayoutFactory.createPanel('On init', [
+    ...EditorInterfaceLayoutFactory.outputArrayCardListKey('onInit',
+      { $eval: `return { value: 'On prop init' }`, dependencies: []},
+      [
+        ... EditorInterfaceLayoutFactory.outputKey('onInit[].type', 'Type'),
+        {
+          type: 'div',
+          visibleIf: {
+            $eval: `return $getItemValue('onInit[].type') === 'set'`,
+            dependencies: ['onInit[].type']
+          },
+          items: [
+            ...EditorInterfaceLayoutFactory.outputJsfValueOptionsProperty('onInit[]', 'value', 'Set value')
+          ]
+        },
+        {
+          type: 'div',
+          visibleIf: {
+            $eval: `return $getItemValue('onInit[].type') === 'eval'`,
+            dependencies: ['onInit[].type']
+          },
+          items: [
+            ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('onInit[].$eval', 'Eval')
+          ]
+        }
+      ]),
   ]),
 
   ...EditorInterfaceLayoutFactory.createPanel('On value change', [
