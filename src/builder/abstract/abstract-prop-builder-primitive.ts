@@ -80,7 +80,7 @@ export abstract class JsfAbstractPropBuilderPrimitive<PropType extends JsfUnknow
     throw new Error(`Can not call getControl(${ path.join('.') }) on JsfAbstractPropBuilderPrimitive`);
   }
 
-  _getValueViaProp(opt?: { virtual?: boolean }) {
+  _getValueViaProp(opt?: { virtual?: boolean, skipGetter?: boolean  }) {
     if (this.disabled) {
       return null;
     }

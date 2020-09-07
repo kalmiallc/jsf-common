@@ -245,7 +245,7 @@ None existing path: <${ path }>`);
     return this.items[itemIndex].getControl(path);
   }
 
-  _getValueViaProp(opt?: { virtual?: boolean }) {
+  _getValueViaProp(opt?: { virtual?: boolean, skipGetter?: boolean  }) {
     if (!this.getItems()) {
       return this.getItems();
     }

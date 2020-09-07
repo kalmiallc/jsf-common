@@ -392,11 +392,11 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
     return this.rootComponent.jsfBuilder.validate();
   }
 
-  getJsonValue(opt?: { virtual?: boolean }): any {
+  getJsonValue(opt?: { virtual?: boolean, skipGetter?: boolean  }): any {
     return this.rootComponent && this.rootComponent.jsfBuilder ? this.rootComponent.jsfBuilder.getJsonValue(opt) : null;
   }
 
-  getValue(opt?: { virtual?: boolean }): any {
+  getValue(opt?: { virtual?: boolean, skipGetter?: boolean  }): any {
     return this.rootComponent && this.rootComponent.jsfBuilder ? this.rootComponent.jsfBuilder.getValue(opt) : null;
   }
 

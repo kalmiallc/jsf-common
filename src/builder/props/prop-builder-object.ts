@@ -184,7 +184,7 @@ export class JsfPropBuilderObject
     }
   }
 
-  _getValueViaProp(opt?: { virtual?: boolean }) {
+  _getValueViaProp(opt?: { virtual?: boolean, skipGetter?: boolean  }) {
     if (!this.properties) {
       return this.properties;
     }

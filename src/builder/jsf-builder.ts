@@ -811,11 +811,11 @@ export class JsfBuilder extends JsfAbstractBuilder {
     return null;
   }
 
-  getValue(opt?: { virtual?: boolean }) {
+  getValue(opt?: { virtual?: boolean, skipGetter?: boolean }) {
     return this.propBuilder.getValue(opt);
   }
 
-  getJsonValue(opt?: { virtual?: boolean }) {
+  getJsonValue(opt?: { virtual?: boolean, skipGetter?: boolean  }) {
     return this.propBuilder.getJsonValue(opt);
   }
 

@@ -57,6 +57,7 @@ export const layoutClickHandlerService = new class {
    */
   getValue(valueOptions: JsfValueOptionsType, ctxOptions: {
     rootBuilder: JsfBuilder,
+    skipGetter?: boolean,
     layoutBuilder?: JsfAbstractLayoutBuilder<JsfAbstractLayout>,
     propBuilder?: JsfUnknownPropBuilder,
     extraContextParams?: { [key: string]: any }
@@ -81,7 +82,7 @@ export const layoutClickHandlerService = new class {
         throw new Error(`Can not find prop for ${ valueOptions.key }.`);
       }
 
-      return prop.getValue();
+      return prop.getValue({ skipGetter: ctxOptions.skipGetter });
     }
 
     // Eval

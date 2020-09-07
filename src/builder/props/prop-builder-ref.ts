@@ -43,7 +43,7 @@ export class JsfPropBuilderRef extends JsfAbstractPropBuilder<JsfPropRef, JsfHan
     throw new Error('Not implemented!');
   }
 
-  _getValueViaProp(opt?: { virtual?: boolean }) {
+  _getValueViaProp(opt?: { virtual?: boolean, skipGetter?: boolean  }) {
     return this.builder.getValue(opt);
   }
 

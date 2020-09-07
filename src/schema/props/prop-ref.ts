@@ -26,7 +26,10 @@ export class JsfPropRef extends JsfAbstractBareProp<'ref', JsfHandlerRef> {
    */
   $ref: string;
 
-  set?: {
+  /**
+   * Not used!
+   */
+  refPatch?: {
     path: string;
     value: any;
   }[];

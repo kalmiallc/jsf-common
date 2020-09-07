@@ -1,5 +1,5 @@
-import { JsfProp, JsfPropTypes }        from '../index';
-import { JsfProviderExecutorInterface } from '../../providers';
+import { JsfProp, JsfPropTypes } from '../index';
+import { JsfProviderExecutorInterface }               from '../../providers';
 import { JsfValueOptionsInterface }     from '../../layout/interfaces/value-options.type';
 import { EditorInterfaceLayoutFactory } from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { EditorInterfaceSchemaFactory } from '../../editor/helpers/editor-factory/editor-interface-schema-factory';
@@ -103,7 +103,6 @@ export abstract class JsfAbstractBareProp<TypeString, Handlers> {
     dependencies: string[];
   };
 
-
   /**
    * Change other prop value when this value changes
    */
@@ -141,6 +140,21 @@ export abstract class JsfAbstractBareProp<TypeString, Handlers> {
       }
     }[]
   };
+
+  /**
+   * Value setter
+   */
+  set?: {
+    $eval?: string;
+
+    // Could be supported if needed.
+    // key?: string;
+  };
+
+  /**
+   * Value getter
+   */
+  get?: JsfValueOptionsInterface;
 }
 
 export const jsfAbstractBarePropJsfDefinitionSchemaProperties      = {

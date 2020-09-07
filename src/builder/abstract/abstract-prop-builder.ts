@@ -7,25 +7,39 @@ import { isPropBuilderArray, JsfPropBuilder }                                   
 import {
   JsfAbstractProp,
   JsfUnknownProp
-}                                                                                                              from '../../schema/abstract/abstract-prop';
-import { JsfAbstractBuilder }                                                                                  from './abstract-builder';
-import { EvalValidationError }                                                                                 from '../validation-errors';
-import { Observable, Subject }                                                                                 from 'rxjs';
-import { JsfTranslatableMessage, JsfTranslationServer }                                                        from '../../translations';
-import { JsfRegister }                                                                                         from '../../register/jsf-register';
-import { JsfBuilder }                                                                                          from '../jsf-builder';
-import { JsfBasicHandlerBuilder }                                                                              from './abstract-basic-handler-builder';
-import { JsfEvalRuntimeError }                                                                                 from '../../errors';
-import { PropStatus }                                                                                          from '../interfaces/prop-status.enum';
-import { ValueChangeInterface }                                                                                from '../interfaces/value-change.interface';
+}                                        from '../../schema/abstract/abstract-prop';
+import { JsfAbstractBuilder }            from './abstract-builder';
+import { EvalValidationError }           from '../validation-errors';
+import {
+  Observable,
+  Subject
+}                                        from 'rxjs';
+import {
+  JsfTranslatableMessage,
+  JsfTranslationServer
+}                                        from '../../translations';
+import { JsfRegister }                   from '../../register/jsf-register';
+import { JsfBuilder }                    from '../jsf-builder';
+import { JsfBasicHandlerBuilder }        from './abstract-basic-handler-builder';
+import { JsfEvalRuntimeError }           from '../../errors';
+import {
+  PropStatus
+}                                        from '../interfaces/prop-status.enum';
+import { ValueChangeInterface }          from '../interfaces/value-change.interface';
 import {
   ConsumeProviderValueOptionsInterface,
   PatchValueOptionsInterface,
   SetValueOptionsInterface
-}                                                                                                              from '../interfaces/set-value-options.interface';
-import { canActivateFilterItem }                                                                               from '../../filters';
-import { isJsfProviderExecutor, JsfProviderConsumerInterface, JsfProviderExecutor, JsfProviderExecutorStatus } from '../../providers';
-import { takeUntil }                                                                                           from 'rxjs/operators';
+}                                        from '../interfaces/set-value-options.interface';
+import { canActivateFilterItem }         from '../../filters';
+import {
+  isJsfProviderExecutor,
+  JsfProviderConsumerInterface,
+  JsfProviderExecutor,
+  JsfProviderExecutorStatus
+}                                        from '../../providers';
+import { takeUntil }                     from 'rxjs/operators';
+
 import { getEvalValidatorsDependencies }                                                                       from '../util/abstarct-prop-util';
 import { safeModeCompatibleHandlers }                                                                          from '../../handlers';
 import { isNil, isString }                                                                                     from 'lodash';
@@ -377,6 +391,14 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
 
   get hasHandlerGetValue(): boolean {
     return !!(this.handler && this.handler.getValue);
+  }
+
+  get hasGetter(): boolean {
+    return !!this.prop.get;
+  }
+
+  get hasSetter(): boolean {
+    return !!this.prop.set;
   }
 
   get hasHandlerSetValue(): boolean {
@@ -907,15 +929,15 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
   abstract jsonToValue(jsonValue: PropJsonValue): PropValue;
 
 
-  getJsonValue(opt?: { virtual?: boolean }): PropJsonValue {
+  getJsonValue(opt?: { virtual?: boolean, skipGetter?: boolean }): PropJsonValue {
     return this.valueToJson(this.getValue(opt));
   }
 
-  getValueHash(opt?: { virtual?: boolean }): string {
+  getValueHash(opt?: { virtual?: boolean, skipGetter?: boolean }): string {
     return hash.MD5(this.valueToJson(this.getValue(opt)) || null);
   }
 
-  getJsonValueWithHash(opt?: { virtual?: boolean }): {
+  getJsonValueWithHash(opt?: { virtual?: boolean, skipGetter?: boolean }): {
     value: PropJsonValue,
     hash: string
   } {
@@ -926,7 +948,7 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
     };
   }
 
-  getValue(opt?: { virtual?: boolean }): PropValue {
+  getValue(opt?: { virtual?: boolean, skipGetter?: boolean }): PropValue {
 
     // Here we have paradox: eval needs old / curr. val but we do not know what is it E/D - any/null
     if (this._enabledIfStatus === false) {
@@ -936,10 +958,21 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
     if (this.hasHandlerGetValue) {
       return this.handler.getValue();
     }
+    if (this.hasGetter && !opt?.skipGetter) {
+      return this._getValueFromGetter(opt);
+    }
     return this._getValueViaProp(opt);
   }
 
-  getValueWithHash(opt?: { virtual?: boolean }): {
+  _getValueFromGetter(opt?: { virtual?: boolean, skipGetter?: boolean }): PropValue {
+    return layoutClickHandlerService.getValue(this.prop.get, {
+      propBuilder: this,
+      rootBuilder: this.rootBuilder,
+      skipGetter : true
+    });
+  }
+
+  getValueWithHash(opt?: { virtual?: boolean, skipGetter?: boolean }): {
     value: PropValue,
     hash: string
   } {
@@ -950,7 +983,7 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
     };
   }
 
-  abstract _getValueViaProp(opt?: { virtual?: boolean }): PropValue;
+  abstract _getValueViaProp(opt?: { virtual?: boolean, skipGetter?: boolean }): PropValue;
 
   setValueNoResolve(value: PropValue, options: SetValueOptionsInterface = {}): void {
     const x = this.setValue(value, { ...options, noResolve: true });
@@ -966,8 +999,10 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
 
     const oldValue = options.noValueChange ? undefined : this.getValue();
 
-    if (this.hasHandlerSetValue) {
+    if (this.hasHandlerSetValue && !options.skipSetter) {
       this.handler.setValue(value, options);
+    } else if (this.hasSetter) {
+      this._setValueViaSetter(value, 'set', options);
     } else {
       this._setValueViaProp(value, options);
     }
@@ -1018,8 +1053,10 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
 
     const oldValue = options.noValueChange ? undefined : this.getValue();
 
-    if (this.hasHandlerPatchValue) {
+    if (this.hasHandlerPatchValue && !options.skipSetter) {
       this.handler.patchValue(value, options);
+    } else if (this.hasSetter) {
+      this._setValueViaSetter(value, 'patch', options);
     } else {
       this._patchValueViaProp(value, options);
     }
@@ -1061,6 +1098,29 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
         return options.mode === 'set' ? control.setJsonValue(jsonValue, options) : control.patchJsonValue(jsonValue, options);
       }
       return options.mode === 'set' ? this.setJsonValue(jsonValue, options) : this.patchJsonValue(jsonValue, options);
+    }
+  }
+
+  _setValueViaSetter(value: any, mode: 'patch' | 'set', options: PatchValueOptionsInterface | SetValueOptionsInterface) {
+    const ctx = this.rootBuilder.getEvalContext({
+      propBuilder       : this,
+      extraContextParams: {
+        $args: {
+          value,
+          mode,
+          options
+        }
+      }
+    });
+    const res = this.rootBuilder.runEvalWithContext(this.prop.set.$eval, ctx);
+    if (res.hasOwnProperty('value')) {
+      if (mode === 'patch') {
+        this._patchValueViaProp(res.value, options);
+      } else if (mode === 'set') {
+        this._setValueViaProp(res.value, options);
+      } else {
+        throw new Error('Missing mode.');
+      }
     }
   }
 

@@ -7,6 +7,8 @@ export interface SetValueOptionsInterface {
   noResolve?: boolean;
 
   noValueChange?: boolean;
+
+  skipSetter?: boolean;
 }
 
 export interface PatchValueOptionsInterface {
@@ -17,6 +19,8 @@ export interface PatchValueOptionsInterface {
   noResolve?: boolean;
 
   noValueChange?: boolean;
+
+  skipSetter?: boolean;
 }
 
 export interface ConsumeProviderValueOptionsInterface {
