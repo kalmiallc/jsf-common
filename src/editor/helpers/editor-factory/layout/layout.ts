@@ -2,7 +2,7 @@ export function divider() {
   return [
     {
       type     : 'hr',
-      htmlClass: 'my-1'
+      htmlClass: 'my-2'
     }
   ];
 }

@@ -1,8 +1,9 @@
-export function key(key: string, label?: string) {
+export function key(key: string, label?: string, keyExtraLayoutProperties?: any) {
   return [
     ...(label ? [{ type: 'span', title: label }] : []),
     {
-      key
+      key,
+      ... (keyExtraLayoutProperties || {})
     }
   ];
 }
