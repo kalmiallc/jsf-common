@@ -215,11 +215,11 @@ export class JsfPropBuilderArray extends JsfAbstractPropBuilder<JsfPropArray, Js
     const firstBracketEnd   = propertyId.indexOf(']');
 
     if (firstBracketStart === -1 || firstBracketEnd === -1) {
-      throw new Error(`[BAE-04] Property ${ propertyId } should be in brackets []`);
+      throw new Error(`[BAE-04] Property "${ propertyId }" should be in brackets []`);
     }
 
     if (firstBracketStart === firstBracketEnd) {
-      throw new Error(`[BAE-03] Property ${ propertyId } is not in format: [number | @string]`);
+      throw new Error(`[BAE-03] Property "${ propertyId }" is not in format: [number | @string]`);
     }
 
     const itemId = propertyId.substring(firstBracketStart + 1, firstBracketEnd);
@@ -231,15 +231,15 @@ export class JsfPropBuilderArray extends JsfAbstractPropBuilder<JsfPropArray, Js
     if (itemId.startsWith('@')) {
       const item = this.items.find(x => x.id === itemId);
       if (!item) {
-        throw new Error(`[BAE-01] JsfPropBuilderArray<${ this.path }>: Item ${ propertyId } can not be found.`);
+        throw new Error(`[BAE-01] JsfPropBuilderArray "${ this.path }": Item "${ propertyId }" can not be found.`);
       }
       return item.getControl(path);
     }
 
     const itemIndex = +itemId;
     if (itemIndex >= this.items.length) {
-      throw new Error(`[BAE-02] JsfPropBuilderArray<${ this.path }>: item index ${ itemIndex } out of bounds exception.
-None existing path: <${ path }>`);
+      throw new Error(`[BAE-02] JsfPropBuilderArray "${ this.path }": item index ${ itemIndex } out of bounds exception.
+Non-existing path: "${ path }"`);
     }
 
     return this.items[itemIndex].getControl(path);
