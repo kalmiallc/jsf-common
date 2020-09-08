@@ -181,12 +181,6 @@ export const evalService = new class {
         }
         return options.propBuilder.getSibling(key).getValue();
       },
-      get $propVal() {
-        if (!options.propBuilder) {
-          throw new Error(`'$propVal' cannot be used outside of prop schema.`);
-        }
-        return options.propBuilder.getValue({ skipGetter: options.propBuilder.hasGetter });
-      },
 
       $clientConfig: builder.clientConfig,
 
@@ -211,6 +205,12 @@ export const evalService = new class {
       get: (target, name: string) => {
         if (name === '$val') {
           return builder.propBuilder.getJsonValue();
+        } else if (name === '$propVal') {
+          if (!options.propBuilder) {
+            throw new Error(`'$propVal' cannot be used outside of prop schema.`);
+          }
+          return options.propBuilder.getValue({ skipGetter: options.propBuilder.hasGetter });
+
         } else {
           return target[name];
         }
