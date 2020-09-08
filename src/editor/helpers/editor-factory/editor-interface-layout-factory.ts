@@ -5,6 +5,7 @@ import { arrayCardListKey }                     from './layout/array-card-list-k
 import { key, keyWithItems }                    from './layout/key';
 import { divider, verticalSpacer }              from './layout/layout';
 import { dynamicSwitchablePropKey }             from './layout/dynamic-switchable-prop-key';
+import { editorPropName }                       from './editor-interface-utils';
 
 export abstract class EditorInterfaceLayoutFactory {
 
@@ -105,6 +106,57 @@ export abstract class EditorInterfaceLayoutFactory {
         }
       }
     ]);
+  };
+
+  static outputOnClickProperty = (basePath: string, propName: string) => {
+    const propFullPath       = `${ basePath ? basePath + '.' : '' }${ propName }`;
+    const editorPropFullPath = `${ basePath ? basePath + '.' : '' }${ propName }[].${ editorPropName(propName) }`;
+
+    return [
+      ...EditorInterfaceLayoutFactory.outputArrayCardListKey(propFullPath,
+        { $eval: `return { value: 'Action' }`, dependencies: [] },
+        [
+          // Type switcher
+          ...EditorInterfaceLayoutFactory.outputKey(editorPropFullPath, 'Action'),
+          // Abort
+          {
+            type: 'div',
+            visibleIf: {
+              $eval: `return $getItemValue('${ editorPropFullPath }') === 'abort'`,
+              dependencies: [editorPropFullPath]
+            },
+            items: [
+              ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor(`${ propFullPath }[].abort.$eval`, 'Abort condition'),
+            ]
+          },
+          // Eval
+          {
+            type     : 'div',
+            visibleIf: {
+              $eval       : `return $getItemValue('${ editorPropFullPath }') === '$eval'`,
+              dependencies: [editorPropFullPath]
+            },
+            items    : [
+              ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor(`${ propFullPath }[].$eval`, 'Eval'),
+            ]
+          },
+          // Emit
+          {
+            type     : 'div',
+            visibleIf: {
+              $eval       : `return $getItemValue('${ editorPropFullPath }') === 'emit'`,
+              dependencies: [editorPropFullPath]
+            },
+            items    : [
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].emit.event`, 'Event name'),
+              ...EditorInterfaceLayoutFactory.outputJsfValueOptionsProperty(`${ propFullPath }[].emit`, 'value', 'Value'),
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].emit.onLinked`),
+            ]
+          },
+          // Condition
+          ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor(`${ propFullPath }[].condition.$eval`, 'Condition')
+        ])
+    ];
   };
 }
 

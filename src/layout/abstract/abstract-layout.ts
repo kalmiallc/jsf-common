@@ -271,11 +271,8 @@ export const jsfAbstractLayoutJsfDefinitionSchemaProperties = {
       }
     }
   },
-  // TODO
-  onClick           : {
-    title: 'On click',
-    type : 'string'
-  }
+
+  ... EditorInterfaceSchemaFactory.createOnClickProperty('', 'onClick'),
 };
 
 export const jsfAbstractLayoutJsfDefinitionLayoutItems = [
@@ -289,7 +286,7 @@ export const jsfAbstractLayoutJsfDefinitionLayoutItems = [
     ...EditorInterfaceLayoutFactory.outputKey('visibleIf.layoutDependencies', 'Layout dependencies')
   ]),
   ...EditorInterfaceLayoutFactory.createPanel('Click Actions', [
-    // TODO
+    ... EditorInterfaceLayoutFactory.outputOnClickProperty('', 'onClick')
   ]),
   ...EditorInterfaceLayoutFactory.createPanel('Tooltip', [
     ...EditorInterfaceLayoutFactory.outputKey('tooltip.title', 'Tooltip title'),

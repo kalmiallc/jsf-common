@@ -191,7 +191,7 @@ export const jsfAbstractBarePropJsfDefinitionSchemaProperties      = {
           },
           default : 'set'
         },
-        ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty('onInit[]', 'value'),
+        ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty('onInit[]', 'value', 'dynamic'),
         ...EditorInterfaceSchemaFactory.createEvalProperty()
       }
     }
