@@ -1,6 +1,5 @@
 import { JsfRegister }                from '../../register/jsf-register';
 import { JsfBasicHandlerBuilder }     from '../../builder/abstract/abstract-basic-handler-builder';
-import { JsfPropBuilderObject }       from '../../builder/props';
 import {
   PatchValueOptionsInterface,
   SetValueOptionsInterface
@@ -40,10 +39,21 @@ export class JsfHandlerBuilderAny extends JsfBasicHandlerBuilder<JsfUnknownPropB
   }
 
   setValue(value: any, options: SetValueOptionsInterface = {}) {
+    if (this.builder.hasSetter) {
+      return this.builder._modifyValueViaSetter(value, 'set', x => this.value = x, options);
+    }
     this.value = value;
   }
 
   patchValue(value: any, options: PatchValueOptionsInterface = {}) {
+    if (this.builder.hasSetter) {
+      return this.builder._modifyValueViaSetter(
+        value,
+        'patch',
+        x => this.value = { ...this.value, ...x },
+        options
+      );
+    }
     this.value = { ...this.value, ...value };
   }
 
@@ -52,10 +62,13 @@ export class JsfHandlerBuilderAny extends JsfBasicHandlerBuilder<JsfUnknownPropB
   }
 
   getJsonValue() {
-    return this.value;
+    return this.getValue();
   }
 
   getValue() {
+    if (this.builder.hasGetter) {
+      return this.builder._getValueFromGetter();
+    }
     return this.value;
   }
 }

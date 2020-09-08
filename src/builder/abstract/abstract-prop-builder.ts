@@ -1002,7 +1002,14 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
     if (this.hasHandlerSetValue) {
       this.handler.setValue(value, options);
     } else if (this.hasSetter && !options.skipSetter) {
-      this._setValueViaSetter(value, 'set', options);
+      if (!this._modifyValueViaSetter(
+        value,
+        'set',
+        x => this._patchValueViaProp(x, options),
+        options
+      )) {
+        return;
+      }
     } else {
       this._setValueViaProp(value, options);
     }
@@ -1056,7 +1063,14 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
     if (this.hasHandlerPatchValue) {
       this.handler.patchValue(value, options);
     } else if (this.hasSetter && !options.skipSetter) {
-      this._setValueViaSetter(value, 'patch', options);
+      if (!this._modifyValueViaSetter(
+        value,
+        'patch',
+        x => this._patchValueViaProp(x, options),
+        options
+      )) {
+        return;
+      }
     } else {
       this._patchValueViaProp(value, options);
     }
@@ -1101,7 +1115,8 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
     }
   }
 
-  _setValueViaSetter(value: any, mode: 'patch' | 'set', options: PatchValueOptionsInterface | SetValueOptionsInterface) {
+  _modifyValueViaSetter(value: any, mode: 'patch' | 'set', cbForSetVal: (val: any) => void, options: PatchValueOptionsInterface | SetValueOptionsInterface) {
+    const $skip = {};
     const ctx = this.rootBuilder.getEvalContext({
       propBuilder       : this,
       extraContextParams: {
@@ -1109,19 +1124,16 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
           value,
           mode,
           options
-        }
+        },
+        $skip
       }
     });
     const res = this.rootBuilder.runEvalWithContext(this.prop.set.$eval, ctx);
-    if (res.hasOwnProperty('value')) {
-      if (mode === 'patch') {
-        this._patchValueViaProp(res.value, options);
-      } else if (mode === 'set') {
-        this._setValueViaProp(res.value, options);
-      } else {
-        throw new Error('Missing mode.');
-      }
+    if (res === $skip) {
+      return false;
     }
+    cbForSetVal(res);
+    return true;
   }
 
   // ════════════════════════════════════════════════════════════════════════════════════════

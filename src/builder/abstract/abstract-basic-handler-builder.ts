@@ -39,16 +39,28 @@ export abstract class JsfBasicHandlerBuilder<BuilderType extends JsfUnknownPropB
 
   setValue(value: any, options: SetValueOptionsInterface = {}) {
     if (this.builder.hasSetter) {
-      return this.builder._setValueViaSetter(value, 'set', options);
+      this.builder._modifyValueViaSetter(
+        value,
+        'set',
+        x => this.builder._setValueViaProp(x, options),
+        options
+      );
+    } else {
+      this.builder._setValueViaProp(value, options);
     }
-    this.builder._setValueViaProp(value, options);
   }
 
   patchValue(value: any, options: PatchValueOptionsInterface = {}) {
     if (this.builder.hasSetter) {
-      return this.builder._setValueViaSetter(value, 'patch', options);
+      this.builder._modifyValueViaSetter(
+        value,
+        'patch',
+        x => this.builder._patchValueViaProp(x, options),
+        options
+      );
+    } else {
+      this.builder._patchValueViaProp(value, options);
     }
-    this.builder._patchValueViaProp(value, options);
   }
 
   async consumeProviderValue(value: any, options: ConsumeProviderValueOptionsInterface = { mode: 'set' }) {
