@@ -3,7 +3,7 @@ import { JsfEditor }                                  from '../jsf-editor';
 import { JsfProp }                                    from '../../schema/props';
 import { JsfTranslatableMessage }                     from '../../translations';
 import { JsfDocument }                                from '../../jsf-document';
-import { isObject }                                   from 'lodash';
+import { isEmpty, isNil, isObject, omitBy }           from 'lodash';
 import { HandlerCompatibilityInterface, JsfRegister } from '../../register';
 
 export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownProp> {
@@ -123,31 +123,22 @@ export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownPro
   }
 
   getDefinition(opt: { skipItems?: boolean } = {}) { // TODO PropDefinition error TS2577: Return type annotation circularly references itself.
-    /// AUTO RECOVERY SECTION (ideally we don't need this, but builder UI is still in beta)
-    if (!(this._definition as any).onInit?.type) {
-      delete this._definition.onInit;
-    }
-    if (!(this._definition as any).title) {
-      delete (this._definition as any).title;
-    }
-    if (!(this._definition as any).required) {
-      delete (this._definition as any).required;
-    }
-    if (isObject(this._definition.enabledIf) && !this._definition.enabledIf.$eval) {
-      delete this._definition.enabledIf;
-    }
-    if (isObject((this._definition as any).evalValidators) && !(this._definition as any).evalValidators?.$evals) {
-      delete (this._definition as any).evalValidators;
+    // Clean up definition.
+    let definition: any;
+
+    function omitEmptyProperties(prop: any) {
+      return omitBy(prop, (value: any, key: string) => {
+        if (isObject(value)) {
+          value = omitEmptyProperties(value);
+        }
+        return isNil(value) || isEmpty(value);
+      });
     }
 
-    // TODO we are removing following (for now) since UI is setting bed data
-    delete this._definition.onValueChange;
-    delete (this._definition as any).searchable;
-    delete (this._definition as any).default;
-    /// AUTO RECOVERY END
+    definition = omitEmptyProperties(this._definition);
 
     return {
-      ...this._definition,
+      ...definition,
       id: this.id.startsWith('#/tmp/') ? undefined : this.id
     };
   }

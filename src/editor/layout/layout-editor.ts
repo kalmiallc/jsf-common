@@ -4,7 +4,7 @@ import { JsfDocument }                      from '../../jsf-document';
 import { JsfUnknownLayout }                 from '../../layout';
 import { createJsfLayoutEditor }            from '../util';
 import { Subject }                          from 'rxjs';
-import { isNil, isObject }                  from 'lodash';
+import { isEmpty, isNil, isObject, omitBy } from 'lodash';
 import { JsfRegister, LayoutInfoInterface } from '../../register';
 
 export class JsfLayoutEditor {
@@ -156,29 +156,22 @@ export class JsfLayoutEditor {
   }
 
   getDefinition(opt: { skipItems?: boolean } = {}): JsfUnknownLayout {
-    /// AUTO RECOVERY SECTION (ideally we don't need this, but builder UI is still in beta)
-    if (!this._definition.$mode) {
-      delete this._definition.$mode;
+    // Clean up definition.
+    let definition: any;
+
+    function omitEmptyProperties(prop: any) {
+      return omitBy(prop, (value: any, key: string) => {
+        if (isObject(value)) {
+          value = omitEmptyProperties(value);
+        }
+        return isNil(value) || isEmpty(value);
+      });
     }
-    if (isObject(this._definition.visibleIf) && !this._definition.visibleIf.$eval) {
-      delete this._definition.visibleIf;
-    }
-    if (!this._definition.buildIf?.$eval) {
-      delete this._definition.buildIf;
-    }
-    if (isObject(this._definition.tooltip) && !this._definition.tooltip?.title) {
-      delete this._definition.tooltip;
-    }
-    if (!this._definition.analytics?.category) {
-      delete this._definition.analytics;
-    }
-    if ((this._definition as any).templateData) {
-      delete (this._definition as any).templateData;
-    }
-    /// AUTO RECOVERY END
+
+    definition = omitEmptyProperties(this._definition);
 
     return {
-      ...this._definition,
+      ...definition,
       type : this.type === 'prop'
         ? undefined
         : this.type,
