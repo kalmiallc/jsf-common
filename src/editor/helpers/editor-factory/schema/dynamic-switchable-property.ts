@@ -20,6 +20,13 @@ export function dynamicSwitchableProperty(basePath: string, propName: string, de
       properties: {},
       handler: {
         type: 'any'
+      },
+      get: {
+        $eval: `const selectedType = $valueOf('${ basePath ? basePath + '.' : ''}${ typeSwitcherPropName }');
+          if (!selectedType) {
+            return null;
+          }
+          return $valueOf('${ basePath ? basePath + '.' : ''}${ typeValuePropName }.' + selectedType)`
       }
     },
     // Type switcher
@@ -31,20 +38,6 @@ export function dynamicSwitchableProperty(basePath: string, propName: string, de
         values: definitions.map(x => ({ value: x.typeKey, label: x.typeName })),
       },
       default: definitions[0].typeKey,
-      onValueChange: {
-        updateDependencyValue: [
-          {
-            mode: 'set',
-            key: `${ basePath ? basePath + '.' : ''}${ propName }`,
-            condition: {
-              $eval: 'return !!$propVal'
-            },
-            value: {
-              $eval: `console.log("Switched - Setting to", $getPropValue('${ basePath ? basePath + '.' : ''}${ typeValuePropName }.' + $propVal)); return $getPropValue('${ basePath ? basePath + '.' : ''}${ typeValuePropName }.' + $propVal);`
-            }
-          }
-        ]
-      }
     },
     // Values
     [typeValuePropName]: {
@@ -53,24 +46,10 @@ export function dynamicSwitchableProperty(basePath: string, propName: string, de
         ... definitions.reduce((acc, x) => {
           return {
             ... acc,
-            [x.typeKey]: {
-              ... x.propDefinition,
-              onValueChange: {
-                updateDependencyValue: [
-                  {
-                    mode: 'set',
-                    key: `${ basePath ? basePath + '.' : ''}${ propName }`,
-                    value: {
-                      $eval: 'console.log("Prop - Setting from", $oldValue, "to", $propVal, "ready:", $form.ready); return $propVal'
-                    }
-                  }
-                ]
-              }
-            }
+            [x.typeKey]: x.propDefinition
           };
         }, {}),
       }
     },
   }
 }
-
