@@ -999,9 +999,9 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
 
     const oldValue = options.noValueChange ? undefined : this.getValue();
 
-    if (this.hasHandlerSetValue && !options.skipSetter) {
+    if (this.hasHandlerSetValue) {
       this.handler.setValue(value, options);
-    } else if (this.hasSetter) {
+    } else if (this.hasSetter && !options.skipSetter) {
       this._setValueViaSetter(value, 'set', options);
     } else {
       this._setValueViaProp(value, options);
@@ -1053,9 +1053,9 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
 
     const oldValue = options.noValueChange ? undefined : this.getValue();
 
-    if (this.hasHandlerPatchValue && !options.skipSetter) {
+    if (this.hasHandlerPatchValue) {
       this.handler.patchValue(value, options);
-    } else if (this.hasSetter) {
+    } else if (this.hasSetter && !options.skipSetter) {
       this._setValueViaSetter(value, 'patch', options);
     } else {
       this._patchValueViaProp(value, options);
