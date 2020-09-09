@@ -110,6 +110,9 @@ export abstract class JsfAbstractLayout {
     $evalTranspiled?: string;
   };
 
+  /**
+   * @deprecated
+   */
   translatableFields?: string[];
 
   /**
