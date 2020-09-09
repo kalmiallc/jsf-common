@@ -9,7 +9,9 @@ import {
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { JsfRegister }                  from '../../../register';
 
-export class JsfLayoutPropExpansionPanelPreferences {}
+export class JsfLayoutPropExpansionPanelPreferences {
+  startCollapsed: boolean;
+}
 
 const layoutInfo: LayoutInfoInterface = {
   type       : 'expansion-panel',
