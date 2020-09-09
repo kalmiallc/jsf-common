@@ -189,6 +189,10 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
   }
 
   deRegisterComponent(path: string) {
+    // TODO
+    // if (this.dataSourcesInfo[dataSourceKey].interval) {
+    //   this.dataSourcesInfo[dataSourceKey].interval.unsubscribe();
+    // }
     delete this.components[path];
   }
 
@@ -271,6 +275,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
       this.dataSourcesInfo[dataSource.key].components[componentPath].refreshInterval = dataSource.refreshInterval;
       this.dataSourcesInfo[dataSource.key].components[componentPath].subscribed      = true;
       this.dataSourcesInfo[dataSource.key].dirty                                     = true;
+      this.repairDataSourceInterval(dataSource.key);
     }
   }
 
@@ -439,8 +444,6 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
 
   /**
    * Req object reference must be same as called in registerDataSourceRequest.
-   * @param req
-   * @private
    */
   private unregisterDataSourceRequest(reqKey: { dataSource: string, groupKey?: string }) {
     const index = this.dataSourceRequests.indexOf(reqKey);
