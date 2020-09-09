@@ -11,30 +11,30 @@ export function dynamicSwitchablePropKey(basePath: string, propName: string, lab
   const typeValuePropName    = `${ editorPropName(propName) }_value`;
 
   const output = [
+    // Type switcher
     {
-      type : 'div',
-      htmlClass: 'border rounded-sm p-1 my-1',
+      type: 'div',
+      htmlClass: 'border rounded-sm py-1 px-2 mt-1 mb-2',
       items: [
         ...(label ? [{ type: 'span', title: label }] : []),
-        // Type switcher
         {
           key: `${ basePath ? basePath + '.' : '' }${ typeSwitcherPropName }`,
           handlerPreferences: {
             layout: 'inline'
           }
         },
-        // Values
-        ...definitions.map(x => {
-          return {
-            ... x.layoutDefinition,
-            visibleIf: {
-              $eval: `return $getItemValue('${ basePath ? basePath + '.' : ''}${ typeSwitcherPropName }') === '${ x.typeKey }'`,
-              dependencies: [`${ basePath ? basePath + '.' : ''}${ typeSwitcherPropName }`]
-            }
-          };
-        })
       ]
-    }
+    },
+    // Values
+    ...definitions.map(x => {
+      return {
+        ... x.layoutDefinition,
+        visibleIf: {
+          $eval: `return $getItemValue('${ basePath ? basePath + '.' : ''}${ typeSwitcherPropName }') === '${ x.typeKey }'`,
+          dependencies: [`${ basePath ? basePath + '.' : ''}${ typeSwitcherPropName }`]
+        }
+      };
+    })
   ];
 
   return JSON.parse(

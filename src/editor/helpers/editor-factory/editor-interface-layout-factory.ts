@@ -120,13 +120,13 @@ export abstract class EditorInterfaceLayoutFactory {
           ...EditorInterfaceLayoutFactory.outputKey(editorPropFullPath, 'Action'),
           // Abort
           {
-            type: 'div',
+            type     : 'div',
             visibleIf: {
-              $eval: `return $getItemValue('${ editorPropFullPath }') === 'abort'`,
+              $eval       : `return $getItemValue('${ editorPropFullPath }') === 'abort'`,
               dependencies: [editorPropFullPath]
             },
-            items: [
-              ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor(`${ propFullPath }[].abort.$eval`, 'Abort condition'),
+            items    : [
+              ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor(`${ propFullPath }[].abort.$eval`, 'Abort condition')
             ]
           },
           // Eval
@@ -137,7 +137,7 @@ export abstract class EditorInterfaceLayoutFactory {
               dependencies: [editorPropFullPath]
             },
             items    : [
-              ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor(`${ propFullPath }[].$eval`, 'Eval'),
+              ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor(`${ propFullPath }[].$eval`, 'Eval')
             ]
           },
           // Emit
@@ -150,10 +150,86 @@ export abstract class EditorInterfaceLayoutFactory {
             items    : [
               ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].emit.event`, 'Event name'),
               ...EditorInterfaceLayoutFactory.outputJsfValueOptionsProperty(`${ propFullPath }[].emit`, 'value', 'Value'),
-              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].emit.onLinked`),
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].emit.onLinked`)
             ]
           },
+          // Set value
+          {
+            type     : 'div',
+            visibleIf: {
+              $eval       : `return $getItemValue('${ editorPropFullPath }') === 'setValue'`,
+              dependencies: [editorPropFullPath]
+            },
+            items    : [
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].setValue.path`, 'Path'),
+              ...EditorInterfaceLayoutFactory.outputJsfValueOptionsProperty(`${ propFullPath }[].setValue`, 'value', 'Value'),
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].setValue.onLinked`),
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].setValue.noResolve`),
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].setValue.noValueChange`)
+            ]
+          },
+          // Patch value
+          {
+            type     : 'div',
+            visibleIf: {
+              $eval       : `return $getItemValue('${ editorPropFullPath }') === 'patchValue'`,
+              dependencies: [editorPropFullPath]
+            },
+            items    : [
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].patchValue.path`, 'Path'),
+              ...EditorInterfaceLayoutFactory.outputJsfValueOptionsProperty(`${ propFullPath }[].patchValue`, 'value', 'Value'),
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].patchValue.onLinked`),
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].patchValue.noResolve`),
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].patchValue.noValueChange`)
+            ]
+          },
+          // Validate
+          {
+            type     : 'div',
+            visibleIf: {
+              $eval       : `return $getItemValue('${ editorPropFullPath }') === 'validate'`,
+              dependencies: [editorPropFullPath]
+            },
+            items    : [
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].validate`)
+            ]
+          },
+          // Submit
+          {
+            type     : 'div',
+            visibleIf: {
+              $eval       : `return $getItemValue('${ editorPropFullPath }') === 'submit'`,
+              dependencies: [editorPropFullPath]
+            },
+            items    : [
+              ...EditorInterfaceLayoutFactory.outputDynamicSwitchablePropKey(`${ propFullPath }[]`, 'submit', 'Submit', [
+                {
+                  typeKey         : 'basic',
+                  layoutDefinition: {
+                    type : 'div',
+                    items: [
+                      ...EditorInterfaceLayoutFactory.createLabel('Form will be submitted.')
+                    ]
+                  }
+                },
+                {
+                  typeKey         : 'advanced',
+                  layoutDefinition: {
+                    type : 'div',
+                    items: [
+                      ...EditorInterfaceLayoutFactory.outputKey(wrapKeyDynamic(`advanced.createRevision`)),
+                      ...EditorInterfaceLayoutFactory.outputKey(wrapKeyDynamic(`advanced.createFork`)),
+                      ...EditorInterfaceLayoutFactory.outputKey(wrapKeyDynamic(`advanced.onLinked`)),
+                      ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor(wrapKeyDynamic(`advanced.mapResponseData`), 'Map response data'),
+                    ]
+                  }
+                }
+              ])
+            ]
+          },
+
           // Condition
+          ...EditorInterfaceLayoutFactory.createDivider(),
           ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor(`${ propFullPath }[].condition.$eval`, 'Condition')
         ])
     ];

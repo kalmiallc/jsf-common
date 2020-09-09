@@ -75,11 +75,11 @@ export abstract class EditorInterfaceSchemaFactory {
           properties: {
             // Type switcher
             [editorPropName(propName)]: {
-              type: 'string',
+              type    : 'string',
               required: true,
-              default: '$eval',
-              handler: {
-                type: 'common/dropdown',
+              default : '$eval',
+              handler : {
+                type  : 'common/dropdown',
                 values: [
                   { label: 'Run eval', value: '$eval' },
                   { label: 'Abort', value: 'abort' },
@@ -109,30 +109,30 @@ export abstract class EditorInterfaceSchemaFactory {
 
             // Condition (always available)
             condition: {
-              type: 'object',
+              type      : 'object',
               properties: {
-                ... EditorInterfaceSchemaFactory.createEvalProperty(),
+                ...EditorInterfaceSchemaFactory.createEvalProperty(),
               }
             },
 
             // Abort
             abort: {
-              type: 'object',
-              enabledIf: {
-                $eval: `return $getPropValue('${ editorPropFullPath }') === 'abort'`,
+              type      : 'object',
+              enabledIf : {
+                $eval       : `return $getPropValue('${ editorPropFullPath }') === 'abort'`,
                 dependencies: [editorPropFullPath]
               },
               properties: {
-                ... EditorInterfaceSchemaFactory.createEvalProperty()
+                ...EditorInterfaceSchemaFactory.createEvalProperty()
               }
             },
 
             // Eval
-            ... {
+            ...{
               $eval: {
-                ... EditorInterfaceSchemaFactory.createEvalProperty().$eval,
+                ...EditorInterfaceSchemaFactory.createEvalProperty().$eval,
                 enabledIf: {
-                  $eval: `return $getPropValue('${ editorPropFullPath }') === '$eval'`,
+                  $eval       : `return $getPropValue('${ editorPropFullPath }') === '$eval'`,
                   dependencies: [editorPropFullPath]
                 },
               }
@@ -140,22 +140,129 @@ export abstract class EditorInterfaceSchemaFactory {
 
             // Emit
             emit: {
-              type: 'object',
-              enabledIf: {
-                $eval: `return $getPropValue('${ editorPropFullPath }') === 'emit'`,
+              type      : 'object',
+              enabledIf : {
+                $eval       : `return $getPropValue('${ editorPropFullPath }') === 'emit'`,
                 dependencies: [editorPropFullPath]
               },
               properties: {
                 onLinked: {
-                  type: 'boolean',
+                  type : 'boolean',
                   title: 'Run this action on linked form'
                 },
-                event: {
+                event   : {
                   type: 'string',
                 },
-                ... EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].emit`, 'value', 'any')
+                ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].emit`, 'value', 'any')
               }
             },
+
+            // Set value
+            setValue: {
+              type      : 'object',
+              enabledIf : {
+                $eval       : `return $getPropValue('${ editorPropFullPath }') === 'setValue'`,
+                dependencies: [editorPropFullPath]
+              },
+              properties: {
+                onLinked     : {
+                  type : 'boolean',
+                  title: 'Run this action on linked form'
+                },
+                path         : {
+                  type       : 'string',
+                  description: 'Optional. If not provided, the value will be set on root.'
+                },
+                ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].setValue`, 'value', 'any'),
+                noResolve    : {
+                  type : 'boolean',
+                  title: 'No resolve'
+                },
+                noValueChange: {
+                  type : 'boolean',
+                  title: 'No value change'
+                },
+              }
+            },
+
+            // Set value
+            patchValue: {
+              type      : 'object',
+              enabledIf : {
+                $eval       : `return $getPropValue('${ editorPropFullPath }') === 'patchValue'`,
+                dependencies: [editorPropFullPath]
+              },
+              properties: {
+                onLinked     : {
+                  type : 'boolean',
+                  title: 'Run this action on linked form'
+                },
+                path         : {
+                  type       : 'string',
+                  description: 'Optional. If not provided, the value will be set on root.'
+                },
+                ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].patchValue`, 'value', 'any'),
+                noResolve    : {
+                  type : 'boolean',
+                  title: 'No resolve'
+                },
+                noValueChange: {
+                  type : 'boolean',
+                  title: 'No value change'
+                },
+              }
+            },
+
+            // Validate
+            validate: {
+              type     : 'boolean',
+              title    : 'Validate',
+              enabledIf: {
+                $eval       : `return $getPropValue('${ editorPropFullPath }') === 'validate'`,
+                dependencies: [editorPropFullPath]
+              },
+              const    : true
+            },
+
+            // Submit
+            ...EditorInterfaceSchemaFactory.createDynamicSwitchableProperty(`${ propFullPath }[]`, 'submit', [
+              {
+                typeName: 'Basic',
+                typeKey: 'basic',
+                propDefinition: {
+                  type: 'boolean',
+                  title: 'Submit',
+                  const: true
+                }
+              },
+              {
+                typeName: 'Advanced',
+                typeKey: 'advanced',
+                propDefinition: {
+                  type: 'object',
+                  properties: {
+                    onLinked: {
+                      type: 'boolean',
+                      title: 'Run this action on linked form'
+                    },
+                    createRevision: {
+                      type: 'boolean',
+                      title: 'Create revision'
+                    },
+                    createFork: {
+                      type: 'boolean',
+                      title: 'Create fork'
+                    },
+                    mapResponseData: {
+                      type: 'object',
+                      properties: {
+                        ... EditorInterfaceSchemaFactory.createEvalProperty()
+                      }
+                    }
+                  }
+                },
+              }
+            ])
           }
         }
       }
