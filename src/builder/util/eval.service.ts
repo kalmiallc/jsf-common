@@ -126,6 +126,9 @@ export const evalService = new class {
         }
       }),
 
+      // $propVal is implemented below via Proxy object, this is here just to allow compilation of eval functions.
+      $propVal: void 0,
+
       $form   : builder,
       $builder: builder.propBuilder,
       $objects: builder.$evalObjects,
