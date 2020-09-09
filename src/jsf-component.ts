@@ -46,6 +46,11 @@ export class JsfComponent {
      * Every event also contains time of load trigger and filter hash, so you have option to discard old data.
      */
     key: string;
+
+    /**
+     * If set, data source will be automatically reloaded.
+     */
+    refreshInterval?: number;
   }[];
 
 

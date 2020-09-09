@@ -821,6 +821,26 @@ export const layoutClickHandlerService = new class {
       }
 
       /**
+       * Dat source actions
+       */
+      if (onClickData.dataSourceReload) {
+        if (onClickData.dataSourceReload.dataSourceKey === '*') {
+          if (onClickData.dataSourceReload.force) {
+            options.rootBuilder.jsfPageBuilder.forceProcessDataSources();
+          } else {
+            options.rootBuilder.jsfPageBuilder.processDataSources();
+          }
+        } else {
+          if (onClickData.dataSourceReload.force) {
+            options.rootBuilder.jsfPageBuilder.forceProcessDataSource(onClickData.dataSourceReload.dataSourceKey)
+          } else {
+            options.rootBuilder.jsfPageBuilder.processDataSource(onClickData.dataSourceReload.dataSourceKey)
+          }
+        }
+        return;
+      }
+
+      /**
        * If we reached this point then the user provided an unknown action, so throw an error.
        */
       throw new Error(`Unknown action ${ JSON.stringify(onClickData) }`);

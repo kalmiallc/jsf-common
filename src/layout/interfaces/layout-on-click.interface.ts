@@ -380,7 +380,7 @@ export interface JsfLayoutOnClickInterface {
   /**
    * Run service action.
    */
-  runServiceAction: {
+  runServiceAction?: {
     /**
      * Run action on linked form.
      */
@@ -390,4 +390,13 @@ export interface JsfLayoutOnClickInterface {
     action: JsfValueOptionsType;
     data?: JsfValueOptionsType;
   };
+
+  dataSourceReload?: {
+    force?: boolean;
+
+    /**
+     * If '*' it will reload all datasources.
+     */
+    dataSourceKey?: string;
+  }
 }
