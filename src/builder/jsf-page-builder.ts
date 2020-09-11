@@ -18,6 +18,22 @@ export interface JsfPageBuilderOptionsInterface {
   dataSourceConfig?: any;
 }
 
+export interface DataSourceReqFunArg {
+  filters?: any[],
+  groupKey?: string,
+  payload?: {
+    /**
+     * Extra key, could be used for PUT req.
+     * */
+    key?: any;
+
+    /**
+     * Extra data, could be used for POST req.
+     */
+    data?: any;
+  }
+}
+
 export interface DataSourceProviderRequestInterface {
   /**
    * Uniq identification of data source. For example: db1://cars/bmw/parts
@@ -36,6 +52,18 @@ export interface DataSourceProviderRequestInterface {
    * Filters for given data source. Filters are gathered in array, it's implementors job to merge them.
    */
   filters?: any[];
+
+  payload?: {
+    /**
+     * Extra key, could be used for PUT req.
+     * */
+    key?: any;
+
+    /**
+     * Extra data, could be used for POST req.
+     */
+    data?: any;
+  };
 }
 
 export interface DataSourceProviderResponseInterface {
@@ -373,21 +401,38 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
 
       if (components.length) {
         dataSource.dirty = false;
-        this.requestDataForDataSource(dataSourceKey, {
+        this.makeDataSourceRequest(dataSourceKey, {
           filters
         });
       }
     }
   }
 
-  private requestDataForDataSource(dataSourceKey: string, data: { filters?: any[], groupKey?: string } = {}) {
+  makeDataSourceInsertRequest(dataSourceKey: string, data: DataSourceReqFunArg = {}) {
+    return this.makeDataSourceRequest(dataSourceKey + '#insert', data);
+  }
+
+  makeDataSourceUpdateRequest(dataSourceKey: string, data: DataSourceReqFunArg = {}) {
+    return this.makeDataSourceRequest(dataSourceKey + '#update', data);
+  }
+
+  makeDataSourceRemoveRequest(dataSourceKey: string, data: DataSourceReqFunArg = {}) {
+    return this.makeDataSourceRequest(dataSourceKey + '#remove', data);
+  }
+
+  makeDataSourceGetRequest(dataSourceKey: string, data: DataSourceReqFunArg = {}) {
+    return this.makeDataSourceRequest(dataSourceKey + '#get', data);
+  }
+
+  private makeDataSourceRequest(dataSourceKey: string, data: DataSourceReqFunArg = {}) {
     if (!this.dataSourceProvider) {
       throw new Error('[JSF-PAGE] Missing data source provider.');
     }
     const request$ = this.dataSourceProvider({
       groupKey  : data.groupKey,
       dataSource: dataSourceKey,
-      filters   : data.filters
+      filters   : data.filters,
+      payload   : data.payload
     });
     const reqKey = { dataSource: dataSourceKey, groupKey: data.groupKey };
     if (request$) {
