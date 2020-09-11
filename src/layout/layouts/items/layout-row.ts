@@ -28,12 +28,12 @@ export class JsfLayoutRow extends JsfAbstractItemsLayout<'row'> {
   /**
    * Vertical alignment for items.
    */
-  verticalAlign: 'start' | 'center' | 'end';
+  verticalAlign?: 'start' | 'center' | 'end';
 
   /**
    * Horizontal alignment.
    */
-  horizontalAlign: 'start' | 'center' | 'end' | 'around' | 'between';
+  horizontalAlign?: 'start' | 'center' | 'end' | 'around' | 'between';
 
   items: JsfLayoutCol[];
 
