@@ -1,11 +1,12 @@
 import { JsfAbstractHandler }            from '../../schema/abstract/abstract-handler';
 import { HandlerCompatibilityInterface } from '../../register/interfaces';
+import { EditorInterfaceLayoutFactory }  from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
 
 export class JsfHandlerComponent extends JsfAbstractHandler<'component'> {
 
 }
 
-export const jsfHandlerComponentJsfDefinition: any = {
+export const jsfHandlerComponentJsfFormDefinition: any = {
   $providers: {
     'jsf-definitions': {
       source: {
@@ -282,13 +283,30 @@ export const jsfHandlerComponentJsfDefinition: any = {
   }
 };
 
+export const jsfHandlerComponentJsfLayoutDefinition: any = {
+  schema: {
+    type      : 'object',
+    properties: {}
+  },
+  layout: {
+    type : 'div',
+    items: [
+      ...EditorInterfaceLayoutFactory.createPanelGroup([
+        ...EditorInterfaceLayoutFactory.createPanel('Component', [
+          ...EditorInterfaceLayoutFactory.createLabel('No configuration available.')
+        ])
+      ])
+    ]
+  }
+};
 
 export const jsfHandlerComponentCompatibility: HandlerCompatibilityInterface = {
 
-  formDefinition: jsfHandlerComponentJsfDefinition,
-  title         : 'Component',
-  icon          : 'handler-icons/component.svg',
-  category      : 'Core',
+  formDefinition  : jsfHandlerComponentJsfFormDefinition,
+  layoutDefinition: jsfHandlerComponentJsfLayoutDefinition,
+  title           : 'Component',
+  icon            : 'handler-icons/component.svg',
+  category        : 'Core',
 
   compatibleWith: [
     {

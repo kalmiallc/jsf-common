@@ -155,6 +155,24 @@ export class JsfRegister {
       : JsfRegister.handlerCompatibility[type].formDefinition;
   }
 
+  static getHandlerLayoutDefinition(type: string, prop: JsfProp, options: { crashIfNotFound?: boolean } = {}) {
+    if (!JsfRegister.handlerCompatibility[type]) {
+      if (!options.crashIfNotFound) {
+        return;
+      }
+      throw new Error(`Handler ${ type } not found!`);
+    }
+    const compatibleType = (JsfRegister.handlerCompatibility[type].compatibleWith || []).find(x => x.type === prop.type);
+    if (!compatibleType) {
+      if (!options.crashIfNotFound) {
+        return;
+      }
+      throw new Error(`Handler ${ type } does not have compatible type ${ prop.type }!`);
+    }
+
+    return JsfRegister.handlerCompatibility[type].layoutDefinition;
+  }
+
   static getHandlerCompatibility(type: string) {
     return JsfRegister.handlerCompatibility[type];
   }

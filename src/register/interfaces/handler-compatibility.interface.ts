@@ -19,6 +19,7 @@ export interface HandlerCompatibilityInterface {
   title?: string;
 
   formDefinition: JsfDefinition;
+  layoutDefinition?: JsfDefinition;
 
   compatibleWith: {
     type: JsfPropTypes,
