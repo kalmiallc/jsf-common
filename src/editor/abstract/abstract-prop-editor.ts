@@ -3,7 +3,7 @@ import { JsfEditor }                                  from '../jsf-editor';
 import { JsfProp }                                    from '../../schema/props';
 import { JsfTranslatableMessage }                     from '../../translations';
 import { JsfDocument }                                from '../../jsf-document';
-import { isEmpty, isNil, isObject, omitBy }           from 'lodash';
+import { isArray, isEmpty, isNil, isObject, omitBy }  from 'lodash';
 import { HandlerCompatibilityInterface, JsfRegister } from '../../register';
 
 export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownProp> {
@@ -131,7 +131,7 @@ export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownPro
         if (isObject(value)) {
           value = omitEmptyProperties(value);
         }
-        return isNil(value) || isEmpty(value);
+        return isNil(value) || ((isObject(value) || isArray(value)) && isEmpty(value));
       });
     }
 
@@ -156,6 +156,12 @@ export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownPro
   getHandlerForm(): JsfDocument {
     if (this.hasHandler) {
       return JsfRegister.getHandlerFormDefinition(this.handlerType, this.definition as any);
+    }
+  }
+
+  getHandlerLayoutForm(): JsfDocument {
+    if (this.hasHandler) {
+      return JsfRegister.getHandlerLayoutDefinition(this.handlerType, this.definition as any);
     }
   }
 

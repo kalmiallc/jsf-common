@@ -1,11 +1,11 @@
-import { JsfEditor }                        from '../jsf-editor';
-import { JsfTranslatableMessage }           from '../../translations';
-import { JsfDocument }                      from '../../jsf-document';
-import { JsfUnknownLayout }                 from '../../layout';
-import { createJsfLayoutEditor }            from '../util';
-import { Subject }                          from 'rxjs';
-import { isEmpty, isNil, isObject, omitBy } from 'lodash';
-import { JsfRegister, LayoutInfoInterface } from '../../register';
+import { JsfEditor }                                 from '../jsf-editor';
+import { JsfTranslatableMessage }                    from '../../translations';
+import { JsfDocument }                               from '../../jsf-document';
+import { JsfUnknownLayout }                          from '../../layout';
+import { createJsfLayoutEditor }                     from '../util';
+import { Subject }                                   from 'rxjs';
+import { isArray, isEmpty, isNil, isObject, omitBy } from 'lodash';
+import { JsfRegister, LayoutInfoInterface }          from '../../register';
 
 export class JsfLayoutEditor {
 
@@ -164,7 +164,7 @@ export class JsfLayoutEditor {
         if (isObject(value)) {
           value = omitEmptyProperties(value);
         }
-        return isNil(value) || isEmpty(value);
+        return isNil(value) || ((isObject(value) || isArray(value)) && isEmpty(value));
       });
     }
 
