@@ -181,7 +181,6 @@ export const jsfAbstractBarePropJsfDefinitionSchemaProperties      = {
       properties: {
         type: {
           type    : 'string',
-          required: true,
           handler : {
             type  : 'common/dropdown',
             values: [
@@ -357,14 +356,7 @@ export const jsfAbstractBarePropJsfDefinitionSchemaProperties      = {
                   { value: 'patch', label: 'Patch' }
                 ]
               },
-              onInit : [
-                {
-                  type : 'set',
-                  value: {
-                    const: 'set'
-                  }
-                }
-              ]
+              default: 'set'
             },
             key      : {
               type: 'string'

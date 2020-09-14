@@ -8,7 +8,7 @@ export class JsfValueOptionsInterface {
   $eval?: string;
 
   /**
-   * You should use $eval, this file dis auto generated.
+   * You should use $eval, this property is auto generated.
    * @ignore
    */
   $evalTranspiled?: string;

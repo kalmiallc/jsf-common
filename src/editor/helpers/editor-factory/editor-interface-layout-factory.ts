@@ -117,7 +117,11 @@ export abstract class EditorInterfaceLayoutFactory {
         { $eval: `return { value: 'Action' }`, dependencies: [] },
         [
           // Type switcher
-          ...EditorInterfaceLayoutFactory.outputKey(editorPropFullPath, 'Action'),
+          ...EditorInterfaceLayoutFactory.outputKey(editorPropFullPath, 'Action', {
+            handlerPreferences: {
+              searchable: true
+            }
+          }),
           // Abort
           {
             type     : 'div',
@@ -220,11 +224,242 @@ export abstract class EditorInterfaceLayoutFactory {
                       ...EditorInterfaceLayoutFactory.outputKey(wrapKeyDynamic(`advanced.createRevision`)),
                       ...EditorInterfaceLayoutFactory.outputKey(wrapKeyDynamic(`advanced.createFork`)),
                       ...EditorInterfaceLayoutFactory.outputKey(wrapKeyDynamic(`advanced.onLinked`)),
-                      ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor(wrapKeyDynamic(`advanced.mapResponseData`), 'Map response data'),
+                      ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor(wrapKeyDynamic(`advanced.mapResponseData`), 'Map response data')
                     ]
                   }
                 }
               ])
+            ]
+          },
+          // Array item add
+          {
+            type     : 'div',
+            visibleIf: {
+              $eval       : `return $getItemValue('${ editorPropFullPath }') === 'arrayItemAdd'`,
+              dependencies: [editorPropFullPath]
+            },
+            items    : [
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].arrayItemAdd.path`, 'Path'),
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].arrayItemAdd.mode`, 'Mode'),
+              ...EditorInterfaceLayoutFactory.outputJsfValueOptionsProperty(`${ propFullPath }[].arrayItemAdd`, 'value', 'Value'),
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].arrayItemAdd.onLinked`)
+            ]
+          },
+          // Array item remove
+          {
+            type     : 'div',
+            visibleIf: {
+              $eval       : `return $getItemValue('${ editorPropFullPath }') === 'arrayItemRemove'`,
+              dependencies: [editorPropFullPath]
+            },
+            items    : [
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].arrayItemRemove.path`, 'Path'),
+              ...EditorInterfaceLayoutFactory.outputJsfValueOptionsProperty(`${ propFullPath }[].arrayItemRemove`, 'index', 'Index'),
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].arrayItemRemove.onLinked`)
+            ]
+          },
+          // Navigate to
+          {
+            type     : 'div',
+            visibleIf: {
+              $eval       : `return $getItemValue('${ editorPropFullPath }') === 'navigateTo'`,
+              dependencies: [editorPropFullPath]
+            },
+            items    : [
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].navigateTo.reload`),
+              ...EditorInterfaceLayoutFactory.outputJsfValueOptionsProperty(`${ propFullPath }[].navigateTo`, 'path', 'Path'),
+              ...EditorInterfaceLayoutFactory.outputJsfValueOptionsProperty(`${ propFullPath }[].navigateTo`, 'query', 'Query parameters'),
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].navigateTo.queryParamsHandling`, 'Query parameters handling'),
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].navigateTo.relative`),
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].navigateTo.openInNewWindow`),
+              ...EditorInterfaceLayoutFactory.createDivider(),
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].navigateTo.transferFormValue.path`, 'Transfer form value path'),
+              ...EditorInterfaceLayoutFactory.outputJsfValueOptionsProperty(`${ propFullPath }[].navigateTo.transferFormValue`, 'value', 'Transfer form value data')
+            ]
+          },
+          // DFF
+          {
+            type     : 'div',
+            visibleIf: {
+              $eval       : `return $getItemValue('${ editorPropFullPath }') === 'dff'`,
+              dependencies: [editorPropFullPath]
+            },
+            items    : [
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].dff.action`, 'Action'),
+              ...EditorInterfaceLayoutFactory.outputJsfValueOptionsProperty(`${ propFullPath }[].dff`, 'value', 'Event value'),
+              ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor(`${ propFullPath }[].dff.mapResponseData`, 'Map response data'),
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].dff.onLinked`)
+            ]
+          },
+          // Show dialog
+          {
+            type     : 'div',
+            visibleIf: {
+              $eval       : `return $getItemValue('${ editorPropFullPath }') === 'showDialog'`,
+              dependencies: [editorPropFullPath]
+            },
+            items    : [
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].showDialog.key`, 'Dialog key'),
+              ...EditorInterfaceLayoutFactory.outputJsfValueOptionsProperty(`${ propFullPath }[].showDialog`, 'data', 'Dialog data'),
+              ...EditorInterfaceLayoutFactory.createDivider(),
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].navigateTo.transferFormValue.path`, 'Transfer form value path'),
+              ...EditorInterfaceLayoutFactory.outputJsfValueOptionsProperty(`${ propFullPath }[].navigateTo.transferFormValue`, 'value', 'Transfer form value data')
+
+            ]
+          },
+          // Hide dialog
+          {
+            type     : 'div',
+            visibleIf: {
+              $eval       : `return $getItemValue('${ editorPropFullPath }') === 'hideDialog'`,
+              dependencies: [editorPropFullPath]
+            },
+            items    : [
+              ...EditorInterfaceLayoutFactory.createLabel('Dialog will be hidden.')
+            ]
+          },
+          // Open form dialog
+          {
+            type     : 'div',
+            visibleIf: {
+              $eval       : `return $getItemValue('${ editorPropFullPath }') === 'openFormDialog'`,
+              dependencies: [editorPropFullPath]
+            },
+            items    : [
+              ...EditorInterfaceLayoutFactory.outputJsfValueOptionsProperty(`${ propFullPath }[].openFormDialog`, 'dffKey', 'DFF key'),
+              ...EditorInterfaceLayoutFactory.outputJsfValueOptionsProperty(`${ propFullPath }[].openFormDialog`, 'documentId', 'Document ID'),
+              ...EditorInterfaceLayoutFactory.createDivider(),
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].openFormDialog.transferFormValue.path`, 'Transfer form value path'),
+              ...EditorInterfaceLayoutFactory.outputJsfValueOptionsProperty(`${ propFullPath }[].openFormDialog.transferFormValue`, 'value', 'Transfer form value data'),
+              ...EditorInterfaceLayoutFactory.createDivider(),
+              ...EditorInterfaceLayoutFactory.outputJsfValueOptionsProperty(`${ propFullPath }[].openFormDialog`, 'abortOnDismiss', 'Abort on dismiss'),
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].openFormDialog.proxy`),
+              ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor(`${ propFullPath }[].openFormDialog.mapResponseData`, 'Map response data')
+            ]
+          },
+          // Close form dialog
+          {
+            type     : 'div',
+            visibleIf: {
+              $eval       : `return $getItemValue('${ editorPropFullPath }') === 'closeFormDialog'`,
+              dependencies: [editorPropFullPath]
+            },
+            items    : [
+              ...EditorInterfaceLayoutFactory.outputDynamicSwitchablePropKey(`${ propFullPath }[]`, 'closeFormDialog', 'Close form dialog', [
+                {
+                  typeKey         : 'basic',
+                  layoutDefinition: {
+                    type : 'div',
+                    items: [
+                      ...EditorInterfaceLayoutFactory.createLabel('Form dialog will be closed.')
+                    ]
+                  }
+                },
+                {
+                  typeKey         : 'advanced',
+                  layoutDefinition: {
+                    type : 'div',
+                    items: [
+                      ...EditorInterfaceLayoutFactory.outputKey(wrapKeyDynamic(`advanced.dismiss`))
+                    ]
+                  }
+                }
+              ])
+            ]
+          },
+          // Show loading indicator
+          {
+            type     : 'div',
+            visibleIf: {
+              $eval       : `return $getItemValue('${ editorPropFullPath }') === 'showLoadingIndicator'`,
+              dependencies: [editorPropFullPath]
+            },
+            items    : [
+              ...EditorInterfaceLayoutFactory.createLabel('Loading indicator will be shown.')
+            ]
+          },
+          // Hide loading indicator
+          {
+            type     : 'div',
+            visibleIf: {
+              $eval       : `return $getItemValue('${ editorPropFullPath }') === 'hideLoadingIndicator'`,
+              dependencies: [editorPropFullPath]
+            },
+            items    : [
+              ...EditorInterfaceLayoutFactory.createLabel('Loading indicator will be hidden.')
+            ]
+          },
+          // Stepper next
+          {
+            type     : 'div',
+            visibleIf: {
+              $eval       : `return $getItemValue('${ editorPropFullPath }') === 'stepperNext'`,
+              dependencies: [editorPropFullPath]
+            },
+            items    : [
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].stepperNext.id`, 'Stepper layout ID')
+            ]
+          },
+          // Stepper previous
+          {
+            type     : 'div',
+            visibleIf: {
+              $eval       : `return $getItemValue('${ editorPropFullPath }') === 'stepperPrevious'`,
+              dependencies: [editorPropFullPath]
+            },
+            items    : [
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].stepperPrevious.id`, 'Stepper layout ID')
+            ]
+          },
+          // Clipboard
+          {
+            type     : 'div',
+            visibleIf: {
+              $eval       : `return $getItemValue('${ editorPropFullPath }') === 'clipboard'`,
+              dependencies: [editorPropFullPath]
+            },
+            items    : [
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].clipboard.clear`, 'Clipboard keys to clear'),
+              ...EditorInterfaceLayoutFactory.outputJsfValueOptionsProperty(`${ propFullPath }[].clipboard.copy`, 'key', 'Key'),
+              ...EditorInterfaceLayoutFactory.outputJsfValueOptionsProperty(`${ propFullPath }[].clipboard.copy`, 'value', 'Value')
+            ]
+          },
+          // Show notification
+          {
+            type     : 'div',
+            visibleIf: {
+              $eval       : `return $getItemValue('${ editorPropFullPath }') === 'showNotification'`,
+              dependencies: [editorPropFullPath]
+            },
+            items    : [
+              ...EditorInterfaceLayoutFactory.outputJsfValueOptionsProperty(`${ propFullPath }[].showNotification`, 'message', 'Message'),
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].showNotification.level`, 'Notification level')
+            ]
+          },
+          // Run service action
+          {
+            type     : 'div',
+            visibleIf: {
+              $eval       : `return $getItemValue('${ editorPropFullPath }') === 'runServiceAction'`,
+              dependencies: [editorPropFullPath]
+            },
+            items    : [
+              ...EditorInterfaceLayoutFactory.outputJsfValueOptionsProperty(`${ propFullPath }[].runServiceAction`, 'service', 'Service'),
+              ...EditorInterfaceLayoutFactory.outputJsfValueOptionsProperty(`${ propFullPath }[].runServiceAction`, 'action', 'Action'),
+              ...EditorInterfaceLayoutFactory.outputJsfValueOptionsProperty(`${ propFullPath }[].runServiceAction`, 'data', 'Data'),
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].runServiceAction.onLinked`)
+            ]
+          },
+          // Data source reload
+          {
+            type     : 'div',
+            visibleIf: {
+              $eval       : `return $getItemValue('${ editorPropFullPath }') === 'dataSourceReload'`,
+              dependencies: [editorPropFullPath]
+            },
+            items    : [
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].dataSourceReload.force`),
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].dataSourceReload.dataSourceKey`, 'Data source key')
             ]
           },
 
