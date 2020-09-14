@@ -1,5 +1,6 @@
 import { LayoutInfoInterface }          from '../../../register/interfaces';
 import {
+  jsfAbstractLayoutTranslatableProperties,
   JsfAbstractSpecialLayout,
   jsfAbstractSpecialLayoutJsfDefinitionLayoutItems,
   jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties
@@ -14,6 +15,9 @@ const layoutInfo: LayoutInfoInterface = {
   icon             : 'layout-icons/app-page-title.svg',
   defaultDefinition: {
     type: 'app-page-title'
+  },
+  localization     : {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties, 'title']
   }
 };
 

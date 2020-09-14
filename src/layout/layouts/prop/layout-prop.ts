@@ -1,14 +1,17 @@
-import { LayoutInfoInterface }                                             from '../../../register/interfaces';
-import { JsfAbstractPropLayout, JsfUnknownLayout, layoutDivJsfDefinition } from '../../../layout';
-import { JsfRegister }                                                     from '../../../register';
+import { LayoutInfoInterface }                                                              from '../../../register/interfaces';
+import { jsfAbstractLayoutTranslatableProperties, JsfAbstractPropLayout, JsfUnknownLayout } from '../../../layout';
+import { JsfRegister }                                                                      from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type       : 'prop',
-  title      : 'Form Control',
-  category   : 'Layout',
-  icon       : 'layout-icons/prop.svg',
-  formControl: {
+  type        : 'prop',
+  title       : 'Form Control',
+  category    : 'Layout',
+  icon        : 'layout-icons/prop.svg',
+  formControl : {
     enabled: true
+  },
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties, 'placeholder']
   }
 };
 
@@ -112,5 +115,6 @@ export interface JsfLayoutPropBooleanPreferences {
   labelPositionSlider?: 'before' | 'after';
 }
 
-// The actual definition should be fetched from the `@prop/<type>` layouts, in order to avoid having to do any definition transforms based on prop type.
+// The actual definition should be fetched from the `@prop/<type>` layouts, in order to avoid having to do any definition transforms based
+// on prop type.
 JsfRegister.layout('prop', layoutInfo, null);

@@ -1,12 +1,11 @@
 import { LayoutInfoInterface }          from '../../../register/interfaces';
 import {
+  jsfAbstractLayoutTranslatableProperties,
   JsfAbstractSpecialLayout,
   jsfAbstractSpecialLayoutJsfDefinitionLayoutItems,
   jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties
 }                                       from '../../../layout';
-import { EditorInterfaceSchemaFactory } from '../../../editor/helpers/editor-factory/editor-interface-schema-factory';
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
-import { CodeEditorKeyIconType }        from '../../../editor/helpers/editor-factory/layout/code-editor-key';
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
@@ -18,6 +17,9 @@ const layoutInfo: LayoutInfoInterface = {
     type : 'anchor',
     title: 'My link',
     href : 'https://'
+  },
+  localization     : {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties, 'title', 'href']
   }
 };
 

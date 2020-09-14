@@ -1,5 +1,6 @@
 import { LayoutInfoInterface }          from '../../../register/interfaces';
 import {
+  jsfAbstractLayoutTranslatableProperties,
   JsfAbstractSpecialLayout,
   jsfAbstractSpecialLayoutJsfDefinitionLayoutItems,
   jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties
@@ -15,6 +16,9 @@ const layoutInfo: LayoutInfoInterface = {
   defaultDefinition: {
     type : 'button',
     title: 'Button'
+  },
+  localization     : {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties, 'title']
   }
 };
 

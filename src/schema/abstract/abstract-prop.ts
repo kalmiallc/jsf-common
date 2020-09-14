@@ -639,6 +639,8 @@ export abstract class JsfAbstractProp<Type, TypeString, Handlers> extends JsfAbs
   };
 }
 
+export const jsfAbstractPropTranslatableProperties = ['title', 'description', 'searchable.title'];
+
 export const jsfAbstractPropJsfDefinitionSchemaProperties = {
   ...jsfAbstractBarePropJsfDefinitionSchemaProperties,
 

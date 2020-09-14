@@ -3,18 +3,22 @@ import {
   JsfAbstractItemsLayout,
   jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
   jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+  jsfAbstractLayoutTranslatableProperties,
   JsfUnknownLayout
 }                                       from '../../../layout';
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'tab',
-  title   : 'Tab',
-  category: 'Layout',
-  icon    : 'layout-icons/tab.svg',
-  items   : {
+  type        : 'tab',
+  title       : 'Tab',
+  category    : 'Layout',
+  icon        : 'layout-icons/tab.svg',
+  items       : {
     enabled: true
+  },
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties, 'title']
   }
 };
 

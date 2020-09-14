@@ -1,5 +1,6 @@
 import { LayoutInfoInterface }          from '../../../register/interfaces';
 import {
+  jsfAbstractLayoutTranslatableProperties,
   JsfAbstractSpecialLayout,
   jsfAbstractSpecialLayoutJsfDefinitionLayoutItems,
   jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties,
@@ -9,10 +10,13 @@ import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-fac
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'array-item-add',
-  title   : 'Array item add',
-  category: 'Buttons & Indicators',
-  icon    : 'layout-icons/array-item-add.svg'
+  type        : 'array-item-add',
+  title       : 'Array item add',
+  category    : 'Buttons & Indicators',
+  icon        : 'layout-icons/array-item-add.svg',
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties, 'title']
+  }
 };
 
 export class JsfLayoutArrayItemAdd extends JsfAbstractSpecialLayout<'array-item-add'> {

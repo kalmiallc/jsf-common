@@ -2,7 +2,8 @@ import {
   JsfAbstractProp,
   jsfAbstractPropJsfDefinitionLayoutItems,
   jsfAbstractPropJsfDefinitionSchemaProperties,
-  jsfAbstractPropJsfDefinitionValidationLayoutItems
+  jsfAbstractPropJsfDefinitionValidationLayoutItems,
+  jsfAbstractPropTranslatableProperties
 }                                       from '../abstract/abstract-prop';
 import { JsfHandlerNull }               from '../../handlers';
 import { PropInfoInterface }            from '../../register/interfaces';
@@ -10,9 +11,12 @@ import { EditorInterfaceLayoutFactory } from '../../editor/helpers/editor-factor
 import { JsfRegister }                  from '../../register';
 
 const propInfo: PropInfoInterface = {
-  type : 'null',
-  title: 'Null',
-  color: '#858585'
+  type        : 'null',
+  title       : 'Null',
+  color       : '#858585',
+  localization: {
+    translatableProperties: [...jsfAbstractPropTranslatableProperties]
+  }
 };
 
 

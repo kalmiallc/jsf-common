@@ -3,21 +3,25 @@ import {
   JsfAbstractItemsLayout,
   jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
   jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+  jsfAbstractLayoutTranslatableProperties,
   JsfUnknownLayout
 }                                       from '../../../layout';
 import { JsfRegister }                  from '../../../register';
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'col',
-  title   : 'Column',
-  category: 'Layout',
-  icon    : 'layout-icons/col.svg',
-  items   : {
+  type        : 'col',
+  title       : 'Column',
+  category    : 'Layout',
+  icon        : 'layout-icons/col.svg',
+  items       : {
     enabled: true
   },
-  parent  : {
+  parent      : {
     allowedTypes: ['row']
+  },
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
   }
 };
 
@@ -47,12 +51,12 @@ export class JsfLayoutCol extends JsfAbstractItemsLayout<'col'> {
    * Visual order in row.
    */
   order?: {
-    xs?: number;
-    sm?: number;
-    md?: number;
-    lg?: number;
-    xl?: number;
-  } | 'first' | 'last';
+            xs?: number;
+            sm?: number;
+            md?: number;
+            lg?: number;
+            xl?: number;
+          } | 'first' | 'last';
 
   /**
    * Vertical alignment for self.
@@ -72,50 +76,50 @@ export const layoutColJsfDefinition = {
     properties: {
       ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
 
-      _order: {
-        type: 'object',
-        properties: {
-          orderType: {
-            type: 'string',
+      _order       : {
+        type         : 'object',
+        properties   : {
+          orderType : {
+            type   : 'string',
             handler: {
-              type: 'common/button-toggle',
+              type  : 'common/button-toggle',
               values: [
-                { label: 'first', value: 'first'},
-                { label: 'last', value: 'last'},
-                { label: 'custom', value: 'custom'},
+                { label: 'first', value: 'first' },
+                { label: 'last', value: 'last' },
+                { label: 'custom', value: 'custom' }
               ]
             }
           },
           typeCustom: {
-            type: 'object',
+            type      : 'object',
             properties: {
               xs: {
-                type: 'integer',
-                title: 'xs',
+                type   : 'integer',
+                title  : 'xs',
                 minimum: 0,
                 maximum: 12
               },
               sm: {
-                type: 'integer',
-                title: 'sm',
+                type   : 'integer',
+                title  : 'sm',
                 minimum: 0,
                 maximum: 12
               },
               md: {
-                type: 'integer',
-                title: 'md',
+                type   : 'integer',
+                title  : 'md',
                 minimum: 0,
                 maximum: 12
               },
               lg: {
-                type: 'integer',
-                title: 'lg',
+                type   : 'integer',
+                title  : 'lg',
                 minimum: 0,
                 maximum: 12
               },
               xl: {
-                type: 'integer',
-                title: 'xl',
+                type   : 'integer',
+                title  : 'xl',
                 minimum: 0,
                 maximum: 12
               }
@@ -125,8 +129,8 @@ export const layoutColJsfDefinition = {
         onValueChange: {
           updateDependencyValue: [
             {
-              mode: 'set',
-              key: 'order',
+              mode : 'set',
+              key  : 'order',
               value: {
                 $eval: `
             if ($val._order.orderType == 'first'){

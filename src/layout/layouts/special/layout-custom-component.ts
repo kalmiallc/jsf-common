@@ -1,5 +1,6 @@
 import { LayoutInfoInterface }          from '../../../register/interfaces';
 import {
+  jsfAbstractLayoutTranslatableProperties,
   JsfAbstractSpecialLayout,
   jsfAbstractSpecialLayoutJsfDefinitionLayoutItems,
   jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties
@@ -8,10 +9,13 @@ import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-fac
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'custom-component',
-  title   : 'Custom component',
-  category: 'Layout',
-  icon    : 'layout-icons/custom-component.svg'
+  type        : 'custom-component',
+  title       : 'Custom component',
+  category    : 'Layout',
+  icon        : 'layout-icons/custom-component.svg',
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
+  }
 };
 
 export class JsfLayoutCustomComponent extends JsfAbstractSpecialLayout<'custom-component'> {

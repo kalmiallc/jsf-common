@@ -5,6 +5,7 @@ import {
   wrapKeyDynamic
 }                                                                 from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { CodeEditorKeyIconType }                                  from '../../editor/helpers/editor-factory/layout/code-editor-key';
+import { get } from 'lodash';
 
 /**********************************
  * JSF Abstract Layout
@@ -158,6 +159,8 @@ export abstract class JsfAbstractLayout {
     track: Array<string | { event: string, as: string }>
   };
 }
+
+export const jsfAbstractLayoutTranslatableProperties = [(x => (typeof x.tooltip === 'string') ? x.tooltip : get(x.tooltip, 'title'))];
 
 export const jsfAbstractLayoutJsfDefinitionSchemaProperties = {
   $comment: {

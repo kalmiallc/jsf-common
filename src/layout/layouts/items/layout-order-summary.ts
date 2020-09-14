@@ -1,7 +1,9 @@
 import { LayoutInfoInterface }          from '../../../register/interfaces';
 import {
-  JsfAbstractItemsLayout, jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
+  JsfAbstractItemsLayout,
+  jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
   jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+  jsfAbstractLayoutTranslatableProperties,
   JsfLayoutOrderSummaryScrollContainer,
   JsfLayoutOrderSummaryStaticContainer
 }                                       from '../../../layout';
@@ -9,13 +11,16 @@ import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-fac
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'order-summary',
-  title   : 'Order summary',
-  category: 'Layout',
-  icon    : 'layout-icons/order-summary.svg',
-  items   : {
+  type        : 'order-summary',
+  title       : 'Order summary',
+  category    : 'Layout',
+  icon        : 'layout-icons/order-summary.svg',
+  items       : {
     enabled     : true,
     allowedTypes: ['order-summary-static-container', 'order-summary-scroll-container', 'order-summary-overlay']
+  },
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
   }
 };
 
@@ -32,7 +37,7 @@ export const layoutOrderSummaryJsfDefinition = {
   schema: {
     type      : 'object',
     properties: {
-      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties
 
     }
   },
@@ -41,8 +46,8 @@ export const layoutOrderSummaryJsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
 
-        ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
-      ]),
+        ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems
+      ])
     ]
   }
 };

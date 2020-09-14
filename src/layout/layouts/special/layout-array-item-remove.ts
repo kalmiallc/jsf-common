@@ -1,5 +1,6 @@
 import { LayoutInfoInterface }          from '../../../register/interfaces';
 import {
+  jsfAbstractLayoutTranslatableProperties,
   JsfAbstractSpecialLayout,
   jsfAbstractSpecialLayoutJsfDefinitionLayoutItems,
   jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties,
@@ -9,10 +10,13 @@ import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-fac
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'array-item-remove',
-  title   : 'Array item remove',
-  category: 'Buttons & Indicators',
-  icon    : 'layout-icons/array-item-remove.svg'
+  type        : 'array-item-remove',
+  title       : 'Array item remove',
+  category    : 'Buttons & Indicators',
+  icon        : 'layout-icons/array-item-remove.svg',
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties, 'title']
+  }
 };
 
 export class JsfLayoutArrayItemRemove extends JsfAbstractSpecialLayout<'array-item-remove'> {

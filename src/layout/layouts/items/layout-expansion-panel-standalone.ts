@@ -3,20 +3,24 @@ import {
   JsfAbstractItemsLayout,
   jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
   jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+  jsfAbstractLayoutTranslatableProperties,
   JsfLayoutExpansionPanelStandalonePanel
 }                                       from '../../../layout';
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'expansion-panel-standalone',
-  title   : 'Expansion panel standalone',
-  category: 'Layout',
-  icon    : 'unknown.svg',
-  items   : {
+  type        : 'expansion-panel-standalone',
+  title       : 'Expansion panel standalone',
+  category    : 'Layout',
+  icon        : 'unknown.svg',
+  items       : {
     enabled     : true,
     default     : ['expansion-panel-standalone-panel'],
     allowedTypes: ['expansion-panel-standalone-panel']
+  },
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
   }
 };
 

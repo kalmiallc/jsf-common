@@ -1,5 +1,6 @@
 import { LayoutInfoInterface }          from '../../../register/interfaces';
 import {
+  jsfAbstractLayoutTranslatableProperties,
   JsfAbstractSpecialLayout,
   jsfAbstractSpecialLayoutJsfDefinitionLayoutItems,
   jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties
@@ -8,10 +9,13 @@ import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-fac
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'order-summary-line-item',
-  title   : 'Order summery line item',
-  category: 'Layout',
-  icon    : 'layout-icons/order-summary.svg'
+  type        : 'order-summary-line-item',
+  title       : 'Order summery line item',
+  category    : 'Layout',
+  icon        : 'layout-icons/order-summary.svg',
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties, 'label', 'value']
+  }
 };
 
 export class JsfLayoutOrderSummaryLineItem extends JsfAbstractSpecialLayout<'order-summary-line-item'> {

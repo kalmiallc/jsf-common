@@ -2,16 +2,20 @@ import {
   JsfAbstractBareProp,
   jsfAbstractBarePropJsfDefinitionLayoutItems,
   jsfAbstractBarePropJsfDefinitionSchemaProperties,
-  jsfAbstractBarePropJsfDefinitionValidationLayoutItems
+  jsfAbstractBarePropJsfDefinitionValidationLayoutItems,
+  jsfAbstractPropTranslatableProperties
 }                                         from '../abstract/abstract-prop';
 import { JsfHandlerRef }                  from '../../handlers';
 import { EditorInterfaceLayoutFactory }   from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { JsfRegister, PropInfoInterface } from '../../register';
 
 const propInfo: PropInfoInterface = {
-  type : 'ref',
-  title: 'Reference',
-  color: '#f77976'
+  type        : 'ref',
+  title       : 'Reference',
+  color       : '#f77976',
+  localization: {
+    translatableProperties: [...jsfAbstractPropTranslatableProperties]
+  }
 };
 
 export class JsfPropRef extends JsfAbstractBareProp<'ref', JsfHandlerRef> {

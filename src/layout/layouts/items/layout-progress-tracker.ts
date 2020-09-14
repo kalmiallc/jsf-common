@@ -3,19 +3,23 @@ import {
   JsfAbstractItemsLayout,
   jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
   jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+  jsfAbstractLayoutTranslatableProperties,
   JsfLayoutProgressTrackerStep
 }                                       from '../../../layout';
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'progress-tracker',
-  title   : 'Progress tracker',
-  category: 'Layout',
-  icon    : 'layout-icons/progress-tracker.svg',
-  items   : {
+  type        : 'progress-tracker',
+  title       : 'Progress tracker',
+  category    : 'Layout',
+  icon        : 'layout-icons/progress-tracker.svg',
+  items       : {
     enabled: true,
     fixed  : ['progress-tracker-step']
+  },
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties, 'progressTitle']
   }
 };
 

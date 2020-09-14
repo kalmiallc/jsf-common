@@ -1,5 +1,6 @@
 import { LayoutInfoInterface }          from '../../../register/interfaces';
 import {
+  jsfAbstractLayoutTranslatableProperties,
   JsfAbstractSpecialLayout,
   jsfAbstractSpecialLayoutJsfDefinitionLayoutItems,
   jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties
@@ -8,10 +9,13 @@ import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-fac
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'chartjs',
-  title   : 'Chart',
-  category: 'Layout',
-  icon    : 'layout-icons/chartjs.svg'
+  type        : 'chartjs',
+  title       : 'Chart',
+  category    : 'Layout',
+  icon        : 'layout-icons/chartjs.svg',
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
+  }
 };
 
 export class JsfLayoutChartJS extends JsfAbstractSpecialLayout<'chartjs'> {

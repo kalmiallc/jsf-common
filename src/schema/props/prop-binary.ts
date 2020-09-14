@@ -1,7 +1,9 @@
 import {
-  JsfAbstractProp, jsfAbstractPropJsfDefinitionLayoutItems,
+  JsfAbstractProp,
+  jsfAbstractPropJsfDefinitionLayoutItems,
   jsfAbstractPropJsfDefinitionSchemaProperties,
-  jsfAbstractPropJsfDefinitionValidationLayoutItems
+  jsfAbstractPropJsfDefinitionValidationLayoutItems,
+  jsfAbstractPropTranslatableProperties
 }                                       from '../abstract/abstract-prop';
 import { JsfHandlerBinary }             from '../../handlers';
 import { PropInfoInterface }            from '../../register/interfaces';
@@ -13,9 +15,12 @@ export type ContentType = 'image/jpeg' | 'image/png' | 'application/pdf';
 type Buffer = any;
 
 const propInfo: PropInfoInterface = {
-  type: 'binary',
-  title: 'Binary',
-  color: '#240046'
+  type        : 'binary',
+  title       : 'Binary',
+  color       : '#240046',
+  localization: {
+    translatableProperties: [...jsfAbstractPropTranslatableProperties]
+  }
 };
 
 
@@ -38,7 +43,7 @@ export const propBinaryJsfDefinition = {
       contentType: {
         type   : 'array',
         handler: {
-          type: 'common/dropdown',
+          type  : 'common/dropdown',
           values: ['image/jpeg', 'image/png', 'application/pdf']
         },
         items  : {

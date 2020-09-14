@@ -1,8 +1,10 @@
 import { JsfProp, JsfPropJsonValue, JsfPropValue } from './index';
 import {
-  JsfAbstractProp, jsfAbstractPropJsfDefinitionLayoutItems,
+  JsfAbstractProp,
+  jsfAbstractPropJsfDefinitionLayoutItems,
   jsfAbstractPropJsfDefinitionSchemaProperties,
-  jsfAbstractPropJsfDefinitionValidationLayoutItems
+  jsfAbstractPropJsfDefinitionValidationLayoutItems,
+  jsfAbstractPropTranslatableProperties
 }                                                  from '../abstract/abstract-prop';
 import { JsfHandlerArray }                         from '../../handlers';
 import { PropInfoInterface }                       from '../../register/interfaces';
@@ -13,9 +15,12 @@ export interface JsfPropArrayValue extends Array<JsfPropValue> {} // TODO this i
 export interface JsfPropArrayJsonValue extends Array<JsfPropJsonValue> {}
 
 const propInfo: PropInfoInterface = {
-  type : 'array',
-  title: 'Array',
-  color: '#f94144'
+  type        : 'array',
+  title       : 'Array',
+  color       : '#f94144',
+  localization: {
+    translatableProperties: [...jsfAbstractPropTranslatableProperties]
+  }
 };
 
 
@@ -139,15 +144,15 @@ export const propArrayJsfDefinition = {
       ...jsfAbstractPropJsfDefinitionSchemaProperties,
 
       uniqueItems: {
-        title      : 'Unique items',
-        type       : 'boolean',
+        title: 'Unique items',
+        type : 'boolean'
       },
       minItems   : {
-        type       : 'integer'
+        type: 'integer'
       },
       maxItems   : {
-        type       : 'integer'
-      },
+        type: 'integer'
+      }
     }
   },
   layout: {

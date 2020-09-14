@@ -1,17 +1,22 @@
 import {
-  JsfAbstractPropPrimitive, jsfAbstractPropPrimitiveJsfDefinitionLayoutItems,
+  JsfAbstractPropPrimitive,
+  jsfAbstractPropPrimitiveJsfDefinitionLayoutItems,
   jsfAbstractPropPrimitiveJsfDefinitionSchemaProperties,
   jsfAbstractPropPrimitiveJsfDefinitionValidationLayoutItems
-}                                       from '../abstract/abstract-prop-primitive';
-import { JsfHandlerDate }               from '../../handlers';
-import { PropInfoInterface }            from '../../register/interfaces';
-import { EditorInterfaceLayoutFactory } from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
-import { JsfRegister }                  from '../../register';
+}                                                from '../abstract/abstract-prop-primitive';
+import { JsfHandlerDate }                        from '../../handlers';
+import { PropInfoInterface }                     from '../../register/interfaces';
+import { EditorInterfaceLayoutFactory }          from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { JsfRegister }                           from '../../register';
+import { jsfAbstractPropTranslatableProperties } from '../abstract';
 
 const propInfo: PropInfoInterface = {
-  type: 'date',
-  title: 'Date',
-  color: '#16db93'
+  type        : 'date',
+  title       : 'Date',
+  color       : '#16db93',
+  localization: {
+    translatableProperties: [...jsfAbstractPropTranslatableProperties]
+  }
 };
 
 
@@ -47,10 +52,10 @@ export const propDateJsfDefinition = {
       ...jsfAbstractPropPrimitiveJsfDefinitionSchemaProperties,
 
       minimum: {
-        type : 'date'
+        type: 'date'
       },
       maximum: {
-        type : 'date'
+        type: 'date'
       }
     }
   },
@@ -79,10 +84,10 @@ export const propDateJsfDefinition = {
             ]
           },
 
-          ...jsfAbstractPropPrimitiveJsfDefinitionValidationLayoutItems,
+          ...jsfAbstractPropPrimitiveJsfDefinitionValidationLayoutItems
         ]),
 
-        ...jsfAbstractPropPrimitiveJsfDefinitionLayoutItems,
+        ...jsfAbstractPropPrimitiveJsfDefinitionLayoutItems
       ])
     ]
   }

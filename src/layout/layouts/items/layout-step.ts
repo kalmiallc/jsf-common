@@ -3,20 +3,22 @@ import {
   JsfAbstractItemsLayout,
   jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
   jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+  jsfAbstractLayoutTranslatableProperties,
   JsfUnknownLayout
 }                                       from '../../../layout';
-import { EditorInterfaceSchemaFactory } from '../../../editor/helpers/editor-factory/editor-interface-schema-factory';
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
-import { CodeEditorKeyIconType }        from '../../../editor/helpers/editor-factory/layout/code-editor-key';
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'step',
-  title   : 'Step',
-  category: 'Layout',
-  icon    : 'unknown.svg',
-  items   : {
+  type        : 'step',
+  title       : 'Step',
+  category    : 'Layout',
+  icon        : 'unknown.svg',
+  items       : {
     enabled: true
+  },
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties, 'title']
   }
 };
 
@@ -98,7 +100,8 @@ export const layoutStepJsfDefinition = {
       editable             : {
         type : 'boolean',
         title: 'Editable step'
-      }    }
+      }
+    }
   },
   layout: {
     type : 'div',
@@ -269,8 +272,8 @@ export const layoutStepJsfDefinition = {
           }
         ]),
 
-        ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
-      ]),
+        ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems
+      ])
     ]
   }
 };

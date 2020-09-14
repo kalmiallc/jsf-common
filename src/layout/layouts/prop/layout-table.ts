@@ -1,5 +1,6 @@
 import { LayoutInfoInterface }          from '../../../register/interfaces';
 import {
+  jsfAbstractLayoutTranslatableProperties,
   JsfAbstractPropLayout,
   jsfAbstractPropLayoutJsfDefinitionLayoutItems,
   jsfAbstractPropLayoutJsfDefinitionSchemaProperties,
@@ -9,15 +10,18 @@ import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-fac
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type       : 'table',
-  title      : 'Table',
-  category   : 'List',
-  icon       : 'layout-icons/table.svg',
-  formControl: {
+  type        : 'table',
+  title       : 'Table',
+  category    : 'List',
+  icon        : 'layout-icons/table.svg',
+  formControl : {
     enabled: true
   },
-  items      : {
+  items       : {
     enabled: true
+  },
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
   }
 };
 

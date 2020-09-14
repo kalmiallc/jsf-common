@@ -3,6 +3,7 @@ import {
   JsfAbstractItemsLayout,
   jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
   jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+  jsfAbstractLayoutTranslatableProperties,
   JsfLayoutDrawerContent,
   JsfLayoutDrawerHeader
 }                                       from '../../../layout';
@@ -10,13 +11,16 @@ import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-fac
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'drawer',
-  title   : 'Drawer',
-  category: 'Layout',
-  icon    : 'layout-icons/drawer.svg',
-  items   : {
+  type        : 'drawer',
+  title       : 'Drawer',
+  category    : 'Layout',
+  icon        : 'layout-icons/drawer.svg',
+  items       : {
     enabled: true,
     fixed  : ['drawer-header', 'drawer-content']
+  },
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
   }
 };
 

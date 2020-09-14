@@ -1,5 +1,6 @@
 import { LayoutInfoInterface }          from '../../../register/interfaces';
 import {
+  jsfAbstractLayoutTranslatableProperties,
   JsfAbstractSpecialLayout,
   jsfAbstractSpecialLayoutJsfDefinitionLayoutItems,
   jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties
@@ -8,10 +9,13 @@ import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-fac
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'progress-tracker-step',
-  title   : 'Progress tracker step',
-  category: 'Layout',
-  icon    : 'layout-icons/progress-tracker.svg'
+  type        : 'progress-tracker-step',
+  title       : 'Progress tracker step',
+  category    : 'Layout',
+  icon        : 'layout-icons/progress-tracker.svg',
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties, 'title', 'description']
+  }
 };
 
 export class JsfLayoutProgressTrackerStep extends JsfAbstractSpecialLayout<'progress-tracker-step'> {

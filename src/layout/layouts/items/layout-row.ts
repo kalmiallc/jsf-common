@@ -3,19 +3,23 @@ import {
   JsfAbstractItemsLayout,
   jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
   jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+  jsfAbstractLayoutTranslatableProperties,
   JsfLayoutCol
 }                                       from '../../../layout';
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'row',
-  title   : 'Row',
-  category: 'Layout',
-  icon    : 'layout-icons/row.svg',
-  items   : {
+  type        : 'row',
+  title       : 'Row',
+  category    : 'Layout',
+  icon        : 'layout-icons/row.svg',
+  items       : {
     enabled     : true,
     allowedTypes: ['col']
+  },
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
   }
 };
 

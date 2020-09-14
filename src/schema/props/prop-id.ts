@@ -1,7 +1,9 @@
 import {
-  JsfAbstractProp, jsfAbstractPropJsfDefinitionLayoutItems,
+  JsfAbstractProp,
+  jsfAbstractPropJsfDefinitionLayoutItems,
   jsfAbstractPropJsfDefinitionSchemaProperties,
-  jsfAbstractPropJsfDefinitionValidationLayoutItems
+  jsfAbstractPropJsfDefinitionValidationLayoutItems,
+  jsfAbstractPropTranslatableProperties
 }                                       from '../abstract/abstract-prop';
 import { JsfHandlerId }                 from '../../handlers';
 import { PropInfoInterface }            from '../../register/interfaces';
@@ -9,9 +11,12 @@ import { EditorInterfaceLayoutFactory } from '../../editor/helpers/editor-factor
 import { JsfRegister }                  from '../../register';
 
 const propInfo: PropInfoInterface = {
-  type : 'id',
-  title: 'ID',
-  color: '#54478c'
+  type        : 'id',
+  title       : 'ID',
+  color       : '#54478c',
+  localization: {
+    translatableProperties: [...jsfAbstractPropTranslatableProperties]
+  }
 };
 
 export class JsfPropId extends JsfAbstractProp<string, 'id', JsfHandlerId> {

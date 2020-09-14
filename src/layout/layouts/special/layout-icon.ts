@@ -1,5 +1,6 @@
 import { LayoutInfoInterface }          from '../../../register/interfaces';
 import {
+  jsfAbstractLayoutTranslatableProperties,
   JsfAbstractSpecialLayout,
   jsfAbstractSpecialLayoutJsfDefinitionLayoutItems,
   jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties
@@ -15,6 +16,9 @@ const layoutInfo: LayoutInfoInterface = {
   defaultDefinition: {
     type: 'icon',
     icon: 'warning'
+  },
+  localization     : {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
   }
 };
 
@@ -66,7 +70,8 @@ export const layoutIconJsfDefinition = {
       size : {
         type : 'string',
         title: 'Size'
-      }    }
+      }
+    }
   },
   layout: {
     type : 'div',

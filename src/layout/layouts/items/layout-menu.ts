@@ -3,6 +3,7 @@ import {
   JsfAbstractItemsLayout,
   jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
   jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+  jsfAbstractLayoutTranslatableProperties,
   JsfLayoutButtonPreferences,
   JsfLayoutMenuItem
 }                                       from '../../../layout';
@@ -10,12 +11,15 @@ import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-fac
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'menu',
-  title   : 'Menu',
-  category: 'Navigation',
-  icon    : 'layout-icons/menu.svg',
-  items   : {
+  type        : 'menu',
+  title       : 'Menu',
+  category    : 'Navigation',
+  icon        : 'layout-icons/menu.svg',
+  items       : {
     enabled: true
+  },
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties, 'title']
   }
 };
 

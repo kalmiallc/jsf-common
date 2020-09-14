@@ -6,21 +6,28 @@ import {
   jsfAbstractPropPrimitiveJsfDefinitionLayoutItems,
   jsfAbstractPropPrimitiveJsfDefinitionSchemaProperties,
   jsfAbstractPropPrimitiveJsfDefinitionValidationLayoutItems
-}                                              from '../abstract/abstract-prop-primitive';
-import { JsfHandlerInteger, JsfHandlerNumber } from '../../handlers';
-import { EditorInterfaceLayoutFactory }        from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
-import { JsfRegister, PropInfoInterface }      from '../../register';
+}                                                from '../abstract/abstract-prop-primitive';
+import { JsfHandlerInteger, JsfHandlerNumber }   from '../../handlers';
+import { EditorInterfaceLayoutFactory }          from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { JsfRegister, PropInfoInterface }        from '../../register';
+import { jsfAbstractPropTranslatableProperties } from '../abstract';
 
 const propInfoNumber: PropInfoInterface = {
-  type : 'number',
-  title: 'Number',
-  color: '#048ba8'
+  type        : 'number',
+  title       : 'Number',
+  color       : '#048ba8',
+  localization: {
+    translatableProperties: [...jsfAbstractPropTranslatableProperties]
+  }
 };
 
 const propInfoInteger: PropInfoInterface = {
-  type : 'integer',
-  title: 'Integer',
-  color: '#0db39e'
+  type        : 'integer',
+  title       : 'Integer',
+  color       : '#0db39e',
+  localization: {
+    translatableProperties: [...jsfAbstractPropTranslatableProperties]
+  }
 };
 
 abstract class JsfAbstractNumberBase<TypeString, Handler> extends JsfAbstractPropPrimitive<number, TypeString, Handler> {
@@ -150,10 +157,10 @@ export const propNumberJsfDefinition = {
         type: 'number'
       },
       minDecimalDigits: {
-        type : 'number'
+        type: 'number'
       },
       maxDecimalDigits: {
-        type : 'number'
+        type: 'number'
       }
     }
   },

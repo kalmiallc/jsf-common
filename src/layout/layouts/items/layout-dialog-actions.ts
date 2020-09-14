@@ -3,18 +3,22 @@ import {
   JsfAbstractItemsLayout,
   jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
   jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+  jsfAbstractLayoutTranslatableProperties,
   JsfUnknownLayout
 }                                       from '../../../layout';
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'dialog-actions',
-  title   : 'Dialog actions',
-  category: 'Popups & Modals',
-  icon    : 'layout-icons/dialog-actions.svg',
-  items   : {
+  type        : 'dialog-actions',
+  title       : 'Dialog actions',
+  category    : 'Popups & Modals',
+  icon        : 'layout-icons/dialog-actions.svg',
+  items       : {
     enabled: true
+  },
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
   }
 };
 

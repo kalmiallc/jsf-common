@@ -2,18 +2,22 @@ import { LayoutInfoInterface }          from '../../../register/interfaces';
 import {
   JsfAbstractItemsLayout,
   jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
-  jsfAbstractItemsLayoutJsfDefinitionSchemaProperties
+  jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+  jsfAbstractLayoutTranslatableProperties
 }                                       from '../../../layout';
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'section',
-  title   : 'Section',
-  category: 'Layout',
-  icon    : 'layout-icons/section.svg',
-  items   : {
+  type        : 'section',
+  title       : 'Section',
+  category    : 'Layout',
+  icon        : 'layout-icons/section.svg',
+  items       : {
     enabled: true
+  },
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
   }
 };
 

@@ -3,7 +3,8 @@ import {
   JsfAbstractProp,
   jsfAbstractPropJsfDefinitionLayoutItems,
   jsfAbstractPropJsfDefinitionSchemaProperties,
-  jsfAbstractPropJsfDefinitionValidationLayoutItems
+  jsfAbstractPropJsfDefinitionValidationLayoutItems,
+  jsfAbstractPropTranslatableProperties
 }                                                  from '../abstract/abstract-prop';
 import { JsfHandlerObject }                        from '../../handlers';
 import { EditorInterfaceLayoutFactory }            from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
@@ -19,9 +20,12 @@ export interface JsfPropObjectJsonValue {
 }
 
 const propInfo: PropInfoInterface = {
-  type : 'object',
-  title: 'Object',
-  color: '#f29e4c'
+  type        : 'object',
+  title       : 'Object',
+  color       : '#f29e4c',
+  localization: {
+    translatableProperties: [...jsfAbstractPropTranslatableProperties]
+  }
 };
 
 

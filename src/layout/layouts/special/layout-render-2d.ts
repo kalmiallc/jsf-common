@@ -1,9 +1,10 @@
 import { LayoutInfoInterface }          from '../../../register/interfaces';
 import {
+  jsfAbstractLayoutTranslatableProperties,
   JsfAbstractSpecialLayout,
   jsfAbstractSpecialLayoutJsfDefinitionLayoutItems,
   jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties
-}                                       from '../../../layout';
+} from '../../../layout';
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { JsfRegister }                  from '../../../register';
 
@@ -11,7 +12,11 @@ const layoutInfo: LayoutInfoInterface = {
   type    : 'render-2d',
   title   : 'Render 2D',
   category: 'Layout',
-  icon    : 'layout-icons/render-2d.svg'
+  icon    : 'layout-icons/render-2d.svg',
+  localization: {
+    // TODO extract from text nodes
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
+  }
 };
 
 export class JsfLayoutRender2D extends JsfAbstractSpecialLayout<'render-2d'> {

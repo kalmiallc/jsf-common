@@ -3,18 +3,22 @@ import {
   JsfAbstractItemsLayout,
   jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
   jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+  jsfAbstractLayoutTranslatableProperties,
   JsfLayoutOrderSummary
 }                                       from '../../../layout';
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'order-summary-overlay',
-  title   : 'Order summary overlay',
-  category: 'Layout',
-  icon    : 'unknown.svg',
-  items   : {
+  type        : 'order-summary-overlay',
+  title       : 'Order summary overlay',
+  category    : 'Layout',
+  icon        : 'unknown.svg',
+  items       : {
     enabled: true
+  },
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
   }
 };
 

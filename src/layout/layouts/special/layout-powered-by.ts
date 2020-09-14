@@ -1,5 +1,6 @@
 import { LayoutInfoInterface }          from '../../../register/interfaces';
 import {
+  jsfAbstractLayoutTranslatableProperties,
   JsfAbstractSpecialLayout,
   jsfAbstractSpecialLayoutJsfDefinitionLayoutItems,
   jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties
@@ -8,10 +9,13 @@ import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-fac
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'powered-by',
-  title   : 'Powered by',
-  category: 'Layout',
-  icon    : 'layout-icons/powered-by.svg'
+  type        : 'powered-by',
+  title       : 'Powered by',
+  category    : 'Layout',
+  icon        : 'layout-icons/powered-by.svg',
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
+  }
 };
 
 export class JsfLayoutPoweredBy extends JsfAbstractSpecialLayout<'powered-by'> {
@@ -27,7 +31,7 @@ export const layoutPoweredByJsfDefinition = {
   schema: {
     type      : 'object',
     properties: {
-      ...jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties,
+      ...jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties
 
     }
   },

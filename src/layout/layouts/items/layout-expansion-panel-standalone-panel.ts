@@ -3,20 +3,24 @@ import {
   JsfAbstractItemsLayout,
   jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
   jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+  jsfAbstractLayoutTranslatableProperties,
   JsfUnknownLayout
 }                                       from '../../../layout';
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'expansion-panel-standalone-panel',
-  title   : 'Expansion panel standalone panel',
-  category: 'Layout',
-  icon    : 'unknown.svg',
-  items   : {
+  type        : 'expansion-panel-standalone-panel',
+  title       : 'Expansion panel standalone panel',
+  category    : 'Layout',
+  icon        : 'unknown.svg',
+  items       : {
     enabled: true,
     default: ['expansion-panel-standalone-header', 'expansion-panel-standalone-content'],
     fixed  : ['expansion-panel-standalone-header', 'expansion-panel-standalone-content']
+  },
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
   }
 };
 
@@ -33,7 +37,7 @@ export const layoutExpansionPanelStandalonePanelJsfDefinition = {
   schema: {
     type      : 'object',
     properties: {
-      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties
 
     }
   },
@@ -42,8 +46,8 @@ export const layoutExpansionPanelStandalonePanelJsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
 
-        ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
-      ]),
+        ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems
+      ])
     ]
   }
 };

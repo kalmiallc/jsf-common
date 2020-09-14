@@ -3,18 +3,22 @@ import {
   JsfAbstractItemsLayout,
   jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
   jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+  jsfAbstractLayoutTranslatableProperties,
   JsfUnknownLayout
 }                                       from '../../../layout';
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'expansion-panel-standalone-content',
-  title   : 'Expansion panel standalone content',
-  category: 'Layout',
-  icon    : 'unknown.svg',
-  items   : {
+  type        : 'expansion-panel-standalone-content',
+  title       : 'Expansion panel standalone content',
+  category    : 'Layout',
+  icon        : 'unknown.svg',
+  items       : {
     enabled: true
+  },
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
   }
 };
 
@@ -31,7 +35,7 @@ export const layoutExpansionPanelStandaloneContentJsfDefinition = {
   schema: {
     type      : 'object',
     properties: {
-      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties
 
     }
   },
@@ -40,8 +44,8 @@ export const layoutExpansionPanelStandaloneContentJsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
 
-        ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
-      ]),
+        ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems
+      ])
     ]
   }
 };

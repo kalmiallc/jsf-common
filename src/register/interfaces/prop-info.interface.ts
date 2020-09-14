@@ -1,3 +1,5 @@
+import { TranslatablePropertyDescriptor } from '../../editor/localization';
+
 export interface PropInfoInterface {
   /**
    * Type of prop.
@@ -13,4 +15,11 @@ export interface PropInfoInterface {
    * Hex color code identifying this prop type.
    */
   color?: string;
+
+  /**
+   * Localization information.
+   */
+  localization?: {
+    translatableProperties: TranslatablePropertyDescriptor[];
+  }
 }

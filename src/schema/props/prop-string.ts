@@ -1,20 +1,22 @@
 import {
-  JsfAbstractPropPrimitive, jsfAbstractPropPrimitiveJsfDefinitionLayoutItems,
+  JsfAbstractPropPrimitive,
+  jsfAbstractPropPrimitiveJsfDefinitionLayoutItems,
   jsfAbstractPropPrimitiveJsfDefinitionSchemaProperties,
   jsfAbstractPropPrimitiveJsfDefinitionValidationLayoutItems
-} from '../abstract/abstract-prop-primitive';
-import { JsfHandlerString }                                                                                    from '../../handlers';
-import { PropInfoInterface }                                                                                   from '../../register/interfaces';
-import { JsfRegister }                                                                                         from '../../register';
-import { jsfAbstractItemsLayoutJsfDefinitionLayoutItems, jsfAbstractItemsLayoutJsfDefinitionSchemaProperties } from '../../layout/abstract';
-import { EditorInterfaceSchemaFactory }                                                                        from '../../editor/helpers/editor-factory/editor-interface-schema-factory';
-import { EditorInterfaceLayoutFactory }                                                                        from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
-import { CodeEditorKeyIconType }                                                                               from '../../editor/helpers/editor-factory/layout/code-editor-key';
+}                                                from '../abstract/abstract-prop-primitive';
+import { JsfHandlerString }                      from '../../handlers';
+import { PropInfoInterface }                     from '../../register/interfaces';
+import { JsfRegister }                           from '../../register';
+import { EditorInterfaceLayoutFactory }          from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { jsfAbstractPropTranslatableProperties } from '../abstract';
 
 const propInfo: PropInfoInterface = {
-  type: 'string',
-  title: 'String',
-  color: '#83e377'
+  type        : 'string',
+  title       : 'String',
+  color       : '#83e377',
+  localization: {
+    translatableProperties: [...jsfAbstractPropTranslatableProperties]
+  }
 };
 
 /**
@@ -134,7 +136,7 @@ export const propStringJsfDefinition = {
     properties: {
       ...jsfAbstractPropPrimitiveJsfDefinitionSchemaProperties,
 
-      format   : {
+      format: {
         type   : 'string',
         handler: {
           type  : 'common/dropdown',
@@ -200,10 +202,10 @@ export const propStringJsfDefinition = {
       },
 
       minLength: {
-        type : 'integer'
+        type: 'integer'
       },
       maxLength: {
-        type : 'integer'
+        type: 'integer'
       },
       pattern  : {
         description: 'Regular expression that strings must match.',
@@ -226,20 +228,20 @@ export const propStringJsfDefinition = {
         ...EditorInterfaceLayoutFactory.createPanel('Validation', [
           ...EditorInterfaceLayoutFactory.outputKey('format', 'Format'),
           {
-            type: 'row',
+            type : 'row',
             items: [
               {
-                type: 'col',
-                xs: 6,
+                type : 'col',
+                xs   : 6,
                 items: [
-                  ...EditorInterfaceLayoutFactory.outputKey('minLength', 'Min. length'),
+                  ...EditorInterfaceLayoutFactory.outputKey('minLength', 'Min. length')
                 ]
               },
               {
-                type: 'col',
-                xs: 6,
+                type : 'col',
+                xs   : 6,
                 items: [
-                  ...EditorInterfaceLayoutFactory.outputKey('maxLength', 'Max. length'),
+                  ...EditorInterfaceLayoutFactory.outputKey('maxLength', 'Max. length')
                 ]
               }
             ]
@@ -248,10 +250,10 @@ export const propStringJsfDefinition = {
           ...EditorInterfaceLayoutFactory.outputKey('secret'),
           ...EditorInterfaceLayoutFactory.outputKey('multiline'),
 
-          ...jsfAbstractPropPrimitiveJsfDefinitionValidationLayoutItems,
+          ...jsfAbstractPropPrimitiveJsfDefinitionValidationLayoutItems
         ]),
 
-        ...jsfAbstractPropPrimitiveJsfDefinitionLayoutItems,
+        ...jsfAbstractPropPrimitiveJsfDefinitionLayoutItems
       ])
     ]
   }

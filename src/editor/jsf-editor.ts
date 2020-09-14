@@ -4,7 +4,8 @@ import { JsfAbstractPropEditor }                      from './abstract';
 import { createJsfLayoutEditor, createJsfPropEditor } from './util/jsf-editor-factory';
 import { JsfProp }                                    from '../schema/props';
 import { JsfLayoutEditor }                            from './layout';
-import { omit } from 'lodash';
+import { flattenDeep, omit }                          from 'lodash';
+import { TranslatableMessage }                        from './localization/translatable-message';
 
 let editorId = 0;
 
@@ -26,7 +27,7 @@ export class JsfEditor {
 
   get jsfDefinition(): JsfDefinition {
     return {
-      ... this.definitionConfig,
+      ...this.definitionConfig,
       schema: this.schemaEditor.getDefinition(),
       layout: this.layoutEditor.getDefinition()
     };
@@ -122,4 +123,24 @@ export class JsfEditor {
       jsfEditor: this
     });
   }
+
+  /**
+   * Get all translatable text from the form. The messages will not have any duplicates removed.
+   */
+  getTranslatableMessages(): TranslatableMessage[] {
+    const translatableMessages: TranslatableMessage[] = [];
+
+    // Extract title & description.
+    translatableMessages.push(new TranslatableMessage(this.definitionConfig.$title));
+    translatableMessages.push(new TranslatableMessage(this.definitionConfig.$description));
+
+    // Extract schema messages.
+    translatableMessages.push(...this.schemaEditor.getTranslatableMessages());
+
+    // Extract layout messages.
+    translatableMessages.push(...this.layoutEditor.getTranslatableMessages());
+
+    return flattenDeep(translatableMessages).filter(x => x.hasSourceContent());
+  }
+
 }

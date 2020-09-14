@@ -1,5 +1,6 @@
 import { LayoutInfoInterface }          from '../../../register/interfaces';
 import {
+  jsfAbstractLayoutTranslatableProperties,
   JsfAbstractSpecialLayout,
   jsfAbstractSpecialLayoutJsfDefinitionLayoutItems,
   jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties
@@ -8,10 +9,13 @@ import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-fac
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'image',
-  title   : 'Image',
-  category: 'Layout',
-  icon    : 'layout-icons/image.svg'
+  type        : 'image',
+  title       : 'Image',
+  category    : 'Layout',
+  icon        : 'layout-icons/image.svg',
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
+  }
 };
 
 export class JsfLayoutImage extends JsfAbstractSpecialLayout<'image'> {

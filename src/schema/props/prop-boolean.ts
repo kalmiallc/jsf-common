@@ -1,16 +1,21 @@
 import {
-  JsfAbstractPropPrimitive, jsfAbstractPropPrimitiveJsfDefinitionLayoutItems,
+  JsfAbstractPropPrimitive,
+  jsfAbstractPropPrimitiveJsfDefinitionLayoutItems,
   jsfAbstractPropPrimitiveJsfDefinitionSchemaProperties,
   jsfAbstractPropPrimitiveJsfDefinitionValidationLayoutItems
-}                                         from '../abstract/abstract-prop-primitive';
-import { JsfHandlerBoolean }              from '../../handlers';
-import { EditorInterfaceLayoutFactory }   from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
-import { JsfRegister, PropInfoInterface } from '../../register';
+}                                                from '../abstract/abstract-prop-primitive';
+import { JsfHandlerBoolean }                     from '../../handlers';
+import { EditorInterfaceLayoutFactory }          from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { JsfRegister, PropInfoInterface }        from '../../register';
+import { jsfAbstractPropTranslatableProperties } from '../abstract';
 
 const propInfo: PropInfoInterface = {
-  type: 'boolean',
-  title: 'Boolean',
-  color: '#efea5a'
+  type        : 'boolean',
+  title       : 'Boolean',
+  color       : '#efea5a',
+  localization: {
+    translatableProperties: [...jsfAbstractPropTranslatableProperties]
+  }
 };
 
 export class JsfPropBoolean extends JsfAbstractPropPrimitive<boolean, 'boolean', JsfHandlerBoolean> {
@@ -26,7 +31,7 @@ export const propBooleanJsfDefinition = {
   schema: {
     type      : 'object',
     properties: {
-      ...jsfAbstractPropPrimitiveJsfDefinitionSchemaProperties,
+      ...jsfAbstractPropPrimitiveJsfDefinitionSchemaProperties
     }
   },
   layout: {
@@ -35,10 +40,10 @@ export const propBooleanJsfDefinition = {
       ...EditorInterfaceLayoutFactory.createPanelGroup([
         ...EditorInterfaceLayoutFactory.createPanel('Validation', [
 
-          ...jsfAbstractPropPrimitiveJsfDefinitionValidationLayoutItems,
+          ...jsfAbstractPropPrimitiveJsfDefinitionValidationLayoutItems
         ]),
 
-        ...jsfAbstractPropPrimitiveJsfDefinitionLayoutItems,
+        ...jsfAbstractPropPrimitiveJsfDefinitionLayoutItems
       ])
     ]
   }

@@ -1,11 +1,11 @@
-import { JsfEditor }                                 from '../jsf-editor';
-import { JsfTranslatableMessage }                    from '../../translations';
-import { JsfDocument }                               from '../../jsf-document';
-import { JsfUnknownLayout }                          from '../../layout';
-import { createJsfLayoutEditor }                     from '../util';
-import { Subject }                                   from 'rxjs';
-import { isArray, isEmpty, isNil, isObject, omitBy } from 'lodash';
-import { JsfRegister, LayoutInfoInterface }          from '../../register';
+import { JsfEditor }                                                   from '../jsf-editor';
+import { JsfDocument }                                                 from '../../jsf-document';
+import { JsfUnknownLayout }                                            from '../../layout';
+import { createJsfLayoutEditor }                                       from '../util';
+import { Subject }                                                     from 'rxjs';
+import { flattenDeep, get, isArray, isEmpty, isNil, isObject, omitBy } from 'lodash';
+import { JsfRegister, LayoutInfoInterface }                            from '../../register';
+import { TranslatableMessage }                                         from '../localization/translatable-message';
 
 export class JsfLayoutEditor {
 
@@ -221,9 +221,6 @@ export class JsfLayoutEditor {
     this.parent.removeItem(this);
   }
 
-  getTranslatableText(): JsfTranslatableMessage[] {
-    return [];
-  }
 
   ///////////////////////////
   /// ITEMS UTIL
@@ -375,5 +372,32 @@ export class JsfLayoutEditor {
    */
   emitDefinitionChange() {
     this.definitionChange$.next();
+  }
+
+
+  getTranslatableMessages(): TranslatableMessage[] {
+    const localizationInfo = this.info.localization;
+    if (!localizationInfo || !localizationInfo.translatableProperties) {
+      console.error(`Layout "${ this.type }" has no translatable property descriptors.`);
+      return [];
+    }
+
+    const definition = this.definitionWithoutItems;
+
+    const messages: TranslatableMessage[] = [];
+    for (const property of localizationInfo.translatableProperties) {
+      if (typeof property === 'function') {
+        const strings = property(definition) || [];
+        messages.push(...strings.map(x => new TranslatableMessage(x)));
+      } else {
+        messages.push(new TranslatableMessage(get(definition, property)));
+      }
+    }
+
+    if (this.supportsItems) {
+      messages.push(...flattenDeep(this.items.map(x => x.getTranslatableMessages())));
+    }
+
+    return messages.filter(x => x.hasSourceContent());
   }
 }

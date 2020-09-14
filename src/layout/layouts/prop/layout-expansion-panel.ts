@@ -1,5 +1,6 @@
 import { LayoutInfoInterface }          from '../../../register/interfaces';
 import {
+  jsfAbstractLayoutTranslatableProperties,
   JsfAbstractPropLayout,
   jsfAbstractPropLayoutJsfDefinitionLayoutItems,
   jsfAbstractPropLayoutJsfDefinitionSchemaProperties,
@@ -14,16 +15,19 @@ export class JsfLayoutPropExpansionPanelPreferences {
 }
 
 const layoutInfo: LayoutInfoInterface = {
-  type       : 'expansion-panel',
-  title      : 'Expansion Panel',
-  category   : 'Layout',
-  icon       : 'layout-icons/expansion-panel.svg',
-  formControl: {
+  type        : 'expansion-panel',
+  title       : 'Expansion Panel',
+  category    : 'Layout',
+  icon        : 'layout-icons/expansion-panel.svg',
+  formControl : {
     enabled: true
   },
-  items      : {
+  items       : {
     enabled: true,
     fixed  : ['expansion-panel-header', 'expansion-panel-content']
+  },
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
   }
 };
 

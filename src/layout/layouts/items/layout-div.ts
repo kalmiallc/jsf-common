@@ -3,6 +3,7 @@ import {
   JsfAbstractItemsLayout,
   jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
   jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+  jsfAbstractLayoutTranslatableProperties,
   JsfUnknownLayout
 }                                       from '../../../layout';
 import { JsfRegister }                  from '../../../register';
@@ -11,12 +12,15 @@ import { EditorInterfaceSchemaFactory } from '../../../editor/helpers/editor-fac
 import { CodeEditorKeyIconType }        from '../../../editor/helpers/editor-factory/layout/code-editor-key';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'div',
-  title   : 'Div',
-  category: 'Layout',
-  icon    : 'layout-icons/div.svg',
-  items   : {
+  type        : 'div',
+  title       : 'Div',
+  category    : 'Layout',
+  icon        : 'layout-icons/div.svg',
+  items       : {
     enabled: true
+  },
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
   }
 };
 

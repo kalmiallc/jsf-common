@@ -3,22 +3,24 @@ import {
   JsfAbstractItemsLayout,
   jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
   jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+  jsfAbstractLayoutTranslatableProperties,
   JsfLayoutStep
 }                                       from '../../../layout';
-import { EditorInterfaceSchemaFactory } from '../../../editor/helpers/editor-factory/editor-interface-schema-factory';
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
-import { CodeEditorKeyIconType }        from '../../../editor/helpers/editor-factory/layout/code-editor-key';
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'stepper',
-  title   : 'Stepper',
-  category: 'Layout',
-  icon    : 'layout-icons/stepper.svg',
-  items   : {
+  type        : 'stepper',
+  title       : 'Stepper',
+  category    : 'Layout',
+  icon        : 'layout-icons/stepper.svg',
+  items       : {
     enabled     : true,
     default     : ['step', 'step', 'step'],
     allowedTypes: ['step']
+  },
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
   }
 };
 
@@ -246,8 +248,8 @@ export const layoutStepperJsfDefinition = {
           }
         ]),
 
-        ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
-      ]),
+        ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems
+      ])
     ]
   }
 };

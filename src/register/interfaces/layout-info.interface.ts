@@ -1,3 +1,5 @@
+import { TranslatablePropertyDescriptor } from '../../editor/localization/translatable-property-descriptor';
+
 export interface LayoutInfoInterface {
   /**
    * Type of layout.
@@ -78,6 +80,13 @@ export interface LayoutInfoInterface {
      * Limit what type of parent this layout can be attached to.
      */
     allowedTypes?: string[];
+  };
+
+  /**
+   * Localization information.
+   */
+  localization?: {
+    translatableProperties: TranslatablePropertyDescriptor[];
   }
 }
 

@@ -1,5 +1,6 @@
 import { LayoutInfoInterface }          from '../../../register/interfaces';
 import {
+  jsfAbstractLayoutTranslatableProperties,
   JsfAbstractSpecialLayout,
   jsfAbstractSpecialLayoutJsfDefinitionLayoutItems,
   jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties
@@ -8,10 +9,13 @@ import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-fac
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'progress-bar',
-  title   : 'Progress bar',
-  category: 'Buttons & Indicators',
-  icon    : 'layout-icons/progress-bar.svg'
+  type        : 'progress-bar',
+  title       : 'Progress bar',
+  category    : 'Buttons & Indicators',
+  icon        : 'layout-icons/progress-bar.svg',
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
+  }
 };
 
 export class JsfLayoutProgressBar extends JsfAbstractSpecialLayout<'progress-bar'> {

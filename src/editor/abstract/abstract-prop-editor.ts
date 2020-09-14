@@ -1,10 +1,11 @@
-import { JsfUnknownProp }                             from '../../schema/abstract';
-import { JsfEditor }                                  from '../jsf-editor';
-import { JsfProp }                                    from '../../schema/props';
-import { JsfTranslatableMessage }                     from '../../translations';
-import { JsfDocument }                                from '../../jsf-document';
-import { isArray, isEmpty, isNil, isObject, omitBy }  from 'lodash';
-import { HandlerCompatibilityInterface, JsfRegister } from '../../register';
+import { JsfUnknownProp }                                              from '../../schema/abstract';
+import { JsfEditor }                                                                          from '../jsf-editor';
+import { JsfProp }                                                                            from '../../schema/props';
+import { JsfTranslatableMessage }                                                             from '../../translations';
+import { JsfDocument }                                                                        from '../../jsf-document';
+import { flattenDeep, get, isArray, isEmpty, isNil, isObject, omitBy }                        from 'lodash';
+import { HandlerCompatibilityInterface, JsfRegister, LayoutInfoInterface, PropInfoInterface } from '../../register';
+import { TranslatableMessage }                                                                from '../localization/translatable-message';
 
 export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownProp> {
 
@@ -25,6 +26,12 @@ export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownPro
   private _id: string;
 
   propertyName: string | number;
+
+  get info(): PropInfoInterface {
+    return JsfRegister.getPropInfo(this.editorType) || {
+      type: this.editorType
+    };
+  }
 
   get parent(): JsfAbstractPropEditor<any> {
     return this._parent;
@@ -265,5 +272,32 @@ export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownPro
    */
   destroyChild(instance: JsfAbstractPropEditor<any>) {
     throw new Error('Prop does not support children.');
+  }
+
+  getTranslatableMessages(): TranslatableMessage[] {
+    const localizationInfo = this.info.localization;
+    if (!localizationInfo || !localizationInfo.translatableProperties) {
+      console.error(`Prop "${ this.editorType }" has no translatable property descriptors.`);
+      return [];
+    }
+
+    const definition = this.definitionWithoutItems;
+
+    const messages: TranslatableMessage[] = [];
+    for (const property of localizationInfo.translatableProperties) {
+      if (typeof property === 'function') {
+        const strings = property(definition) || [];
+        messages.push(...strings.map(x => new TranslatableMessage(x)));
+      } else {
+        messages.push(new TranslatableMessage(get(definition, property)));
+      }
+    }
+
+    const children = this.getChildren();
+    if (children) {
+      messages.push(... flattenDeep(children.map(x => x.getTranslatableMessages())));
+    }
+
+    return messages.filter(x => x.hasSourceContent());
   }
 }

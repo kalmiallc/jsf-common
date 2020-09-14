@@ -1,5 +1,6 @@
 import { LayoutInfoInterface }          from '../../../register/interfaces';
 import {
+  jsfAbstractLayoutTranslatableProperties,
   JsfAbstractSpecialLayout,
   jsfAbstractSpecialLayoutJsfDefinitionLayoutItems,
   jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties
@@ -15,6 +16,9 @@ const layoutInfo: LayoutInfoInterface = {
   defaultDefinition: {
     type: 'html',
     html: '<span>Custom HTML here</span>'
+  },
+  localization     : {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
   }
 };
 

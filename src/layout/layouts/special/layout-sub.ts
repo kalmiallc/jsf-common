@@ -1,5 +1,6 @@
 import { LayoutInfoInterface }          from '../../../register/interfaces';
 import {
+  jsfAbstractLayoutTranslatableProperties,
   JsfAbstractSpecialLayout,
   jsfAbstractSpecialLayoutJsfDefinitionLayoutItems,
   jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties
@@ -8,10 +9,13 @@ import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-fac
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type    : 'sub',
-  title   : 'Subscript',
-  category: 'Text',
-  icon    : 'layout-icons/sub.svg'
+  type        : 'sub',
+  title       : 'Subscript',
+  category    : 'Text',
+  icon        : 'layout-icons/sub.svg',
+  localization: {
+    translatableProperties: [...jsfAbstractLayoutTranslatableProperties, 'title']
+  }
 };
 
 export class JsfLayoutSub extends JsfAbstractSpecialLayout<'sub'> {
