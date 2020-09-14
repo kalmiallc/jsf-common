@@ -42,7 +42,7 @@ export const layoutClickHandlerService = new class {
   }): any {
     if (isPlainObject(valueOptions)) {
       const keys = Object.keys(valueOptions).filter(x => x !== '$evalTranspiled');
-      if (keys.length === 1 && ['$eval', 'paste', 'const'].indexOf(keys[0]) !== -1) {
+      if (keys.length === 1 && ['$eval', 'key', 'paste', 'const'].indexOf(keys[0]) !== -1) {
         return this.getValue(valueOptions, ctxOptions);
       }
     }
