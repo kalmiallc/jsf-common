@@ -108,7 +108,12 @@ export const layoutClickHandlerService = new class {
   async handleOnClick(onClickData: JsfLayoutOnClickInterface | JsfLayoutOnClickInterface[], options: {
     rootBuilder: JsfBuilder,
     layoutBuilder: JsfAbstractLayoutBuilder<JsfAbstractLayout>,
-    extraContextParams?: { [key: string]: any }
+    extraContextParams?: { [key: string]: any },
+    customActionHandler?: (onClickData: any, options: {
+      rootBuilder: JsfBuilder,
+      layoutBuilder: JsfAbstractLayoutBuilder<JsfAbstractLayout>,
+      extraContextParams?: { [key: string]: any }
+    }) => Promise<boolean> | boolean
   }, $event?: any) {
 
     try {
@@ -838,6 +843,12 @@ export const layoutClickHandlerService = new class {
           }
         }
         return;
+      }
+
+      if (options.customActionHandler) {
+        if (await options.customActionHandler(onClickData, options)) {
+          return;
+        }
       }
 
       /**

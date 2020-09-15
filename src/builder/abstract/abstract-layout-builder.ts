@@ -283,4 +283,23 @@ export abstract class JsfAbstractLayoutBuilder<LayoutType extends JsfAbstractLay
       layoutBuilder: this
     }, $event);
   }
+
+  async handleCustomEventWithOnClickFlow(
+    onClickData: JsfLayoutOnClickInterface | JsfLayoutOnClickInterface[],
+    options: {
+      customActionHandler?: (onClickData: any, options: {
+        rootBuilder: JsfBuilder,
+        layoutBuilder: JsfAbstractLayoutBuilder<JsfAbstractLayout>,
+        extraContextParams?: { [key: string]: any }
+      }) => Promise<boolean> | boolean,
+      extraContextParams?: { [key: string]: any }
+      $event?: any
+      } = {}) {
+    return layoutClickHandlerService.handleOnClick(onClickData, {
+      rootBuilder  : this.rootBuilder,
+      layoutBuilder: this,
+      extraContextParams: options.extraContextParams,
+      customActionHandler: options.customActionHandler
+    }, options.$event);
+  }
 }
