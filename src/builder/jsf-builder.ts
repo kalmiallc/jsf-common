@@ -342,7 +342,7 @@ export class JsfBuilder extends JsfAbstractBuilder {
   constructor(public doc: JsfDocument, public options: JsfBuilderOptions = {}) {
     super();
     this.resolver          = new JsfDependencyResolver(this);
-    this.translationServer = new JsfTranslationServer(doc.$translations);
+    this.initTranslations();
     this.initEvalObject();
 
     this.debug    = !!options.debug;
@@ -497,6 +497,21 @@ export class JsfBuilder extends JsfAbstractBuilder {
       throw new Error('[JSF-DEF] No jsfDefinitionProvider set.');
     }
     return this.jsfDefinitionProvider(key);
+  }
+
+  private initTranslations() {
+    if (this.doc.$localization?.translations) {
+      // New translations format.
+      const translations = {};
+      for (const translation of this.doc.$localization.translations) {
+        const sourceIdentifier = translation.sourceId ? `@@${ translation.sourceId }:${ translation.sourceText }` : translation.sourceText;
+        translations[sourceIdentifier] = translation.targetText;
+      }
+      this.translationServer = new JsfTranslationServer(translations);
+    } else {
+      // Legacy style translations.
+      this.translationServer = new JsfTranslationServer(this.doc.$translations);
+    }
   }
 
   private initEvalObject() {

@@ -3,6 +3,7 @@ import { JsfUnknownLayout }     from './layout';
 import { JsfTranslations }      from './translations';
 import { JsfAnalytics }         from './analytics';
 import { JsfProviderInterface } from './providers';
+import { TranslatedMessage }    from './editor/localization';
 
 /**
  * Closely follows https://tools.ietf.org/html/draft-zyp-json-schema-04
@@ -215,6 +216,15 @@ export class JsfDefinition {
    * Translations for this schema.
    */
   $translations?: JsfTranslations;
+
+
+  /**
+   * New translation support for JSF builder.
+   */
+  $localization?: {
+    translations: TranslatedMessage[]
+  };
+
 
   /**
    * Analytics configuration.
