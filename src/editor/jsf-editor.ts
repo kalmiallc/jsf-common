@@ -6,6 +6,7 @@ import { JsfProp }                                    from '../schema/props';
 import { JsfLayoutEditor }                            from './layout';
 import { flattenDeep, omit, uniqBy }                  from 'lodash';
 import { ExtractedMessage, TranslatedMessage }        from './localization';
+import * as objectHash                                from 'object-hash';
 
 let editorId = 0;
 
@@ -42,12 +43,16 @@ export class JsfEditor {
     this.definitionConfig = omit(this._jsfDefinition, ['schema', 'layout']) as any;
   }
 
+  private _initialStateHash: string;
+
   constructor(options: {
     jsfDefinition: JsfDefinition,
     translations: { [languageCode: string]: TranslatedMessage[] }
   }) {
     this.jsfDefinition = options.jsfDefinition;
-    this.translations = options.translations;
+    this.translations  = options.translations;
+
+    this.updateInitialStateHash();
   }
 
   getNewUniqueId() {
@@ -105,6 +110,18 @@ export class JsfEditor {
 
   unRegisterProp(prop: JsfAbstractPropEditor<any>) {
     this.propsMap[prop.id] = void 0;
+  }
+
+  getInitialStateHash(): string {
+    return this._initialStateHash;
+  }
+
+  getCurrentStateHash(): string {
+    return objectHash(this.jsfDefinition) + objectHash(this.translations);
+  }
+
+  updateInitialStateHash(): void {
+    this._initialStateHash = this.getCurrentStateHash();
   }
 
   private initSchema(schema: JsfProp) {
