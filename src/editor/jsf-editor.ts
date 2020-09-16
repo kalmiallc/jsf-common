@@ -117,7 +117,7 @@ export class JsfEditor {
   }
 
   getCurrentStateHash(): string {
-    return objectHash(this.jsfDefinition || {}) + objectHash(this.translations || {});
+    return objectHash(JSON.parse(JSON.stringify(this.jsfDefinition || {}))) + objectHash(JSON.parse(JSON.stringify(this.translations || {})));
   }
 
   updateInitialStateHash(): void {
