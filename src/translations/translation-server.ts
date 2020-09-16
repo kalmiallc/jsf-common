@@ -1,5 +1,6 @@
 import { isI18nObject, JsfI18nObject }         from './translatable-message';
 import { memoize, template, TemplateExecutor } from 'lodash';
+import { ExtractedMessage }                    from '../editor/localization';
 
 export interface JsfTranslations {
   [key: string]: string;
@@ -33,7 +34,11 @@ export class JsfTranslationServer {
       return this.translations ? this.translations[String(source.id)] || source.val : source.val;
     } else {
       const lookupValue = String(source);
-      return this.translations ? this.translations[lookupValue] || lookupValue : lookupValue;
+      const message = new ExtractedMessage(lookupValue);
+      if (!this.translations) {
+        return message.sourceText;
+      }
+      return this.translations[lookupValue] ? this.translations[lookupValue] : message.sourceText;
     }
   }
 
