@@ -142,16 +142,24 @@ export class JsfDependencyResolver {
 
   runWithDelayedUpdate(cb) {
     this.requestPauseByOne();
-    const x = cb();
-    this.requestResumeByOne();
-    return x;
+    try {
+      return cb();
+    } catch (e) {
+      throw e;
+    } finally {
+      this.requestResumeByOne();
+    }
   }
 
   async asyncRunWithDelayedUpdate(cb) {
     this.requestPauseByOne();
-    const x = await cb();
-    this.requestResumeByOne();
-    return x;
+    try {
+      return await cb();
+    } catch (e) {
+      throw e;
+    } finally {
+      this.requestResumeByOne();
+    }
   }
 
   // ══════════════════════
