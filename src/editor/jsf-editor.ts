@@ -47,10 +47,10 @@ export class JsfEditor {
 
   constructor(options: {
     jsfDefinition: JsfDefinition,
-    translations: { [languageCode: string]: TranslatedMessage[] }
+    translations?: { [languageCode: string]: TranslatedMessage[] }
   }) {
     this.jsfDefinition = options.jsfDefinition;
-    this.translations  = options.translations;
+    this.translations  = options.translations || {};
 
     this.updateInitialStateHash();
   }
