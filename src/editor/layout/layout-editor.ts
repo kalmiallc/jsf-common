@@ -5,7 +5,7 @@ import { createJsfLayoutEditor }                                       from '../
 import { Subject }                                                     from 'rxjs';
 import { flattenDeep, get, isArray, isEmpty, isNil, isObject, omitBy } from 'lodash';
 import { JsfRegister, LayoutInfoInterface }                            from '../../register';
-import { TranslatableMessage }                                         from '../localization/translatable-message';
+import { ExtractedMessage }                                            from '../localization/extracted-message';
 
 export class JsfLayoutEditor {
 
@@ -375,7 +375,7 @@ export class JsfLayoutEditor {
   }
 
 
-  getTranslatableMessages(): TranslatableMessage[] {
+  extractTranslatableMessages(): ExtractedMessage[] {
     const localizationInfo = this.info.localization;
     if (!localizationInfo || !localizationInfo.translatableProperties) {
       console.error(`Layout "${ this.type }" has no translatable property descriptors.`);
@@ -384,18 +384,18 @@ export class JsfLayoutEditor {
 
     const definition = this.definitionWithoutItems;
 
-    const messages: TranslatableMessage[] = [];
+    const messages: ExtractedMessage[] = [];
     for (const property of localizationInfo.translatableProperties) {
       if (typeof property === 'function') {
         const strings = property(definition) || [];
-        messages.push(...strings.map(x => new TranslatableMessage(x)));
+        messages.push(...strings.map(x => new ExtractedMessage(x)));
       } else {
-        messages.push(new TranslatableMessage(get(definition, property)));
+        messages.push(new ExtractedMessage(get(definition, property)));
       }
     }
 
     if (this.supportsItems) {
-      messages.push(...flattenDeep(this.items.map(x => x.getTranslatableMessages())));
+      messages.push(...flattenDeep(this.items.map(x => x.extractTranslatableMessages())));
     }
 
     return messages.filter(x => x.hasSourceContent());

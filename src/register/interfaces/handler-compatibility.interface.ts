@@ -1,5 +1,6 @@
-import { JsfDefinition }         from '../../jsf-definition';
-import { JsfProp, JsfPropTypes } from '../../schema/props';
+import { JsfDefinition }                  from '../../jsf-definition';
+import { JsfProp, JsfPropTypes }          from '../../schema/props';
+import { TranslatablePropertyDescriptor } from '../../editor/localization';
 
 export interface HandlerCompatibilityInterface {
   /**
@@ -25,4 +26,11 @@ export interface HandlerCompatibilityInterface {
     type: JsfPropTypes,
     formDefinitionTransform?: (formJsfDef: JsfDefinition, prop: JsfProp) => JsfDefinition
   }[];
+
+  /**
+   * Localization information.
+   */
+  localization?: {
+    translatableProperties: TranslatablePropertyDescriptor[];
+  }
 }

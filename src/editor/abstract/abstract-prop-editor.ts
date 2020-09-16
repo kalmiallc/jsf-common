@@ -5,7 +5,7 @@ import { JsfTranslatableMessage }                                               
 import { JsfDocument }                                                                        from '../../jsf-document';
 import { flattenDeep, get, isArray, isEmpty, isNil, isObject, omitBy }                        from 'lodash';
 import { HandlerCompatibilityInterface, JsfRegister, LayoutInfoInterface, PropInfoInterface } from '../../register';
-import { TranslatableMessage }                                                                from '../localization/translatable-message';
+import { ExtractedMessage }                                                                   from '../localization/extracted-message';
 
 export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownProp> {
 
@@ -274,28 +274,46 @@ export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownPro
     throw new Error('Prop does not support children.');
   }
 
-  getTranslatableMessages(): TranslatableMessage[] {
+  extractTranslatableMessages(): ExtractedMessage[] {
+    const messages: ExtractedMessage[] = [];
+    const definition                   = this.definitionWithoutItems;
+
+    // Get messages from prop.
     const localizationInfo = this.info.localization;
     if (!localizationInfo || !localizationInfo.translatableProperties) {
       console.error(`Prop "${ this.editorType }" has no translatable property descriptors.`);
-      return [];
-    }
-
-    const definition = this.definitionWithoutItems;
-
-    const messages: TranslatableMessage[] = [];
-    for (const property of localizationInfo.translatableProperties) {
-      if (typeof property === 'function') {
-        const strings = property(definition) || [];
-        messages.push(...strings.map(x => new TranslatableMessage(x)));
-      } else {
-        messages.push(new TranslatableMessage(get(definition, property)));
+    } else {
+      for (const property of localizationInfo.translatableProperties) {
+        if (typeof property === 'function') {
+          const strings = property(definition) || [];
+          messages.push(...strings.map(x => new ExtractedMessage(x)));
+        } else {
+          messages.push(new ExtractedMessage(get(definition, property)));
+        }
       }
     }
 
+    // Get messages from handler.
+    if (this.hasHandler) {
+      const handlerCompatibility = this.getHandlerCompatibility();
+      if (!handlerCompatibility || !handlerCompatibility.localization?.translatableProperties) {
+        console.error(`Prop handler "${ this.handlerType }" has no translatable property descriptors.`);
+      } else {
+        for (const property of handlerCompatibility.localization.translatableProperties) {
+          if (typeof property === 'function') {
+            const strings = property(definition) || [];
+            messages.push(...strings.map(x => new ExtractedMessage(x)));
+          } else {
+            messages.push(new ExtractedMessage(get(definition, property)));
+          }
+        }
+      }
+    }
+
+    // Get messages from children.
     const children = this.getChildren();
     if (children) {
-      messages.push(... flattenDeep(children.map(x => x.getTranslatableMessages())));
+      messages.push(... flattenDeep(children.map(x => x.extractTranslatableMessages())));
     }
 
     return messages.filter(x => x.hasSourceContent());

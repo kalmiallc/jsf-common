@@ -4,8 +4,8 @@ import { JsfAbstractPropEditor }                      from './abstract';
 import { createJsfLayoutEditor, createJsfPropEditor } from './util/jsf-editor-factory';
 import { JsfProp }                                    from '../schema/props';
 import { JsfLayoutEditor }                            from './layout';
-import { flattenDeep, omit }                          from 'lodash';
-import { TranslatableMessage }                        from './localization/translatable-message';
+import { flattenDeep, omit, uniqBy }                  from 'lodash';
+import { ExtractedMessage, TranslatedMessage }        from './localization';
 
 let editorId = 0;
 
@@ -21,7 +21,9 @@ export class JsfEditor {
 
   definitionConfig: JsfDefinition & { schema: never, layout: never };
 
-  private _jsfDefinition: JsfDefinition;
+  translations: { [languageCode: string]: TranslatedMessage[] };
+
+  _jsfDefinition: JsfDefinition;
 
   readonly id = editorId++;
 
@@ -41,9 +43,11 @@ export class JsfEditor {
   }
 
   constructor(options: {
-    jsfDefinition: JsfDefinition
+    jsfDefinition: JsfDefinition,
+    translations: { [languageCode: string]: TranslatedMessage[] }
   }) {
     this.jsfDefinition = options.jsfDefinition;
+    this.translations = options.translations;
   }
 
   getNewUniqueId() {
@@ -127,20 +131,28 @@ export class JsfEditor {
   /**
    * Get all translatable text from the form. The messages will not have any duplicates removed.
    */
-  getTranslatableMessages(): TranslatableMessage[] {
-    const translatableMessages: TranslatableMessage[] = [];
+  extractTranslatableMessages(): ExtractedMessage[] {
+    let translatableMessages: ExtractedMessage[] = [];
 
     // Extract title & description.
-    translatableMessages.push(new TranslatableMessage(this.definitionConfig.$title));
-    translatableMessages.push(new TranslatableMessage(this.definitionConfig.$description));
+    translatableMessages.push(new ExtractedMessage(this.definitionConfig.$title));
+    translatableMessages.push(new ExtractedMessage(this.definitionConfig.$description));
 
     // Extract schema messages.
-    translatableMessages.push(...this.schemaEditor.getTranslatableMessages());
+    translatableMessages.push(...this.schemaEditor.extractTranslatableMessages());
 
     // Extract layout messages.
-    translatableMessages.push(...this.layoutEditor.getTranslatableMessages());
+    translatableMessages.push(...this.layoutEditor.extractTranslatableMessages());
 
-    return flattenDeep(translatableMessages).filter(x => x.hasSourceContent());
+    // Flatten array and remove empty messages.
+    translatableMessages = flattenDeep(translatableMessages).filter(x => x.hasSourceContent());
+
+    // Remove duplicates.
+    translatableMessages = uniqBy(translatableMessages, (x) => {
+      return x.id ? `${ x.id }/${ x.sourceText }` : x.sourceText;
+    });
+
+    return translatableMessages;
   }
 
 }

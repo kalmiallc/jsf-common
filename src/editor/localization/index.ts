@@ -1,3 +1,4 @@
 export * from './translatable-property-descriptor';
-export * from './translatable-message';
-export * from './target-language.interface';
+export * from './extracted-message';
+export * from './translated-message';
+export * from './target-language';

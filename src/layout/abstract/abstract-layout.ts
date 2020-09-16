@@ -160,7 +160,7 @@ export abstract class JsfAbstractLayout {
   };
 }
 
-export const jsfAbstractLayoutTranslatableProperties = [(x => (typeof x.tooltip === 'string') ? x.tooltip : get(x.tooltip, 'title'))];
+export const jsfAbstractLayoutTranslatableProperties = [(x => (typeof x.tooltip === 'string') ? [x.tooltip] : [get(x.tooltip, 'title')])];
 
 export const jsfAbstractLayoutJsfDefinitionSchemaProperties = {
   $comment: {

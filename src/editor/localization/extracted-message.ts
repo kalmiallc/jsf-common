@@ -1,11 +1,11 @@
 import { isString, isNil } from 'lodash';
 
-export class TranslatableMessage {
+export class ExtractedMessage {
 
   /**
    * Extracted text.
    */
-  text: string;
+  sourceText: string;
   /**
    * Extracted id.
    */
@@ -15,29 +15,29 @@ export class TranslatableMessage {
     return this._id;
   }
 
-  constructor(public sourceContent: string) {
+  constructor(public rawContent: string) {
     this.parseSourceContent();
   }
 
   private parseSourceContent() {
-    if (!isString(this.sourceContent)) {
+    if (!isString(this.rawContent)) {
       return;
     }
 
-    const markerIndex = this.sourceContent.indexOf('@@');
+    const markerIndex = this.rawContent.indexOf('@@');
     if (markerIndex === 0) {
-      const delimiterIndex = this.sourceContent.indexOf(':');
+      const delimiterIndex = this.rawContent.indexOf(':');
       if (delimiterIndex === -1) {
         throw new Error(`Invalid translatable string format`)
       }
-      this._id  = this.sourceContent.substring(2, delimiterIndex);
-      this.text = this.sourceContent.substring(delimiterIndex + 1);
+      this._id        = this.rawContent.substring(2, delimiterIndex);
+      this.sourceText = this.rawContent.substring(delimiterIndex + 1);
     } else {
-      this.text = this.sourceContent;
+      this.sourceText = this.rawContent;
     }
   }
 
   public hasSourceContent() {
-    return !isNil(this.sourceContent);
+    return !isNil(this.rawContent);
   }
 }

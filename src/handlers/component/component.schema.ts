@@ -312,5 +312,9 @@ export const jsfHandlerComponentCompatibility: HandlerCompatibilityInterface = {
     {
       type: 'object'
     }
-  ]
+  ],
+
+  localization: {
+    translatableProperties: []
+  }
 };
