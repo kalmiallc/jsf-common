@@ -98,7 +98,7 @@ export class JsfEditor {
   }
 
   unRegisterLayout(layout: JsfLayoutEditor) {
-    this.layoutsMap[layout.id] = void 0;
+    delete this.layoutsMap[layout.id];
   }
 
   registerProp(prop: JsfAbstractPropEditor<any>) {
@@ -109,7 +109,7 @@ export class JsfEditor {
   }
 
   unRegisterProp(prop: JsfAbstractPropEditor<any>) {
-    this.propsMap[prop.id] = void 0;
+    delete this.propsMap[prop.id];
   }
 
   getInitialStateHash(): string {
