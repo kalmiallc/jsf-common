@@ -1,6 +1,6 @@
 {
   "name": "@kalmia/jsf-common",
-  "version": "9.1.18",
+  "version": "9.1.19",
   "authors": "Tilen Tomakić <tilen@tomakic.com>",
   "contributors": [
     "Matej Gorjanc"
@@ -38,16 +38,16 @@
     "test"
   ],
   "dependencies": {
-    "@types/lodash": "^4.14.118",
-    "@types/validator": "^9.4.2",
     "bson": "^4.0.1",
     "bson-objectid": "^1.2.4",
-    "lodash": "^4.17.19",
+    "lodash": "4.17.12",
     "moment": "^2.24.0",
     "object-hash": "^2.0.3",
     "validator": "^10.9.0"
   },
   "devDependencies": {
+    "@types/lodash": "4.14.160",
+    "@types/validator": "^9.4.2",
     "@types/jest": "^22.2.2",
     "@types/node": "^14.0.10",
     "big.js": "^5.2.2",
