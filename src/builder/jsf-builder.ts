@@ -386,6 +386,9 @@ export class JsfBuilder extends JsfAbstractBuilder {
     if (doc.value !== undefined) {
       this.propBuilder.setJsonValueNoResolve(doc.value, { noResolve: true });
     }
+    if (doc.patchValue !== undefined) {
+      this.propBuilder.patchJsonValueNoResolve(doc.patchValue, { noResolve: true });
+    }
 
     if (!options.headless) {
       this.layoutBuilder = JsfLayoutBuilderFactory.create(doc.layout, this, null,

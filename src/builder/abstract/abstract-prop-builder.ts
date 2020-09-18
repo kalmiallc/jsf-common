@@ -1103,6 +1103,10 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
     return this.patchValue(this.jsonToValue(jsonValue), options);
   }
 
+  patchJsonValueNoResolve(jsonValue: PropJsonValue, options: PatchValueOptionsInterface = {}): void {
+    return this.patchValueNoResolve(this.jsonToValue(jsonValue), { ...options, noResolve: true }); // tslint:disable-line
+  }
+
   async consumeProviderValue(jsonValue: PropJsonValue, options: ConsumeProviderValueOptionsInterface = { mode: 'set' }): Promise<void> {
     if (this.hasHandlerConsumeProviderValue) {
       return this.handler.consumeProviderValue(jsonValue, options);

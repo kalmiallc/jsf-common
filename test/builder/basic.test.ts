@@ -9,6 +9,9 @@ const doc: JsfDocument = {
         type   : 'string',
         default: 'ABC'
       }),
+      description: new JsfPropString({
+        type   : 'string'
+      }),
       time : new JsfPropDate({
         type: 'date'
       }),
@@ -19,6 +22,10 @@ const doc: JsfDocument = {
     type : 'div',
     items: []
   }),
+
+  patchValue: {
+    description: 'XYZ'
+  }
 };
 
 
@@ -32,6 +39,14 @@ describe('Basic JSF', () => {
     const val = builder.getValue();
 
     expect(val.title).toBe('ABC');
+  });
+
+  it('patchValue', async () => {
+    builder = await JsfBuilder.create(doc);
+
+    const val = builder.getValue();
+
+    expect(val.description).toBe('XYZ');
   });
 
   it('default date test', async (d) => {
