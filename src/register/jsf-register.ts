@@ -5,6 +5,7 @@ import { LayoutInfoInterface }                              from '../editor/layo
 import { EvalContextOptions, JsfBuilder }                   from '../builder';
 import { HandlerCompatibilityInterface }                    from './interfaces/handler-compatibility.interface';
 import { PropInfoInterface }                                from './interfaces';
+import { defaultToolboxLayoutWhitelist }                    from './layout-whitelist';
 
 export class JsfRegister {
 
@@ -18,6 +19,16 @@ export class JsfRegister {
 
   private static handlerBuilderStore: { [propBuilderKey: string]: (new (builder: JsfUnknownPropBuilder) => JsfAbstractHandlerBuilder<any>) } = {};
   private static handlerCompatibility: { [handlerKey: string]: HandlerCompatibilityInterface }                                               = {};
+
+  private static _toolboxLayoutWhitelist = defaultToolboxLayoutWhitelist;
+
+  static setToolboxLayoutWhitelist(whitelist: string[] | null) {
+    JsfRegister._toolboxLayoutWhitelist = whitelist;
+  }
+
+  static getToolboxLayoutWhitelist() {
+    return JsfRegister._toolboxLayoutWhitelist;
+  }
 
   static getAppEvalContextLambda(): (builder: JsfBuilder, options?: EvalContextOptions) => any {
     return JsfRegister.appEvalContextLambda;
