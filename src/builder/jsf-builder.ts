@@ -920,8 +920,8 @@ export class JsfBuilder extends JsfAbstractBuilder {
   // EVAL HELPER
   ////////////////////////
 
-  getStaticEvalContext(): any {
-    return evalService.getStaticEvalContext(this);
+  getStaticEvalContext(options: { extraContextParams?: { [key: string]: any }; } = {}): any {
+    return evalService.getStaticEvalContext(this, options);
   }
 
   getEvalContext(options: EvalContextOptions = {}): any {

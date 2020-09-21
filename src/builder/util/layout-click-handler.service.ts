@@ -19,8 +19,8 @@ import {
 }                                              from './clipboard';
 import { JsfArrayPropLayoutBuilder }           from '../layout';
 import {
-  isObservable
-}                                              from 'rxjs';
+  isObservable, Observable
+} from 'rxjs';
 
 export class JsfAbortEventChain extends Error {
 
@@ -826,7 +826,7 @@ export const layoutClickHandlerService = new class {
       }
 
       /**
-       * Dat source actions
+       * Dats source reload
        */
       if (onClickData.dataSourceReload) {
         if (onClickData.dataSourceReload.dataSourceKey === '*') {
@@ -842,6 +842,56 @@ export const layoutClickHandlerService = new class {
             options.rootBuilder.jsfPageBuilder.processDataSource(onClickData.dataSourceReload.dataSourceKey)
           }
         }
+        return;
+      }
+
+      /**
+       * Dats source requests
+       */
+      if (onClickData.dataSourceRequest) {
+        const data = onClickData.dataSourceRequest.data && this.getValue(onClickData.dataSourceRequest.data, options);
+        let res$: Observable<any>;
+        switch (onClickData.dataSourceRequest.type || 'list') {
+          case 'get':
+            res$ = options.rootBuilder.jsfPageBuilder.makeDataSourceGetRequest(onClickData.dataSourceRequest.key, data);
+            break;
+          case 'insert':
+            res$ = options.rootBuilder.jsfPageBuilder.makeDataSourceInsertRequest(onClickData.dataSourceRequest.key, data);
+            break;
+          case 'list':
+            res$ = options.rootBuilder.jsfPageBuilder.makeDataSourceListRequest(onClickData.dataSourceRequest.key, data);
+            break;
+          case 'remove':
+            res$ = options.rootBuilder.jsfPageBuilder.makeDataSourceRemoveRequest(onClickData.dataSourceRequest.key, data);
+            break;
+          case 'update':
+            res$ = options.rootBuilder.jsfPageBuilder.makeDataSourceUpdateRequest(onClickData.dataSourceRequest.key, data);
+            break;
+          default:
+            throw new Error('Unknown data source type ' + onClickData.dataSourceRequest.type);
+        }
+
+        // const ctx = options.rootBuilder.getEvalContext({
+        //   layoutBuilder     : options.layoutBuilder as any,
+        //   extraContextParams: options.extraContextParams
+        // });
+        await res$.toPromise();
+        //   .then(x => {
+        //     return onClickData.dataSourceRequest?.onSuccess &&
+        //     options.rootBuilder.resolver.asyncRunWithDelayedUpdate(() => {
+        //       const result = options.rootBuilder.runEvalWithContext(
+        //         (onClickData.dataSourceRequest.onSuccess as any).$evalTranspiled
+        //         || onClickData.dataSourceRequest.onSuccess.$eval, ctx);
+        //       if (isObservable(result)) {
+        //         return result.toPromise();
+        //       } else {
+        //         return result;
+        //       }
+        //     });
+        //   })
+        //   .catch(e => {
+        //     onClickData.dataSourceRequest.onFailuer
+        //   });
         return;
       }
 
