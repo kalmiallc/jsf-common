@@ -159,7 +159,8 @@ export abstract class JsfAbstractBareProp<TypeString, Handlers> {
 
 export const jsfAbstractBarePropJsfDefinitionSchemaProperties      = {
   $comment: {
-    type: 'string'
+    type: 'string',
+    multiline: 3,
   },
   $group  : {
     type   : 'array',
