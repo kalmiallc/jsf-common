@@ -105,6 +105,33 @@ export const layoutClickHandlerService = new class {
     throw new Error(`Invalid value options: [${ JSON.stringify(valueOptions) }]`);
   }
 
+  async runEval(objWithEvalProperty, options: {
+    rootBuilder: JsfBuilder,
+    layoutBuilder: JsfAbstractLayoutBuilder<JsfAbstractLayout>,
+    extraContextParams?: { [key: string]: any }
+  }) {
+    if (!objWithEvalProperty) {
+      return;
+    }
+    const evalString =  objWithEvalProperty.$evalTranspiled || objWithEvalProperty.$eval;
+    if (!evalString) {
+      return;
+    }
+    const ctx = options.rootBuilder.getEvalContext({
+      layoutBuilder     : options.layoutBuilder as any,
+      extraContextParams: options.extraContextParams
+    });
+
+    await options.rootBuilder.resolver.asyncRunWithDelayedUpdate(() => {
+      const result = options.rootBuilder.runEvalWithContext(evalString, ctx);
+      if (isObservable(result)) {
+        return result.toPromise();
+      } else {
+        return result;
+      }
+    });
+  }
+
   async handleOnClick(onClickData: JsfLayoutOnClickInterface | JsfLayoutOnClickInterface[], options: {
     rootBuilder: JsfBuilder,
     layoutBuilder: JsfAbstractLayoutBuilder<JsfAbstractLayout>,
@@ -871,27 +898,21 @@ export const layoutClickHandlerService = new class {
             throw new Error('Unknown data source type ' + onClickData.dataSourceRequest.type);
         }
 
-        // const ctx = options.rootBuilder.getEvalContext({
-        //   layoutBuilder     : options.layoutBuilder as any,
-        //   extraContextParams: options.extraContextParams
-        // });
-        await res$.toPromise();
-        //   .then(x => {
-        //     return onClickData.dataSourceRequest?.onSuccess &&
-        //     options.rootBuilder.resolver.asyncRunWithDelayedUpdate(() => {
-        //       const result = options.rootBuilder.runEvalWithContext(
-        //         (onClickData.dataSourceRequest.onSuccess as any).$evalTranspiled
-        //         || onClickData.dataSourceRequest.onSuccess.$eval, ctx);
-        //       if (isObservable(result)) {
-        //         return result.toPromise();
-        //       } else {
-        //         return result;
-        //       }
-        //     });
-        //   })
-        //   .catch(e => {
-        //     onClickData.dataSourceRequest.onFailuer
-        //   });
+        await res$.toPromise()
+           .then($reqResult => this.runEval(onClickData.dataSourceRequest?.onSuccess, {
+             ...options,
+             extraContextParams: { ...options.extraContextParams, $reqResult }
+           }))
+           .catch($reqError => {
+             if (onClickData.dataSourceRequest?.onFailure) {
+               this.runEval(onClickData.dataSourceRequest.onFailure, {
+                 ...options,
+                 extraContextParams: { ...options.extraContextParams, $reqError }
+               })
+             } else {
+               console.error($reqError);
+             }
+           });
         return;
       }
 
