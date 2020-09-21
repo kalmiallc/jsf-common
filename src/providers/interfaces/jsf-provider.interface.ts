@@ -1,3 +1,5 @@
+import { JsfValueOptionsType } from '../../layout/interfaces';
+
 export interface JsfProviderSourceVirtualEventInterface {
   /**
    * Name of virtual event.
@@ -48,11 +50,30 @@ export interface JsfProviderSourceApiInterface {
   reqType?: 'POST' | 'GET';
 }
 
+export interface JsfProviderSourceDataSourceInterface {
+  /**
+   * Example: datasource://weather
+   */
+  dataSourceKey: string;
+
+  /**
+   * CRUD type.
+   * @default list
+   */
+  type?: 'insert' | 'update'  | 'get'| 'remove' | 'list';
+
+  /**
+   * Optional data (body).
+   */
+  data?: JsfValueOptionsType;
+}
+
 export type JsfProviderSource =
   JsfProviderSourceEntityInterface
   | JsfProviderSourceVirtualEventInterface
   | JsfProviderSourceEvalInterface
-  | JsfProviderSourceApiInterface;
+  | JsfProviderSourceApiInterface
+  | JsfProviderSourceDataSourceInterface;
 
 export interface JsfProviderInterface {
   /**
@@ -106,4 +127,8 @@ export function isJsfProviderSourceEval(source: any): source is JsfProviderSourc
 
 export function isJsfProviderSourceApi(source: any): source is JsfProviderSourceApiInterface {
   return typeof source === 'object' && 'api' in source;
+}
+
+export function isJsfProviderSourceDataSource(source: any): source is JsfProviderSourceDataSourceInterface {
+  return typeof source === 'object' && 'dataSourceKey' in source;
 }

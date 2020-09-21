@@ -474,7 +474,8 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
     console.log('[JSF-DASH] onDataSourcesRequestResponse', x);
 
     const dataSource = this.dataSourcesInfo[dataSourceKey];
-    for (const componentKey of Object.keys(dataSource.components)) {
+
+    for (const componentKey of Object.keys(dataSource?.components || {})) {
       const component = dataSource.components[componentKey];
       if (!component.subscribed) {
         continue;

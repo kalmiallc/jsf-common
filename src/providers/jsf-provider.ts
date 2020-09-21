@@ -1,13 +1,17 @@
-import { ConsumeProviderValueOptionsInterface, JsfBuilder, JsfPropBuilderObject } from '../builder';
+import { ConsumeProviderValueOptionsInterface, JsfBuilder, JsfPropBuilderObject, layoutClickHandlerService } from '../builder';
 import {
   isJsfProviderSourceApi,
-  isJsfProviderSourceEntity, isJsfProviderSourceEval,
+  isJsfProviderSourceDataSource,
+  isJsfProviderSourceEntity,
+  isJsfProviderSourceEval,
   isJsfProviderSourceVirtualEvent,
   JsfProviderDffEventInterface,
   JsfProviderInterface
-} from './interfaces/jsf-provider.interface';
-import { isEqual }                                                                from 'lodash';
-import { JsfProviderOptionsInterface }                                            from './interfaces/jsf-provider-options.interface';
+}                                      from './interfaces/jsf-provider.interface';
+import { isEqual }                     from 'lodash';
+import { JsfProviderOptionsInterface } from './interfaces/jsf-provider-options.interface';
+import { Observable }                  from 'rxjs';
+import { map }                         from 'rxjs/operators';
 
 export class JsfProvider {
 
@@ -191,6 +195,26 @@ export class JsfProvider {
         console.error(e);
       }
 
+    } else if (isJsfProviderSourceDataSource(this.provider.source)) {
+      // Provider type => Data source.
+      const response = await this.provideInternal({
+        source: this.provider.source,
+        data  : providerRequestData
+      }, options);
+
+      const consumeProviderValueOptions: ConsumeProviderValueOptionsInterface = this.builder.ready ?
+        { mode: options.mode } :
+        {
+          noResolve    : true,
+          noValueChange: true,
+          mode         : options.mode
+        };
+      try { // TODO FIXME without try-catch!
+        return await options.consumer.consumeProviderValue(response, consumeProviderValueOptions);
+      } catch (e) {
+        console.error(e);
+      }
+
     } else {
       throw new Error(`Unknown source '${ this.provider }'`);
     }
@@ -215,19 +239,18 @@ export class JsfProvider {
           return isEqual(data, x.data);
         }
       });
-      
+
       if (request) {
         // A request is already pending so await it here.
         response = await request.promise;
       } else {
         // Create a new provide request.
-
         const builder: JsfBuilder = this.builder.linkedBuilder || this.builder;
 
         if (isJsfProviderSourceEval(data.source)) {
-          // For eval case only.
+          // For eval case.
           const ctx = builder.getEvalContext({
-            propBuilder: options.propBuilder,
+            propBuilder       : options.propBuilder,
             extraContextParams: {
               $providerRequestData: data.data
             }
@@ -235,9 +258,41 @@ export class JsfProvider {
 
           // tslint:disable-next-line
           response = builder.runEvalWithContext((data.source as any).$evalTranspiled || data.source.$eval, ctx);
+
+        } else if (isJsfProviderSourceDataSource(data.source)) {
+          // For data source case.
+          const sourceData = data.source.data && layoutClickHandlerService.getValue(data.source.data, {
+            propBuilder: options.propBuilder,
+            rootBuilder: options.propBuilder.rootBuilder,
+          });
+
+          let res$: Observable<any>;
+          switch (data.source.type || 'list') {
+            case 'get':
+              res$ = options.propBuilder.rootBuilder.jsfPageBuilder.makeDataSourceGetRequest(data.source.dataSourceKey, sourceData);
+              break;
+            case 'insert':
+              res$ = options.propBuilder.rootBuilder.jsfPageBuilder.makeDataSourceInsertRequest(data.source.dataSourceKey, sourceData);
+              break;
+            case 'list':
+              res$ = options.propBuilder.rootBuilder.jsfPageBuilder.makeDataSourceListRequest(data.source.dataSourceKey, sourceData);
+              break;
+            case 'remove':
+              res$ = options.propBuilder.rootBuilder.jsfPageBuilder.makeDataSourceRemoveRequest(data.source.dataSourceKey, sourceData);
+              break;
+            case 'update':
+              res$ = options.propBuilder.rootBuilder.jsfPageBuilder.makeDataSourceUpdateRequest(data.source.dataSourceKey, sourceData);
+              break;
+            default:
+              throw new Error('Unknown data source type ' + data.source.type);
+          }
+
+          // tslint:disable-next-line
+          response = res$.pipe(map(x => x.value)).toPromise();
+
         } else {
-          // Everything other than eval.
-          const p                   = builder.runOnFormEventHook({
+          // Everything other than eval or data source.
+          const p = builder.runOnFormEventHook({
             event: `dff:provide`,
             value: data
           });
