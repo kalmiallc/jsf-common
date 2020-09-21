@@ -9,6 +9,11 @@ import {
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { JsfRegister }                  from '../../../register';
 
+export interface JsfLayoutArrayFilter {
+  $eval: string;
+  dependencies: string[];
+}
+
 const layoutInfo: LayoutInfoInterface = {
   type        : 'array',
   title       : 'Array',

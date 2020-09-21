@@ -3,10 +3,10 @@ import {
   jsfAbstractLayoutTranslatableProperties,
   JsfAbstractPropLayout,
   jsfAbstractPropLayoutJsfDefinitionLayoutItems,
-  jsfAbstractPropLayoutJsfDefinitionSchemaProperties,
+  jsfAbstractPropLayoutJsfDefinitionSchemaProperties, JsfLayoutArrayFilter,
   JsfLayoutExpansionPanelContent,
   JsfLayoutExpansionPanelHeader
-}                                       from '../../../layout';
+} from '../../../layout';
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { JsfRegister }                  from '../../../register';
 
@@ -43,6 +43,8 @@ export class JsfLayoutPropExpansionPanel extends JsfAbstractPropLayout {
   multi?: boolean;
 
   preferences?: JsfLayoutPropExpansionPanelPreferences;
+
+  filter?: JsfLayoutArrayFilter;
 
   constructor(data: JsfLayoutPropExpansionPanel) {
     super();
