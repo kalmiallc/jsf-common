@@ -8,6 +8,7 @@ import { Moment }                                                               
 import { JsfUnknownPropBuilder }                                                                             from '../abstract';
 import { jsfClipboardClear, jsfClipboardClearAll, jsfClipboardClearMany, jsfClipboardGet, jsfClipboardKeys } from './clipboard';
 import { JsfRegister }                                                                                       from '../../register/jsf-register';
+import { DataSourceReqFunArg }                                                                               from '../jsf-page-builder';
 
 export interface EvalContextOptions {
   layoutBuilder?: JsfUnknownLayoutBuilder;
@@ -25,7 +26,7 @@ export const evalService = new class {
    * Gets the static eval context.
    * This contains helper methods & functions which do not depends on the runtime context of the evaluating function.
    */
-  getStaticEvalContext(builder: JsfBuilder) {
+  getStaticEvalContext(builder: JsfBuilder, options: { extraContextParams?: { [key: string]: any }; } = {}) {
     const locale = builder.runtimeContext ? builder.runtimeContext.application.language : 'en';
 
     return {
@@ -47,7 +48,9 @@ export const evalService = new class {
         dateTime: (date: string | Date | Moment) => {
           return moment(date).locale(locale).format('L LT');
         }
-      }
+      },
+
+      ...(options?.extraContextParams || {})
     };
   }
 
@@ -183,6 +186,39 @@ export const evalService = new class {
           throw new Error(`'$getPropValue' cannot be used outside of prop schema.`);
         }
         return options.propBuilder.getSibling(key).getValue();
+      },
+
+      $dataSource: {
+        list: (dataSourceKey: string, data?: DataSourceReqFunArg) => {
+          if (!builder.jsfPageBuilder) {
+            throw new Error(`'$dataSource' is only available if using JSfPage.`);
+          }
+          return builder.jsfPageBuilder.makeDataSourceListRequest(dataSourceKey, data);
+        },
+        insert: (dataSourceKey: string, data?: DataSourceReqFunArg) => {
+          if (!builder.jsfPageBuilder) {
+            throw new Error(`'$dataSource' is only available if using JSfPage.`);
+          }
+          return builder.jsfPageBuilder.makeDataSourceInsertRequest(dataSourceKey, data);
+        },
+        get: (dataSourceKey: string, data?: DataSourceReqFunArg) => {
+          if (!builder.jsfPageBuilder) {
+            throw new Error(`'$dataSource' is only available if using JSfPage.`);
+          }
+          return builder.jsfPageBuilder.makeDataSourceGetRequest(dataSourceKey, data);
+        },
+        update: (dataSourceKey: string, data?: DataSourceReqFunArg) => {
+          if (!builder.jsfPageBuilder) {
+            throw new Error(`'$dataSource' is only available if using JSfPage.`);
+          }
+          return builder.jsfPageBuilder.makeDataSourceUpdateRequest(dataSourceKey, data);
+        },
+        remove: (dataSourceKey: string, data?: DataSourceReqFunArg) => {
+          if (!builder.jsfPageBuilder) {
+            throw new Error(`'$dataSource' is only available if using JSfPage.`);
+          }
+          return builder.jsfPageBuilder.makeDataSourceRemoveRequest(dataSourceKey, data);
+        }
       },
 
       $clientConfig: builder.clientConfig,

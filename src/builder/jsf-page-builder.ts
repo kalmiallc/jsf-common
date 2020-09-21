@@ -2,9 +2,9 @@ import { JsfAbstractBuilder }                                 from './abstract/a
 import { JsfPage }                                            from '../jsf-page';
 import { JsfBuilder }                                         from './jsf-builder';
 import { JsfTranslatableMessage, JsfTranslationServer }       from '../translations';
-import { JsfComponentBuilder }                                from './jsf-component-builder';
-import { interval, Observable, Subject, timer, Subscription } from 'rxjs';
-import { JsfDefinition }                                      from '../jsf-definition';
+import { JsfComponentBuilder }                                    from './jsf-component-builder';
+import { interval, Observable, Subject, timer, Subscription, of } from 'rxjs';
+import { JsfDefinition }                                          from '../jsf-definition';
 import { debounce, finalize, takeUntil, throttleTime }        from 'rxjs/operators';
 
 /**
@@ -408,23 +408,27 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
     }
   }
 
-  makeDataSourceInsertRequest(dataSourceKey: string, data: DataSourceReqFunArg = {}) {
+  makeDataSourceListRequest(dataSourceKey: string, data?: DataSourceReqFunArg) {
+    return this.makeDataSourceRequest(dataSourceKey, data);
+  }
+
+  makeDataSourceInsertRequest(dataSourceKey: string, data?: DataSourceReqFunArg) {
     return this.makeDataSourceRequest(dataSourceKey + '#insert', data);
   }
 
-  makeDataSourceUpdateRequest(dataSourceKey: string, data: DataSourceReqFunArg = {}) {
+  makeDataSourceUpdateRequest(dataSourceKey: string, data?: DataSourceReqFunArg) {
     return this.makeDataSourceRequest(dataSourceKey + '#update', data);
   }
 
-  makeDataSourceRemoveRequest(dataSourceKey: string, data: DataSourceReqFunArg = {}) {
+  makeDataSourceRemoveRequest(dataSourceKey: string, data?: DataSourceReqFunArg) {
     return this.makeDataSourceRequest(dataSourceKey + '#remove', data);
   }
 
-  makeDataSourceGetRequest(dataSourceKey: string, data: DataSourceReqFunArg = {}) {
+  makeDataSourceGetRequest(dataSourceKey: string, data?: DataSourceReqFunArg) {
     return this.makeDataSourceRequest(dataSourceKey + '#get', data);
   }
 
-  private makeDataSourceRequest(dataSourceKey: string, data: DataSourceReqFunArg = {}) {
+  private makeDataSourceRequest(dataSourceKey: string, data: DataSourceReqFunArg = {}): Observable<any> {
     if (!this.dataSourceProvider) {
       throw new Error('[JSF-PAGE] Missing data source provider.');
     }
@@ -434,26 +438,31 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
       filters   : data.filters,
       payload   : data.payload
     });
-    const reqKey = { dataSource: dataSourceKey, groupKey: data.groupKey };
-    if (request$) {
-      this.registerDataSourceRequest(reqKey);
-      request$
-        .pipe(
-          takeUntil(this.onDestroy),
-          finalize(() => {
-              this.unregisterDataSourceRequest(reqKey);
-              this.processDirtyDataSourcesIfNoActiveRequests();
-            }
-          )
-        )
-        .subscribe(x => {
-          this.onDataSourcesRequestResponse(dataSourceKey, x);
-        }, error => {
-          this.onDataSourcesRequestFail(dataSourceKey, error);
-        });
-    } else {
-      console.log(`[JSF-PAGE] No data source returned for ${ dataSourceKey }`);
+    if (request$ === null) {
+      return of(null);
     }
+    if (!request$) {
+      throw new Error(`[JSF-PAGE] No data source returned for ${ dataSourceKey }`);
+    }
+
+    const reqKey = { dataSource: dataSourceKey, groupKey: data.groupKey };
+    this.registerDataSourceRequest(reqKey);
+    request$
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => {
+            this.unregisterDataSourceRequest(reqKey);
+            this.processDirtyDataSourcesIfNoActiveRequests();
+          }
+        )
+      )
+      .subscribe(x => {
+        this.onDataSourcesRequestResponse(dataSourceKey, x);
+      }, error => {
+        this.onDataSourcesRequestFail(dataSourceKey, error);
+      });
+
+    return request$;
   }
 
   onDataSourcesRequestFail(dataSourceKey: string, error: any) {

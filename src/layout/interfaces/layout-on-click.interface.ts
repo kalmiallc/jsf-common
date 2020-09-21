@@ -399,4 +399,35 @@ export interface JsfLayoutOnClickInterface {
      */
     dataSourceKey?: string;
   }
+
+  /**
+   * Make data source request.
+   */
+  dataSourceRequest?: {
+    /**
+     * Example: datasource://weather
+     */
+    key: string;
+
+    /**
+     * CRUD type.
+     * @default list
+     */
+    type?: 'insert' | 'update'  | 'get'| 'remove' | 'list';
+
+    /**
+     * Optional data (body).
+     */
+    data?: JsfValueOptionsType;
+
+    /**
+     * Optional script after successful request.
+     */
+    onSuccess?: { $eval: string }
+
+    /**
+     * Optional script after failed request.
+     */
+    onFailure?: { $eval: string }
+  }
 }
