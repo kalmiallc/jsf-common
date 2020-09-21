@@ -55,9 +55,24 @@ export class JsfDefinition {
    * What to do when document is initialized and value is set.
    */
   $lifeCycle?: {
+    $beforeFormInit?: {
+      $eval: string;
+    };
     $afterFormInit?: {
       $eval: string;
     };
+    $beforeFormDestroy?: {
+      $eval: string;
+    }
+    $afterFormDestroy?: {
+      $eval: string;
+    },
+    $onFormValueChange?: {
+      $eval: string;
+    },
+    $onFormStatusChange?: {
+      $eval: string;
+    }
   };
 
   /**

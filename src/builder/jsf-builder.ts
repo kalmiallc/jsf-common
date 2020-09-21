@@ -341,6 +341,14 @@ export class JsfBuilder extends JsfAbstractBuilder {
 
   constructor(public doc: JsfDocument, public options: JsfBuilderOptions = {}) {
     super();
+
+    if (!jsfEnv.isApi && this.doc.$lifeCycle?.$beforeFormInit?.$eval) {
+      this.runEvalWithContext((this.doc.$lifeCycle.$beforeFormInit as any).$evalTranspiled || this.doc.$lifeCycle.$beforeFormInit.$eval, {
+        $doc: doc,
+        $options: options
+      });
+    }
+
     this.resolver          = new JsfDependencyResolver(this);
     this.initTranslations();
     this.initEvalObject();
@@ -463,12 +471,8 @@ export class JsfBuilder extends JsfAbstractBuilder {
       }
     }
 
-    if (!jsfEnv.isApi) {
-      if (this.doc.$lifeCycle && this.doc.$lifeCycle.$afterFormInit) {
-        if (this.doc.$lifeCycle.$afterFormInit.$eval) {
-          this.runEval((this.doc.$lifeCycle.$afterFormInit as any).$evalTranspiled || this.doc.$lifeCycle.$afterFormInit.$eval);
-        }
-      }
+    if (!jsfEnv.isApi && this.doc.$lifeCycle?.$afterFormInit?.$eval) {
+      this.runEval((this.doc.$lifeCycle.$afterFormInit as any).$evalTranspiled || this.doc.$lifeCycle.$afterFormInit.$eval);
     }
 
     this.emitFormInit();
@@ -483,6 +487,10 @@ export class JsfBuilder extends JsfAbstractBuilder {
   }
 
   onDestroy() {
+    if (!jsfEnv.isApi && this.doc.$lifeCycle?.$beforeFormDestroy?.$eval) {
+      this.runEval((this.doc.$lifeCycle.$beforeFormDestroy as any).$evalTranspiled || this.doc.$lifeCycle.$beforeFormDestroy.$eval);
+    }
+
     // Destroy services
     for (const serviceName of Object.keys(this.services)) {
       this.services[serviceName].onDestroy()
@@ -492,7 +500,11 @@ export class JsfBuilder extends JsfAbstractBuilder {
     }
     this.services = {};
 
-    return this.propBuilder.onDestroy();
+    this.propBuilder.onDestroy();
+
+    if (!jsfEnv.isApi && this.doc.$lifeCycle?.$afterFormDestroy?.$eval) {
+      this.runEval((this.doc.$lifeCycle.$afterFormDestroy as any).$evalTranspiled || this.doc.$lifeCycle.$afterFormDestroy.$eval);
+    }
   }
 
   requestJsfDefinition(key: string) {
@@ -747,6 +759,18 @@ export class JsfBuilder extends JsfAbstractBuilder {
         this.isDirty = true;
       }
     }
+
+    if (!jsfEnv.isApi && this.doc.$lifeCycle?.$onFormValueChange?.$eval) {
+      this.runEvalWithContext((this.doc.$lifeCycle.$onFormValueChange as any).$evalTranspiled || this.doc.$lifeCycle.$onFormValueChange.$eval,
+        this.getEvalContext({
+          propBuilder: this.propBuilder,
+          extraContextParams: {
+            $path: path,
+            $data: data,
+          }
+        })
+      );
+    }
   }
 
   masterEmitStatusChange(from: { path: string, abstractPath: string }, data: PropStatusChangeInterface) {
@@ -765,6 +789,18 @@ export class JsfBuilder extends JsfAbstractBuilder {
 
     if (this.statusChangeListeners[from.abstractPath]) {
       this.statusChangeListeners[from.abstractPath].next(data);
+    }
+
+    if (!jsfEnv.isApi && this.doc.$lifeCycle?.$onFormStatusChange?.$eval) {
+      this.runEvalWithContext((this.doc.$lifeCycle.$onFormStatusChange as any).$evalTranspiled || this.doc.$lifeCycle.$onFormStatusChange.$eval,
+        this.getEvalContext({
+          propBuilder: this.propBuilder,
+          extraContextParams: {
+            $from: from,
+            $data: data,
+          }
+        })
+      );
     }
   }
 
