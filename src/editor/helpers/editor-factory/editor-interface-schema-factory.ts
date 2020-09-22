@@ -19,7 +19,7 @@ export abstract class EditorInterfaceSchemaFactory {
   /**
    * Compound generators.
    */
-  static createJsfValueOptionsProperty = (basePath: string, propName: string, propType: 'dynamic' | 'any') => {
+  static createJsfValueOptionsProperty = (basePath: string, propName: string, propType: 'dynamic' | 'any', keyExtraSchemaProperties?: any) => {
     return EditorInterfaceSchemaFactory.createDynamicSwitchableProperty(basePath, propName, [
       {
         typeKey: 'key',
@@ -60,7 +60,7 @@ export abstract class EditorInterfaceSchemaFactory {
           type: 'string'
         }
       }
-    ]);
+    ], keyExtraSchemaProperties);
   };
 
   static createOnClickProperty = (basePath: string, propName: string) => {

@@ -9,7 +9,7 @@ export interface DynamicSwitchablePropInterface {
   propDefinition: any;
 }
 
-export function dynamicSwitchableProperty(basePath: string, propName: string, definitions: DynamicSwitchablePropInterface[]) {
+export function dynamicSwitchableProperty(basePath: string, propName: string, definitions: DynamicSwitchablePropInterface[], keyExtraSchemaProperties?: any) {
   const typeSwitcherPropName = `${ editorPropName(propName) }_type`;
   const typeValuePropName = `${ editorPropName(propName) }_value`;
 
@@ -27,7 +27,8 @@ export function dynamicSwitchableProperty(basePath: string, propName: string, de
             return null;
           }
           return $valueOf('${ basePath ? basePath + '.' : ''}${ typeValuePropName }.' + selectedType)`
-      }
+      },
+      ... (keyExtraSchemaProperties || {})
     },
     // Type switcher
     [typeSwitcherPropName]: {
