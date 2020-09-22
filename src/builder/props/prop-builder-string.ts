@@ -74,7 +74,7 @@ export class JsfPropBuilderString extends JsfAbstractPropBuilderPrimitive<JsfPro
             error = !isISO8601(this.value);
             break;
           case 'time':
-            error = !new RegExp('(?:[01]\\d|2[0123]):(?:[012345]\\d):(?:[012345]\\d)')
+            error = !new RegExp('(?:[01]\\d|2[0123]):(?:[012345]\\d)(:(?:[012345]\\d))?')
               .test(this.value);
             break;
           case 'email':
