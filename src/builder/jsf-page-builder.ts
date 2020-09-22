@@ -1,11 +1,12 @@
-import { JsfAbstractBuilder }                                 from './abstract/abstract-builder';
-import { JsfPage }                                            from '../jsf-page';
-import { JsfBuilder }                                         from './jsf-builder';
-import { JsfTranslatableMessage, JsfTranslationServer }       from '../translations';
+import { JsfAbstractBuilder }                                     from './abstract/abstract-builder';
+import { JsfPage }                                                from '../jsf-page';
+import { JsfBuilder }                                             from './jsf-builder';
+import { JsfTranslatableMessage, JsfTranslationServer }           from '../translations';
 import { JsfComponentBuilder }                                    from './jsf-component-builder';
 import { interval, Observable, Subject, timer, Subscription, of } from 'rxjs';
 import { JsfDefinition }                                          from '../jsf-definition';
-import { debounce, finalize, takeUntil, throttleTime }        from 'rxjs/operators';
+import { debounce, finalize, takeUntil, throttleTime }            from 'rxjs/operators';
+import { DataSourceInterface }                                    from '../jsf-component';
 
 /**
  * Global counter so each page can have uniq ID.
@@ -42,7 +43,7 @@ export interface DataSourceProviderRequestInterface {
   dataSource: string;
 
   /**
-   * If set data source provider will be able to diferente between same data sources.
+   * If set data source provider will be able to different between same data sources.
    * This is helpful for example if same data source is used more than once but each instance has different
    * filter set.
    */
@@ -257,7 +258,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
       || [];
   }
 
-  registerComponentDataSourceFilter(componentPath: string) {
+  private registerComponentDataSourceFilter(componentPath: string) {
     const jb = this.components[componentPath].jsfBuilder;
     if (!jb) {
       throw new Error(`[JSF-PAGE] Component's filters <${ componentPath }> can not be initialized since builder is not ready yet.`);
@@ -293,18 +294,29 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
     this.processDirtyDataSources();
   }
 
-  registerComponentDataSourceSubscription(componentPath: string) {
+  private registerComponentDataSourceSubscription(componentPath: string) {
     const jb = this.components[componentPath].jsfBuilder;
     if (!jb) {
       throw new Error(`[JSF-PAGE] Component's filters <${ componentPath }> can not be initialized since builder is not ready yet.`);
     }
     for (const dataSource of this.components[componentPath].jsfComponentDefinition.dataSources || []) {
-      this.initDataSourcesInfoChunk(dataSource.key, componentPath);
-      this.dataSourcesInfo[dataSource.key].components[componentPath].refreshInterval = dataSource.refreshInterval;
-      this.dataSourcesInfo[dataSource.key].components[componentPath].subscribed      = true;
-      this.dataSourcesInfo[dataSource.key].dirty                                     = true;
-      this.repairDataSourceInterval(dataSource.key);
+      this.subscribeComponentToDataSource(componentPath, dataSource);
     }
+  }
+
+  subscribeComponentToDataSource(componentPath: string, dataSource: DataSourceInterface) {
+    this.initDataSourcesInfoChunk(dataSource.key, componentPath);
+    this.dataSourcesInfo[dataSource.key].components[componentPath].refreshInterval = dataSource.refreshInterval;
+    this.dataSourcesInfo[dataSource.key].components[componentPath].subscribed      = true;
+    this.dataSourcesInfo[dataSource.key].dirty                                     = true;
+    this.repairDataSourceInterval(dataSource.key);
+  }
+
+  subscribeToDataSource(jsfBuilder: JsfBuilder, dataSource: DataSourceInterface) {
+    if (!jsfBuilder.jsfComponentBuilder) {
+      throw new Error(`[JSF-PAGE] You can not subscribe to data source if not inside component.`);
+    }
+    this.subscribeComponentToDataSource(jsfBuilder.jsfComponentBuilder.componentName, dataSource);
   }
 
   /**

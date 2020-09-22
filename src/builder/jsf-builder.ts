@@ -315,6 +315,12 @@ export class JsfBuilder extends JsfAbstractBuilder {
 
   private propWaitingForOnInitCallback: string[] = [];
 
+  /**
+   * Extra events registered dynamically.
+   * @private
+   */
+  private externalEventListeners: {[eventKey: string]: ((eventKey: string, eventData: any) => void)[]} = {};
+
   get valid() {
     return this.propBuilder.valid;
   }
@@ -620,7 +626,15 @@ export class JsfBuilder extends JsfAbstractBuilder {
 
 
   onExternalEvent(eventKey: string, eventData: any) {
-    console.log('Incoming external event', eventKey, eventData);
+    if (this.debug) {
+      console.log('[JSF-BUILDER] Incoming external event', eventKey, eventData);
+    }
+
+    if (this.externalEventListeners[eventKey]) {
+      for (const cb of this.externalEventListeners[eventKey]) {
+        cb(eventKey, eventData);
+      }
+    }
 
     if (!this.doc.$events) {
       return;
@@ -635,6 +649,11 @@ export class JsfBuilder extends JsfAbstractBuilder {
       });
       this.runEvalWithContext(this.doc.$events.listen[eventKey].$eval, ctx);
     }
+  }
+
+  registerExternalEventListener(eventKey: string, cb: (eventKey: string, eventData: any) => void) {
+    this.externalEventListeners[eventKey] = this.externalEventListeners[eventKey] || [];
+    this.externalEventListeners[eventKey].push(cb);
   }
 
   registerLayoutComponent(id: string, component: any): void {

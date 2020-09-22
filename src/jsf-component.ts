@@ -1,5 +1,33 @@
 import { JsfDocument }   from './jsf-document';
 
+export interface DataSourceInterface {
+  /**
+   * Defines what data sources should be loaded for component.
+   * Component can get this data via $events, event is triggered on data load / change.
+   *
+   *
+   * - metronik.core.auth://
+   * - http://example.com
+   * - data-source://dff::list
+   * - data-source://dff::virtual-event:widget-banchmark
+   * - data-source://dff::custom-event
+   *
+   * You can also be specific for example if you have user dashboard but need orders list data:
+   * - data-source:dff:order:list
+   *
+   * Special case if filter is array, then system will call event data-source:dff::list/0 and data-source:dff::list/* and not default one.
+   * But if data-source:dff::list filter object is changed normal call is triggered. that allows you to reset data on load.
+   *
+   * Every event also contains time of load trigger and filter hash, so you have option to discard old data.
+   */
+  key: string;
+
+  /**
+   * If set, data source will be automatically reloaded.
+   */
+  refreshInterval?: number;
+};
+
 export class JsfComponent {
 
   /**
@@ -25,33 +53,7 @@ export class JsfComponent {
     filterPath: string;
   }[];
 
-  dataSources?: {
-    /**
-     * Defines what data sources should be loaded for component.
-     * Component can get this data via $events, event is triggered on data load / change.
-     *
-     *
-     * - metronik.core.auth://
-     * - http://example.com
-     * - data-source://dff::list
-     * - data-source://dff::virtual-event:widget-banchmark
-     * - data-source://dff::custom-event
-     *
-     * You can also be specific for example if you have user dashboard but need orders list data:
-     * - data-source:dff:order:list
-     *
-     * Special case if filter is array, then system will call event data-source:dff::list/0 and data-source:dff::list/* and not default one.
-     * But if data-source:dff::list filter object is changed normal call is triggered. that allows you to reset data on load.
-     *
-     * Every event also contains time of load trigger and filter hash, so you have option to discard old data.
-     */
-    key: string;
-
-    /**
-     * If set, data source will be automatically reloaded.
-     */
-    refreshInterval?: number;
-  }[];
+  dataSources?: DataSourceInterface[];
 
 
   /**
