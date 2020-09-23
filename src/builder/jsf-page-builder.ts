@@ -35,6 +35,18 @@ export interface DataSourceReqFunArg {
   }
 }
 
+export interface DataSourceReqFunOptions {
+  /**
+   * Do not notify others on new data (event listener).
+   */
+  preventDefaultSuccess?: boolean;
+
+  /**
+   * Do not call builder on error hook.
+   */
+  preventDefaultError?: boolean;
+}
+
 export interface DataSourceProviderRequestInterface {
   /**
    * Uniq identification of data source. For example: db1://cars/bmw/parts
@@ -429,27 +441,27 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
     }
   }
 
-  makeDataSourceListRequest(dataSourceKey: string, data?: DataSourceReqFunArg) {
-    return this.makeDataSourceRequest(dataSourceKey, data);
+  makeDataSourceListRequest(dataSourceKey: string, data?: DataSourceReqFunArg, options?: DataSourceReqFunOptions) {
+    return this.makeDataSourceRequest(dataSourceKey, data, options);
   }
 
-  makeDataSourceInsertRequest(dataSourceKey: string, data?: DataSourceReqFunArg) {
-    return this.makeDataSourceRequest(dataSourceKey + '#insert', data);
+  makeDataSourceInsertRequest(dataSourceKey: string, data?: DataSourceReqFunArg, options?: DataSourceReqFunOptions) {
+    return this.makeDataSourceRequest(dataSourceKey + '#insert', data, options);
   }
 
-  makeDataSourceUpdateRequest(dataSourceKey: string, data?: DataSourceReqFunArg) {
-    return this.makeDataSourceRequest(dataSourceKey + '#update', data);
+  makeDataSourceUpdateRequest(dataSourceKey: string, data?: DataSourceReqFunArg, options?: DataSourceReqFunOptions) {
+    return this.makeDataSourceRequest(dataSourceKey + '#update', data, options);
   }
 
-  makeDataSourceRemoveRequest(dataSourceKey: string, data?: DataSourceReqFunArg) {
-    return this.makeDataSourceRequest(dataSourceKey + '#remove', data);
+  makeDataSourceRemoveRequest(dataSourceKey: string, data?: DataSourceReqFunArg, options?: DataSourceReqFunOptions) {
+    return this.makeDataSourceRequest(dataSourceKey + '#remove', data, options);
   }
 
-  makeDataSourceGetRequest(dataSourceKey: string, data?: DataSourceReqFunArg) {
-    return this.makeDataSourceRequest(dataSourceKey + '#get', data);
+  makeDataSourceGetRequest(dataSourceKey: string, data?: DataSourceReqFunArg, options?: DataSourceReqFunOptions) {
+    return this.makeDataSourceRequest(dataSourceKey + '#get', data, options);
   }
 
-  private makeDataSourceRequest(dataSourceKey: string, data: DataSourceReqFunArg = {}): Observable<any> {
+  private makeDataSourceRequest(dataSourceKey: string, data: DataSourceReqFunArg = {}, options?: DataSourceReqFunOptions): Observable<any> {
     if (!this.dataSourceProvider) {
       throw new Error('[JSF-PAGE] Missing data source provider.');
     }
@@ -478,22 +490,25 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
         )
       )
       .subscribe(x => {
-        this.onDataSourcesRequestResponse(dataSourceKey, x);
+        if (!options?.preventDefaultSuccess) {
+          this.onDataSourcesRequestResponse(dataSourceKey, x);
+        }
       }, error => {
-        this.onDataSourcesRequestFail(dataSourceKey, error);
+        if (!options?.preventDefaultError) {
+          this.onDataSourcesRequestFail(dataSourceKey, error);
+        }
       });
 
     return request$;
   }
 
   onDataSourcesRequestFail(dataSourceKey: string, error: any) {
-    console.error(`[JSF-PAGE] No data source returned for ${ dataSourceKey }`);
+    console.error(`[JSF-PAGE] Data source ${ dataSourceKey } failed.`, error);
     this.rootComponent.jsfBuilder.onError(error);
   }
 
   onDataSourcesRequestResponse(dataSourceKey: string, x: DataSourceProviderResponseInterface) {
-    console.log('[JSF-DASH] onDataSourcesRequestResponse', x);
-
+    console.log(`[JSF-PAGE] Data source ${ dataSourceKey } responded with data.`, x);
     const dataSource = this.dataSourcesInfo[dataSourceKey];
 
     for (const componentKey of Object.keys(dataSource?.components || {})) {
