@@ -101,10 +101,17 @@ export interface DataSourceProviderResponseInterface {
   value: any;
 }
 
+export interface DataSourceFilterChangeInterface {
+  dataSourceKey: string;
+  filters: any[];
+}
+
 export class JsfPageBuilder extends JsfAbstractBuilder {
 
   protected onDestroy: Subject<void>                      = new Subject<void>();
   protected requestProcessDirtyDataSources: Subject<void> = new Subject<void>();
+
+  onDataSourceFilterChange: Subject<DataSourceFilterChangeInterface> = new Subject<DataSourceFilterChangeInterface>();
 
   pageDefinition: JsfPage;
 
@@ -434,6 +441,10 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
       const { filters, components } = this.getFiltersForDataSource(dataSourceKey);
       if (components.length) {
         dataSource.dirty = false;
+        this.onDataSourceFilterChange.next({
+          dataSourceKey,
+          filters
+        });
         this.makeDataSourceRequest(dataSourceKey, {
           filters
         });
@@ -529,7 +540,13 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
     this.dataSourceRequests.push(reqKey);
     this.sendEventToComponents(
       'jsf-page://activeRequests/status-change',
-      { activeRequestsCount: this.dataSourceRequests.length }
+      {
+        activeRequestsCount: this.dataSourceRequests.length,
+        newRequest: {
+          dataSourceKey: reqKey.dataSource,
+          groupKey     : reqKey.groupKey
+        }
+      }
     );
   }
 
