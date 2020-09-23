@@ -37,9 +37,7 @@ export const jsfHandlerComponentJsfFormDefinition: any = {
         title: 'Inner scroll'
       },
       htmlClass          : {
-        type     : 'string',
-        title    : 'HTML class',
-        htmlClass: 'mt-2'
+        type : 'string',
       },
       componentDefinition: {
         type      : 'object',
@@ -51,7 +49,6 @@ export const jsfHandlerComponentJsfFormDefinition: any = {
               properties: {
                 dataSource: {
                   type    : 'string',
-                  title   : 'Data source',
                   required: true,
                   handler : {
                     type  : 'common/dropdown',
@@ -64,7 +61,6 @@ export const jsfHandlerComponentJsfFormDefinition: any = {
                 },
                 filterPath: {
                   type : 'string',
-                  title: 'Filter path'
                 }
               }
             }
@@ -77,7 +73,6 @@ export const jsfHandlerComponentJsfFormDefinition: any = {
                 key: {
                   type    : 'string',
                   required: true,
-                  title   : 'Data source key',
                   handler : {
                     type  : 'common/dropdown',
                     values: {
@@ -95,7 +90,6 @@ export const jsfHandlerComponentJsfFormDefinition: any = {
             properties: {
               $ref: {
                 type    : 'string',
-                title   : 'JSF definition',
                 required: true,
                 handler : {
                   type  : 'common/dropdown',
@@ -115,169 +109,40 @@ export const jsfHandlerComponentJsfFormDefinition: any = {
   layout    : {
     type : 'div',
     items: [
-      {
-        key: 'innerScroll'
-      },
-      {
-        key: 'htmlClass'
-      },
-      {
-        type     : 'heading',
-        level    : 5,
-        title    : 'Data sources',
-        htmlClass: 'mt-3'
-      },
-      {
-        key  : 'componentDefinition.dataSources',
-        type : 'array',
-        items: [
+      ...EditorInterfaceLayoutFactory.outputKey('innerScroll'),
+      ...EditorInterfaceLayoutFactory.outputKey('htmlClass', 'Component HTML class'),
+      ...EditorInterfaceLayoutFactory.outputKey('componentDefinition.jsfDefinition.$ref', 'JSF definition'),
+      ...EditorInterfaceLayoutFactory.createLabel('Data sources'),
+      ...EditorInterfaceLayoutFactory.outputArrayCardListKey('componentDefinition.dataSources',
+        { $eval: `return { value: 'Data source' }`, dependencies: [] },
+        [
+          ...EditorInterfaceLayoutFactory.outputKey('componentDefinition.dataSources[].key', 'Data source')
+        ]),
+
+      ...EditorInterfaceLayoutFactory.createLabel('Data source filters'),
+      ...EditorInterfaceLayoutFactory.outputArrayCardListKey('componentDefinition.dataSourcesFilters',
+        { $eval: `return { value: 'Filter' }`, dependencies: [] },
+        [
           {
             type : 'row',
             items: [
               {
                 type : 'col',
-                xs   : 10,
+                xs   : 6,
                 items: [
-                  {
-                    key: 'componentDefinition.dataSources[].key'
-                  }
+                  ...EditorInterfaceLayoutFactory.outputKey('componentDefinition.dataSourcesFilters[].dataSource', 'Data source')
                 ]
               },
               {
                 type : 'col',
-                xs   : 2,
+                xs   : 6,
                 items: [
-                  {
-                    type       : 'button',
-                    icon       : 'delete',
-                    preferences: {
-                      variant: 'icon'
-                    },
-                    onClick    : [
-                      {
-                        arrayItemRemove: {
-                          path : 'componentDefinition.dataSources',
-                          index: {
-                            $eval: `return $getItemIndex('componentDefinition.dataSources[]')`
-                          }
-                        }
-                      }
-                    ]
-                  }
+                  ...EditorInterfaceLayoutFactory.outputKey('componentDefinition.dataSourcesFilters[].filterPath', 'Filter path')
                 ]
               }
             ]
           }
-        ]
-      },
-      {
-        type       : 'button',
-        icon       : 'add',
-        preferences: {
-          variant: 'icon'
-        },
-        onClick    : [
-          {
-            arrayItemAdd: {
-              path: 'componentDefinition.dataSources'
-            }
-          }
-        ]
-      },
-
-      {
-        type     : 'heading',
-        level    : 5,
-        title    : 'Data sources filters',
-        htmlClass: 'mt-3'
-      },
-      {
-        key  : 'componentDefinition.dataSourcesFilters',
-        type : 'array',
-        items: [
-          {
-            type : 'row',
-            items: [
-              {
-                type : 'col',
-                xs   : 10,
-                items: [
-                  {
-                    type : 'row',
-                    items: [
-                      {
-                        type : 'col',
-                        xs   : 6,
-                        items: [
-                          {
-                            key: 'componentDefinition.dataSourcesFilters[].dataSource'
-                          }
-                        ]
-                      },
-                      {
-                        type : 'col',
-                        xs   : 6,
-                        items: [
-                          {
-                            key: 'componentDefinition.dataSourcesFilters[].filterPath'
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                type : 'col',
-                xs   : 2,
-                items: [
-                  {
-                    type       : 'button',
-                    icon       : 'delete',
-                    preferences: {
-                      variant: 'icon'
-                    },
-                    onClick    : [
-                      {
-                        arrayItemRemove: {
-                          path : 'componentDefinition.dataSourcesFilters',
-                          index: {
-                            $eval: `return $getItemIndex('componentDefinition.dataSourcesFilters[]')`
-                          }
-                        }
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        type       : 'button',
-        icon       : 'add',
-        preferences: {
-          variant: 'icon'
-        },
-        onClick    : [
-          {
-            arrayItemAdd: {
-              path: 'componentDefinition.dataSourcesFilters'
-            }
-          }
-        ]
-      },
-
-      {
-        type     : 'heading',
-        level    : 5,
-        title    : 'JSF definition',
-        htmlClass: 'mt-3'
-      },
-      {
-        key: 'componentDefinition.jsfDefinition.$ref'
-      }
+        ])
 
     ]
   }
