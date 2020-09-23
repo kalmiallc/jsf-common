@@ -393,24 +393,33 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
     return this.processDirtyDataSources();
   }
 
+  /**
+   * Get filters from all components for a specific data source.
+   * @param dataSourceKey
+   */
+  getFiltersForDataSource(dataSourceKey: string) {
+    const dataSource = this.dataSourcesInfo[dataSourceKey];
+    let filters      = [];
+    const components = [];
+    for (const componentKey of Object.keys(dataSource.components)) {
+      const component = dataSource.components[componentKey];
+      if (component.filters) {
+        filters = filters.concat(component.filters);
+      }
+      if (component.subscribed) {
+        components.push(componentKey);
+      }
+    }
+    return { filters, components }
+  }
+
   processDirtyDataSources() {
     for (const dataSourceKey of Object.keys(this.dataSourcesInfo)) {
       const dataSource = this.dataSourcesInfo[dataSourceKey];
       if (!dataSource.dirty) {
-        continue;
+        return;
       }
-      let filters      = [];
-      const components = [];
-      for (const componentKey of Object.keys(dataSource.components)) {
-        const component = dataSource.components[componentKey];
-        if (component.filters) {
-          filters = filters.concat(component.filters);
-        }
-        if (component.subscribed) {
-          components.push(componentKey);
-        }
-      }
-
+      const { filters, components } = this.getFiltersForDataSource(dataSourceKey);
       if (components.length) {
         dataSource.dirty = false;
         this.makeDataSourceRequest(dataSourceKey, {
