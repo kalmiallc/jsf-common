@@ -77,7 +77,7 @@ export class JsfRegister {
   static getNewPropDefinition(type: string) {
     const x = JsfRegister.getLayoutInfoOrThrow(type);
     if (x.defaultDefinition) {
-      return x.defaultDefinition;
+      return JSON.parse(JSON.stringify(x.defaultDefinition));
     }
     return {
       type : type === 'prop' ? undefined : type,
@@ -133,7 +133,7 @@ export class JsfRegister {
   static getNewLayoutDefinition(type: string) {
     const x = JsfRegister.getLayoutInfoOrThrow(type);
     if (x.defaultDefinition) {
-      return x.defaultDefinition;
+      return JSON.parse(JSON.stringify(x.defaultDefinition));
     }
     return {
       type : type === 'prop' ? undefined : type,
