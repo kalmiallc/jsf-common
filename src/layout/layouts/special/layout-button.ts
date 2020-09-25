@@ -7,6 +7,7 @@ import {
 }                                       from '../../../layout';
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { JsfRegister }                  from '../../../register';
+import { EditorInterfaceSchemaFactory } from '../../../editor/helpers/editor-factory';
 
 const layoutInfo: LayoutInfoInterface = {
   type             : 'button',
@@ -82,39 +83,17 @@ export const layoutButtonJsfDefinition = {
       ...jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties,
 
       title            : {
-        type : 'string',
-        title: 'Title'
+        type: 'string'
       },
       titleTemplateData: {
         type      : 'object',
         title     : 'Title template data',
         properties: {
-          $eval       : {
-            type   : 'string',
-            title  : 'Eval',
-            handler: {
-              type   : 'common/code-editor',
-              options: {
-                language: 'javascript'
-              }
-            }
-          },
-          dependencies: {
-            type : 'array',
-            title: 'Dependencies',
-            items: {
-              type: 'string'
-            }
-          }
+          ...EditorInterfaceSchemaFactory.createEvalPropertyWithDependencies()
         }
       },
       icon             : {
-        type : 'string',
-        title: 'Icon'
-      },
-      submit           : {
-        type : 'boolean',
-        title: 'Submit'
+        type: 'string'
       },
       scrollToTop      : {
         type : 'boolean',
@@ -122,24 +101,12 @@ export const layoutButtonJsfDefinition = {
       },
       disabled         : {
         type      : 'object',
-        title     : 'Disabled',
         properties: {
-          $eval       : {
-            type : 'string',
-            title: 'Eval'
-          },
-          dependencies: {
-            type : 'array',
-            title: 'Dependencies',
-            items: {
-              type: 'string'
-            }
-          }
+          ...EditorInterfaceSchemaFactory.createEvalPropertyWithDependencies()
         }
       },
       preferences      : {
         type      : 'object',
-        title     : 'Preferences',
         properties: {
           color        : {
             type   : 'string',
@@ -181,7 +148,7 @@ export const layoutButtonJsfDefinition = {
                   label: 'Flat'
                 },
                 {
-                  value: 'stroke',
+                  value: 'stroked',
                   label: 'Stroked'
                 },
                 {
@@ -233,140 +200,22 @@ export const layoutButtonJsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
         ...EditorInterfaceLayoutFactory.createPanel('Button', [
-          {
-            type : 'div',
-            items: [
-              {
-                key: 'title'
-              },
-              {
-                key: 'icon'
-              },
-              {
-                key: 'submit'
-              },
-              {
-                key: 'scrollToTop'
-              },
-              {
-                type     : 'div',
-                htmlClass: 'ml-2 mt-3',
-                items    : [
-                  {
-                    type : 'heading',
-                    title: 'Disabled',
-                    level: 5
-                  },
-                  {
-                    key: 'disabled.$eval'
-                  },
-                  {
-                    type : 'div',
-                    items: [
-                      {
-                        type : 'heading',
-                        title: 'Dependencies',
-                        level: 6
-                      },
-                      {
-                        type : 'array',
-                        key  : 'disabled.dependencies',
-                        items: [
-                          {
-                            type : 'row',
-                            items: [
-                              {
-                                type : 'col',
-                                xs   : 'auto',
-                                items: [
-                                  {
-                                    key: 'disabled.dependencies[]'
-                                  }
-                                ]
-                              },
-                              {
-                                type : 'col',
-                                xs   : 'content',
-                                items: [
-                                  {
-                                    type       : 'button',
-                                    icon       : 'delete',
-                                    color      : 'accent',
-                                    preferences: {
-                                      variant: 'icon'
-                                    },
-                                    onClick    : [
-                                      {
-                                        arrayItemRemove: {
-                                          path : 'disabled.dependencies',
-                                          index: {
-                                            $eval: 'return $getItemIndex(\'disabled.dependencies[]\')'
-                                          }
-                                        }
-                                      }
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        type     : 'div',
-                        visibleIf: {
-                          $eval       : 'return !$val.disabled.dependencies.length',
-                          dependencies: [
-                            'disabled'
-                          ]
-                        },
-                        items    : [
-                          {
-                            type     : 'span',
-                            htmlClass: 'd-block py-4 text-center',
-                            title    : 'No dependencies yet.'
-                          }
-                        ]
-                      },
-                      {
-                        type   : 'button',
-                        icon   : 'add',
-                        title  : 'Add dependency',
-                        onClick: {
-                          arrayItemAdd: {
-                            path: 'disabled.dependencies'
-                          }
-                        }
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                type     : 'div',
-                htmlClass: 'ml-2 mt-3',
-                items    : [
-                  {
-                    type : 'heading',
-                    title: 'Preferences',
-                    level: 5
-                  },
-                  {
-                    key: 'preferences.color'
-                  },
-                  {
-                    key: 'preferences.variant'
-                  },
-                  {
-                    key: 'preferences.size'
-                  },
-                  {
-                    key: 'preferences.disableRipple'
-                  }
-                ]
-              }
-            ]
-          }
+          ...EditorInterfaceLayoutFactory.outputKey('title', 'Title'),
+          ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('titleTemplateData.$eval', 'Title template data'),
+          ...EditorInterfaceLayoutFactory.outputKey('titleTemplateData.dependencies', 'Title dependencies'),
+
+          ...EditorInterfaceLayoutFactory.outputKey('icon', 'Icon'),
+          ...EditorInterfaceLayoutFactory.outputKey('scrollToTop'),
+
+          ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('disabled.$eval', 'Disabled condition'),
+          ...EditorInterfaceLayoutFactory.outputKey('disabled.dependencies', 'Disabled dependencies'),
+
+          ...EditorInterfaceLayoutFactory.createDivider(),
+
+          ...EditorInterfaceLayoutFactory.outputKey('preferences.color', 'Color'),
+          ...EditorInterfaceLayoutFactory.outputKey('preferences.variant', 'Variant'),
+          ...EditorInterfaceLayoutFactory.outputKey('preferences.size', 'Size'),
+          ...EditorInterfaceLayoutFactory.outputKey('preferences.disableRipple')
         ]),
 
         ...jsfAbstractSpecialLayoutJsfDefinitionLayoutItems

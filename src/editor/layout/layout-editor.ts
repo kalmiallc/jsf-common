@@ -1,11 +1,12 @@
-import { JsfEditor }                                                   from '../jsf-editor';
-import { JsfDocument }                                                 from '../../jsf-document';
-import { JsfUnknownLayout }                                            from '../../layout';
-import { createJsfLayoutEditor }                                       from '../util';
-import { Subject }                                                     from 'rxjs';
-import { flattenDeep, get, isArray, isEmpty, isNil, isObject, omitBy } from 'lodash';
-import { JsfRegister, LayoutInfoInterface }                            from '../../register';
-import { ExtractedMessage }                                            from '../localization/extracted-message';
+import { JsfEditor }                        from '../jsf-editor';
+import { JsfDocument }                      from '../../jsf-document';
+import { JsfUnknownLayout }                 from '../../layout';
+import { createJsfLayoutEditor }            from '../util';
+import { omitEmptyProperties }              from '../util/omit-empty-properties';
+import { Subject }                          from 'rxjs';
+import { flattenDeep, get, isNil }          from 'lodash';
+import { JsfRegister, LayoutInfoInterface } from '../../register';
+import { ExtractedMessage }                 from '../localization/extracted-message';
 
 export class JsfLayoutEditor {
 
@@ -157,18 +158,7 @@ export class JsfLayoutEditor {
 
   getDefinition(opt: { skipItems?: boolean } = {}): JsfUnknownLayout {
     // Clean up definition.
-    let definition: any;
-
-    function omitEmptyProperties(prop: any) {
-      return omitBy(prop, (value: any, key: string) => {
-        if (isObject(value)) {
-          value = omitEmptyProperties(value);
-        }
-        return isNil(value) || ((isObject(value) || isArray(value)) && isEmpty(value));
-      });
-    }
-
-    definition = omitEmptyProperties(this._definition);
+    const definition: any = omitEmptyProperties(this._definition);
 
     return {
       ...definition,

@@ -6,6 +6,7 @@ import { JsfDocument }                                                          
 import { flattenDeep, get, isArray, isEmpty, isNil, isObject, omitBy }                        from 'lodash';
 import { HandlerCompatibilityInterface, JsfRegister, LayoutInfoInterface, PropInfoInterface } from '../../register';
 import { ExtractedMessage }                                                                   from '../localization/extracted-message';
+import { omitEmptyProperties }                                                                from '../util/omit-empty-properties';
 
 export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownProp> {
 
@@ -131,18 +132,7 @@ export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownPro
 
   getDefinition(opt: { skipItems?: boolean } = {}) { // TODO PropDefinition error TS2577: Return type annotation circularly references itself.
     // Clean up definition.
-    let definition: any;
-
-    function omitEmptyProperties(prop: any) {
-      return omitBy(prop, (value: any, key: string) => {
-        if (isObject(value)) {
-          value = omitEmptyProperties(value);
-        }
-        return isNil(value) || ((isObject(value) || isArray(value)) && isEmpty(value));
-      });
-    }
-
-    definition = omitEmptyProperties(this._definition);
+    const definition: any = omitEmptyProperties(this._definition);
 
     return {
       ...definition,

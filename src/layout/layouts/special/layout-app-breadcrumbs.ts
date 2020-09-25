@@ -37,7 +37,6 @@ export const layoutAppBreadcrumbsJsfDefinition = {
 
       separator: {
         type : 'string',
-        title: 'Separator'
       }
     }
   },
@@ -46,14 +45,7 @@ export const layoutAppBreadcrumbsJsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
         ...EditorInterfaceLayoutFactory.createPanel('App Breadcrumbs', [
-          {
-            type : 'div',
-            items: [
-              {
-                key: 'separator'
-              }
-            ]
-          }
+          ... EditorInterfaceLayoutFactory.outputKey('separator', 'Separator')
         ]),
 
         ...jsfAbstractSpecialLayoutJsfDefinitionLayoutItems
