@@ -104,6 +104,13 @@ export abstract class JsfAbstractBareProp<TypeString, Handlers> {
   };
 
   /**
+   * Called whenever the user changes the prop value.
+   */
+  onUserValueChange?: {
+    $eval: string;
+  };
+
+  /**
    * Change other prop value when this value changes
    */
   onValueChange ?: {

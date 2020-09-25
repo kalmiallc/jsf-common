@@ -919,6 +919,16 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
     }
   }
 
+  public onUserValueChange() {
+    if (this.prop.onUserValueChange?.$eval) {
+      const ctx = this.rootBuilder.getEvalContext({
+        propBuilder       : this,
+        extraContextParams: {}
+      });
+      this.rootBuilder.runEvalWithContext((this.prop.onUserValueChange as any).$evalTranspiled || this.prop.onUserValueChange.$eval, ctx);
+    }
+  }
+
   // ════════════════════════════════════════════════════════════════════════════════════════
   // SET & PATCH & GET VALUE
   // ══════════════════════
@@ -1131,7 +1141,7 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
         $skip
       }
     });
-    const res = this.rootBuilder.runEvalWithContext(this.prop.set.$eval, ctx);
+    const res = this.rootBuilder.runEvalWithContext((this.prop.set as any).$evalTranspiled || this.prop.set.$eval, ctx);
     if (res === $skip) {
       return false;
     }
