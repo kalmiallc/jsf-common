@@ -57,11 +57,22 @@ export const layoutTabJsfDefinition = {
 
       title   : {
         type : 'string',
-        title: 'Title'
       },
       selected: {
         type : 'boolean',
         title: 'Selected'
+      },
+
+      preferences: {
+        type: 'object',
+        properties: {
+          prefixIcon: {
+            type: 'string'
+          },
+          prefixLabel: {
+            type: 'string'
+          }
+        }
       }
     }
   },
@@ -70,17 +81,13 @@ export const layoutTabJsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
         ...EditorInterfaceLayoutFactory.createPanel('Tab', [
-          {
-            type : 'div',
-            items: [
-              {
-                key: 'title'
-              },
-              {
-                key: 'selected'
-              }
-            ]
-          }
+          ...EditorInterfaceLayoutFactory.outputKey('title', 'Title'),
+          ...EditorInterfaceLayoutFactory.outputKey('selected'),
+
+          ...EditorInterfaceLayoutFactory.createDivider(),
+
+          ...EditorInterfaceLayoutFactory.outputKey('preferences.prefixIcon', 'Prefix icon'),
+          ...EditorInterfaceLayoutFactory.outputKey('preferences.prefixLabel', 'Prefix label'),
         ]),
 
         ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems

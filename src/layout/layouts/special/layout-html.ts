@@ -1,12 +1,13 @@
-import { LayoutInfoInterface }          from '../../../register/interfaces';
+import { LayoutInfoInterface }                                 from '../../../register/interfaces';
 import {
   jsfAbstractLayoutTranslatableProperties,
   JsfAbstractSpecialLayout,
   jsfAbstractSpecialLayoutJsfDefinitionLayoutItems,
   jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties
-}                                       from '../../../layout';
-import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
-import { JsfRegister }                  from '../../../register';
+}                                                              from '../../../layout';
+import { EditorInterfaceLayoutFactory }                        from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { JsfRegister }                                         from '../../../register';
+import { CodeEditorKeyIconType, EditorInterfaceSchemaFactory } from '../../../editor/helpers/editor-factory';
 
 const layoutInfo: LayoutInfoInterface = {
   type             : 'html',
@@ -45,31 +46,19 @@ export const layoutHtmlJsfDefinition = {
 
       html        : {
         type : 'string',
-        title: 'Html'
+        handler: {
+          type: 'common/code-editor',
+          options: {
+            language: 'html'
+          }
+        }
       },
       templateData: {
         type      : 'object',
-        title     : 'Template data',
         properties: {
-          $eval       : {
-            type   : 'string',
-            title  : 'Eval',
-            handler: {
-              type   : 'common/code-editor',
-              options: {
-                language: 'javascript'
-              }
-            }
-          },
-          dependencies: {
-            type : 'array',
-            title: 'Dependencies',
-            items: {
-              type: 'string'
-            }
-          }
+          ... EditorInterfaceSchemaFactory.createEvalPropertyWithDependencies()
         }
-      }
+      },
     }
   },
   layout: {
@@ -77,114 +66,9 @@ export const layoutHtmlJsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
         ...EditorInterfaceLayoutFactory.createPanel('HTML', [
-          {
-            type : 'div',
-            items: [
-              {
-                key: 'html'
-              },
-              {
-                type     : 'div',
-                htmlClass: 'ml-2 mt-3',
-                items    : [
-                  {
-                    type : 'heading',
-                    title: 'Template data',
-                    level: 5
-                  },
-                  {
-                    key: 'templateData.$eval'
-                  },
-                  {
-                    type : 'div',
-                    items: [
-                      {
-                        type : 'heading',
-                        title: 'Dependencies',
-                        level: 6
-                      },
-                      {
-                        type : 'array',
-                        key  : 'templateData.dependencies',
-                        items: [
-                          {
-                            type : 'expansion-panel-content',
-                            items: [
-                              {
-                                type: 'hr'
-                              },
-                              {
-                                type     : 'div',
-                                htmlClass: 'd-flex justify-content-between',
-                                items    : [
-                                  {
-                                    type: 'div'
-                                  },
-                                  {
-                                    type       : 'button',
-                                    icon       : 'delete',
-                                    color      : 'accent',
-                                    preferences: {
-                                      variant: 'icon'
-                                    },
-                                    onClick    : [
-                                      {
-                                        arrayItemRemove: {
-                                          path : 'templateData.dependencies',
-                                          index: {
-                                            $eval: 'return $getItemIndex(\'templateData.dependencies[]\')'
-                                          }
-                                        }
-                                      }
-                                    ]
-                                  }
-                                ]
-                              },
-                              {
-                                key: 'templateData.dependencies[]'
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        type     : 'div',
-                        visibleIf: {
-                          $eval       : 'return !$val.templateData.dependencies.length',
-                          dependencies: [
-                            'templateData'
-                          ]
-                        },
-                        items    : [
-                          {
-                            type     : 'span',
-                            htmlClass: 'd-block py-4 text-center',
-                            title    : 'No dependencies yet.'
-                          }
-                        ]
-                      },
-                      {
-                        type           : 'row',
-                        horizontalAlign: 'center',
-                        htmlClass      : 'mt-2',
-                        items          : [
-                          {
-                            type   : 'button',
-                            title  : 'Add dependency',
-                            onClick: {
-                              arrayItemAdd: {
-                                path: 'templateData.dependencies'
-                              }
-                            }
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
+          ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('html', 'HTML', CodeEditorKeyIconType.Template),
+          ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('templateData.$eval', 'HTML template data'),
+          ...EditorInterfaceLayoutFactory.outputKey('templateData.dependencies', 'HTML dependencies'),
         ]),
 
         ...jsfAbstractSpecialLayoutJsfDefinitionLayoutItems

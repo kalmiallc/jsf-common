@@ -6,9 +6,10 @@ import {
   jsfAbstractPropLayoutJsfDefinitionSchemaProperties, JsfLayoutArrayFilter,
   JsfLayoutExpansionPanelContent,
   JsfLayoutExpansionPanelHeader
-} from '../../../layout';
+}                                       from '../../../layout';
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { JsfRegister }                  from '../../../register';
+import { EditorInterfaceSchemaFactory } from '../../../editor/helpers/editor-factory';
 
 export class JsfLayoutPropExpansionPanelPreferences {
   startCollapsed: boolean;
@@ -58,9 +59,26 @@ export const layoutExpansionPanelJsfDefinition = {
     properties: {
       ...jsfAbstractPropLayoutJsfDefinitionSchemaProperties,
 
+      preferences: {
+        type: 'object',
+        properties: {
+          startCollapsed: {
+            type: 'boolean',
+            title: 'Start collapsed'
+          }
+        }
+      },
+
       multi: {
         type : 'boolean',
         title: 'Allow independent expansion state'
+      },
+
+      filter: {
+        type: 'object',
+        properties: {
+          ...EditorInterfaceSchemaFactory.createEvalPropertyWithDependencies()
+        }
       }
     }
   },
@@ -69,7 +87,13 @@ export const layoutExpansionPanelJsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
         ...EditorInterfaceLayoutFactory.createPanel('Expansion Panel', [
-          ...EditorInterfaceLayoutFactory.outputKey('multi')
+          ...EditorInterfaceLayoutFactory.outputKey('multi'),
+          ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('filter.$eval', 'Filter eval'),
+          ...EditorInterfaceLayoutFactory.outputKey('filter.dependencies', 'Filter dependencies'),
+
+          ...EditorInterfaceLayoutFactory.createDivider(),
+
+          ...EditorInterfaceLayoutFactory.outputKey('preferences.startCollapsed', 'Start collapsed'),
         ]),
 
         ...jsfAbstractPropLayoutJsfDefinitionLayoutItems

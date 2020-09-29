@@ -55,15 +55,12 @@ export const layoutArrayJsfDefinition = {
 
       addable  : {
         type : 'boolean',
-        title: 'Addable'
       },
       orderable: {
         type : 'boolean',
-        title: 'Orderable'
       },
       removable: {
         type : 'boolean',
-        title: 'Removable'
       }
     }
   },
@@ -72,20 +69,9 @@ export const layoutArrayJsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
         ...EditorInterfaceLayoutFactory.createPanel('Array', [
-          {
-            type : 'div',
-            items: [
-              {
-                key: 'addable'
-              },
-              {
-                key: 'orderable'
-              },
-              {
-                key: 'removable'
-              }
-            ]
-          }
+          ...EditorInterfaceLayoutFactory.outputKey('addable', 'Addable'),
+          ...EditorInterfaceLayoutFactory.outputKey('orderable', 'Orderable'),
+          ...EditorInterfaceLayoutFactory.outputKey('removable', 'Removable'),
         ]),
 
         ...jsfAbstractPropLayoutJsfDefinitionLayoutItems

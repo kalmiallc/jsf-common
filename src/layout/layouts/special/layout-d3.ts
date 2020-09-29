@@ -42,25 +42,24 @@ export const layoutD3JsfDefinition = {
 
       chartType   : {
         type : 'string',
-        title: 'Chart type'
       },
+
       chartOptions: {
         type   : 'object',
-        title  : 'Chart options',
         handler: {
           type: 'any'
         }
       },
+
       dataSets    : {
         type   : 'object',
-        title  : 'Chart options',
         handler: {
           type: 'any'
         }
       },
+
       height      : {
         type : 'number',
-        title: 'Height'
       }
     }
   },
@@ -69,17 +68,10 @@ export const layoutD3JsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
         ...EditorInterfaceLayoutFactory.createPanel('D3', [
-          {
-            type : 'div',
-            items: [
-              {
-                key: 'chartType'
-              },
-              {
-                key: 'height'
-              }
-            ]
-          }
+          ... EditorInterfaceLayoutFactory.outputKey('chartType', 'Chart type'),
+          ... EditorInterfaceLayoutFactory.outputKey('chartOptions', 'Chart options'),
+          ... EditorInterfaceLayoutFactory.outputKey('dataSets', 'Data sets'),
+          ... EditorInterfaceLayoutFactory.outputKey('height', 'Height'),
         ]),
 
         ...jsfAbstractSpecialLayoutJsfDefinitionLayoutItems

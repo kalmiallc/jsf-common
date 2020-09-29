@@ -45,8 +45,6 @@ export const layoutDrawerJsfDefinition = {
 
       color   : {
         type       : 'string',
-        title      : 'Color',
-        description: 'Choose color of the drawer.',
         handler    : {
           type  : 'common/button-toggle',
           values: [
@@ -65,10 +63,9 @@ export const layoutDrawerJsfDefinition = {
           ]
         }
       },
+
       position: {
         type       : 'string',
-        title      : 'Position',
-        description: 'Choose the position of the drawer.',
         handler    : {
           type  : 'common/button-toggle',
           values: [
@@ -90,28 +87,8 @@ export const layoutDrawerJsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
         ...EditorInterfaceLayoutFactory.createPanel('Drawer', [
-          {
-            type : 'div',
-            items: [
-              {
-                type : 'heading',
-                level: 5,
-                title: 'Color'
-              },
-              {
-                key      : 'color',
-                htmlClass: 'mb-3'
-              },
-              {
-                type : 'heading',
-                level: 5,
-                title: 'Position'
-              },
-              {
-                key: 'position'
-              }
-            ]
-          }
+          ...EditorInterfaceLayoutFactory.outputKey('color', 'Color'),
+          ...EditorInterfaceLayoutFactory.outputKey('position', 'Position'),
         ]),
 
         ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems

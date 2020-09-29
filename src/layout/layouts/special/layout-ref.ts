@@ -49,7 +49,6 @@ export const layoutRefJsfDefinition = {
 
       $ref: {
         type : 'string',
-        title: 'Ref'
       }
     }
   },
@@ -58,14 +57,7 @@ export const layoutRefJsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
         ...EditorInterfaceLayoutFactory.createPanel('Ref', [
-          {
-            type : 'div',
-            items: [
-              {
-                key: '$ref'
-              }
-            ]
-          }
+          ...EditorInterfaceLayoutFactory.outputKey('$ref', 'Ref')
         ]),
 
         ...jsfAbstractSpecialLayoutJsfDefinitionLayoutItems

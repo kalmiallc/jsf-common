@@ -1,13 +1,14 @@
-import { LayoutInfoInterface }          from '../../../register/interfaces';
+import { LayoutInfoInterface }                                 from '../../../register/interfaces';
 import {
   JsfAbstractItemsLayout,
   jsfAbstractItemsLayoutJsfDefinitionLayoutItems,
   jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
   jsfAbstractLayoutTranslatableProperties,
   JsfLayoutStep
-}                                       from '../../../layout';
-import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
-import { JsfRegister }                  from '../../../register';
+}                                                              from '../../../layout';
+import { EditorInterfaceLayoutFactory }                        from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { JsfRegister }                                         from '../../../register';
+import { CodeEditorKeyIconType, EditorInterfaceSchemaFactory } from '../../../editor/helpers/editor-factory';
 
 const layoutInfo: LayoutInfoInterface = {
   type        : 'stepper',
@@ -85,8 +86,6 @@ export const layoutStepperJsfDefinition = {
 
       variant     : {
         type       : 'string',
-        title      : 'Variant',
-        description: 'Choose stepper to be horizontal or vertical.',
         handler    : {
           type  : 'common/button-toggle',
           values: [
@@ -100,36 +99,94 @@ export const layoutStepperJsfDefinition = {
             }
           ]
         },
-        required   : true,
-        'default'  : 'horizontal'
+        default: 'horizontal'
       },
+
       linear      : {
-        type: 'boolean'
+        type: 'boolean',
+        title: 'Linear',
       },
+
       primary     : {
-        type: 'boolean'
+        type: 'boolean',
+        title: 'Primary'
       },
+
       initialStep : {
         type      : 'object',
-        handler   : {
-          type: 'any'
-        },
-        properties: {}
+        properties: {
+          ...EditorInterfaceSchemaFactory.createEvalProperty()
+        }
       },
+
       onStepChange: {
         type      : 'object',
-        title     : 'On step change',
         properties: {
-          $eval: {
-            type   : 'string',
-            title  : 'Eval',
+          ...EditorInterfaceSchemaFactory.createEvalProperty()
+        }
+      },
+
+      preferences: {
+        type: 'object',
+        properties: {
+          appearance: {
+            type: 'string',
             handler: {
-              type   : 'common/code-editor',
-              options: {
-                language: 'javascript'
-              }
+              type: 'common/dropdown',
+              values: [
+                {
+                  value: 'standard',
+                  label: 'Standard'
+                },
+                {
+                  value: 'compact',
+                  label: 'Compact'
+                }
+              ]
             }
-          }
+          },
+
+          labelPosition: {
+            type: 'string',
+            handler: {
+              type: 'common/dropdown',
+              values: [
+                {
+                  value: 'end',
+                  label: 'End'
+                },
+                {
+                  value: 'bottom',
+                  label: 'Bottom'
+                }
+              ]
+            }
+          },
+
+          stepHeaderPosition: {
+            type: 'string',
+            handler: {
+              type: 'common/dropdown',
+              values: [
+                {
+                  value: 'start',
+                  label: 'Start'
+                },
+                {
+                  value: 'end',
+                  label: 'End'
+                }
+              ]
+            }
+          },
+
+          editIcon: {
+            type: 'string'
+          },
+
+          doneIcon: {
+            type: 'string'
+          },
         }
       }
     }
@@ -139,113 +196,20 @@ export const layoutStepperJsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
         ...EditorInterfaceLayoutFactory.createPanel('Stepper', [
-          {
-            type : 'div',
-            items: [
-              {
-                type : 'heading',
-                level: 5,
-                title: 'Orientation'
-              },
-              {
-                key      : 'variant',
-                htmlClass: 'mb-3'
-              },
-              {
-                type     : 'row',
-                htmlClass: 'mb-3',
-                items    : [
-                  {
-                    type : 'col',
-                    xs   : 6,
-                    items: [
-                      {
-                        type : 'heading',
-                        level: 5,
-                        title: 'Linear'
-                      },
-                      {
-                        key        : 'linear',
-                        htmlClass  : 'h5',
-                        preferences: {
-                          variant: 'slider'
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    type : 'col',
-                    xs   : 6,
-                    items: [
-                      {
-                        type : 'heading',
-                        level: 5,
-                        title: 'Primary'
-                      },
-                      {
-                        key        : 'primary',
-                        htmlClass  : 'h5',
-                        preferences: {
-                          variant: 'slider'
-                        }
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                type     : 'div',
-                htmlClass: 'mb-3',
-                items    : [
-                  {
-                    type : 'heading',
-                    level: 5,
-                    title: 'Step to initialize on'
-                  },
-                  {
-                    type : 'span',
-                    title: 'Determine on:'
-                  },
-                  {
-                    key: '_initialStep.initStepType'
-                  },
-                  {
-                    key      : '_initialStep.initStepNumber',
-                    htmlClass: 'mt-1',
-                    visibleIf: {
-                      $eval       : 'return ($val._initialStep.initStepType == \'number\');',
-                      dependencies: [
-                        '_initialStep.initStepType'
-                      ]
-                    }
-                  },
-                  {
-                    key      : '_initialStep.initStepCustom.$eval',
-                    visibleIf: {
-                      $eval       : 'return ($val._initialStep.initStepType == \'custom\');',
-                      dependencies: [
-                        '_initialStep.initStepType'
-                      ]
-                    }
-                  }
-                ]
-              },
-              {
-                type     : 'div',
-                htmlClass: '',
-                items    : [
-                  {
-                    type : 'heading',
-                    title: 'On step change',
-                    level: 5
-                  },
-                  {
-                    key: 'onStepChange.$eval'
-                  }
-                ]
-              }
-            ]
-          }
+          ...EditorInterfaceLayoutFactory.outputKey('variant', 'Variant'),
+          ...EditorInterfaceLayoutFactory.outputKey('linear'),
+          ...EditorInterfaceLayoutFactory.outputKey('primary'),
+
+          ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('initialStep', 'Initial step'),
+          ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('onStepChange.$eval', 'Event: Step change', CodeEditorKeyIconType.EventCallback),
+
+          ...EditorInterfaceLayoutFactory.createDivider(),
+
+          ...EditorInterfaceLayoutFactory.outputKey('preferences.appearance', 'Appearance'),
+          ...EditorInterfaceLayoutFactory.outputKey('preferences.labelPosition', 'Label position'),
+          ...EditorInterfaceLayoutFactory.outputKey('preferences.stepHeaderPosition', 'Step header position'),
+          ...EditorInterfaceLayoutFactory.outputKey('preferences.editIcon', 'Edit icon'),
+          ...EditorInterfaceLayoutFactory.outputKey('preferences.editIcon', 'Done icon'),
         ]),
 
         ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems

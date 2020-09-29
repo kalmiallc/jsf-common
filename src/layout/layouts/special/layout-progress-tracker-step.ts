@@ -7,6 +7,7 @@ import {
 }                                       from '../../../layout';
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { JsfRegister }                  from '../../../register';
+import { EditorInterfaceSchemaFactory } from '../../../editor/helpers/editor-factory';
 
 const layoutInfo: LayoutInfoInterface = {
   type        : 'progress-tracker-step',
@@ -58,104 +59,34 @@ export const layoutProgressTrackerStepJsfDefinition = {
 
       title                  : {
         type : 'string',
-        title: 'Title'
       },
-      titleTemplateData      : {
+      titleTemplateData: {
         type      : 'object',
-        title     : 'Title template data',
         properties: {
-          $eval       : {
-            type   : 'string',
-            title  : 'Eval',
-            handler: {
-              type   : 'common/code-editor',
-              options: {
-                language: 'javascript'
-              }
-            }
-          },
-          dependencies: {
-            type : 'array',
-            title: 'Dependencies',
-            items: {
-              type: 'string'
-            }
-          }
+          ... EditorInterfaceSchemaFactory.createEvalPropertyWithDependencies()
         }
       },
       description            : {
         type : 'string',
-        title: 'Description'
       },
       descriptionTemplateData: {
         type      : 'object',
-        title     : 'Description template data',
         properties: {
-          $eval       : {
-            type   : 'string',
-            title  : 'Eval',
-            handler: {
-              type   : 'common/code-editor',
-              options: {
-                language: 'javascript'
-              }
-            }
-          },
-          dependencies: {
-            type : 'array',
-            title: 'Dependencies',
-            items: {
-              type: 'string'
-            }
-          }
+          ... EditorInterfaceSchemaFactory.createEvalPropertyWithDependencies()
         }
       },
-      icon                   : {
+      icon: {
         type      : 'object',
-        title     : 'Icon',
         properties: {
-          $eval       : {
-            type   : 'string',
-            title  : 'Eval',
-            handler: {
-              type   : 'common/code-editor',
-              options: {
-                language: 'javascript'
-              }
-            }
-          },
-          dependencies: {
-            type : 'array',
-            title: 'Dependencies',
-            items: {
-              type: 'string'
-            }
-          }
+          ... EditorInterfaceSchemaFactory.createEvalPropertyWithDependencies()
         }
       },
-      disabled               : {
+      disabled: {
         type      : 'object',
-        title     : 'Disabled',
         properties: {
-          $eval       : {
-            type   : 'string',
-            title  : 'Eval',
-            handler: {
-              type   : 'common/code-editor',
-              options: {
-                language: 'javascript'
-              }
-            }
-          },
-          dependencies: {
-            type : 'array',
-            title: 'Dependencies',
-            items: {
-              type: 'string'
-            }
-          }
+          ... EditorInterfaceSchemaFactory.createEvalPropertyWithDependencies()
         }
-      }
+      },
     }
   },
   layout: {
@@ -163,393 +94,19 @@ export const layoutProgressTrackerStepJsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
         ...EditorInterfaceLayoutFactory.createPanel('Progress Tracker Step', [
-          {
-            type : 'div',
-            items: [
-              {
-                key: 'title'
-              },
-              {
-                type : 'div',
-                items: [
-                  {
-                    type : 'heading',
-                    title: 'Title template data',
-                    level: '5'
-                  },
-                  {
-                    key: 'titleTemplateData.$eval'
-                  },
-                  {
-                    type : 'heading',
-                    title: 'Dependencies',
-                    level: 6
-                  },
-                  {
-                    type : 'array',
-                    key  : 'titleTemplateData.dependencies',
-                    items: [
-                      {
-                        type : 'expansion-panel-content',
-                        items: [
-                          {
-                            type: 'hr'
-                          },
-                          {
-                            type     : 'div',
-                            htmlClass: 'd-flex justify-content-between',
-                            items    : [
-                              {
-                                type: 'div'
-                              },
-                              {
-                                type       : 'button',
-                                icon       : 'delete',
-                                color      : 'accent',
-                                preferences: {
-                                  variant: 'icon'
-                                },
-                                onClick    : [
-                                  {
-                                    arrayItemRemove: {
-                                      path : 'titleTemplateData.dependencies',
-                                      index: {
-                                        $eval: 'return $getItemIndex(\'titleTemplateData.dependencies[]\')'
-                                      }
-                                    }
-                                  }
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            key: 'titleTemplateData.dependencies[]'
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    type             : 'div',
-                    titleTemplateData: {
-                      $eval       : 'return !$val.titleTemplateData.dependencies.length',
-                      dependencies: [
-                        'titleTemplateData'
-                      ]
-                    },
-                    items            : [
-                      {
-                        type     : 'span',
-                        htmlClass: 'd-block py-4 text-center',
-                        title    : 'No dependencies yet.'
-                      }
-                    ]
-                  },
-                  {
-                    type           : 'row',
-                    horizontalAlign: 'center',
-                    htmlClass      : 'mt-2',
-                    items          : [
-                      {
-                        type   : 'button',
-                        title  : 'Add dependency',
-                        onClick: {
-                          arrayItemAdd: {
-                            path: 'titleTemplateData.dependencies'
-                          }
-                        }
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                type : 'div',
-                items: [
-                  {
-                    type : 'heading',
-                    title: 'Description template data',
-                    level: '5'
-                  },
-                  {
-                    key: 'descriptionTemplateData.$eval'
-                  },
-                  {
-                    type : 'heading',
-                    title: 'Dependencies',
-                    level: 6
-                  },
-                  {
-                    type : 'array',
-                    key  : 'descriptionTemplateData.dependencies',
-                    items: [
-                      {
-                        type : 'expansion-panel-content',
-                        items: [
-                          {
-                            type: 'hr'
-                          },
-                          {
-                            type     : 'div',
-                            htmlClass: 'd-flex justify-content-between',
-                            items    : [
-                              {
-                                type: 'div'
-                              },
-                              {
-                                type       : 'button',
-                                icon       : 'delete',
-                                color      : 'accent',
-                                preferences: {
-                                  variant: 'icon'
-                                },
-                                onClick    : [
-                                  {
-                                    arrayItemRemove: {
-                                      path : 'descriptionTemplateData.dependencies',
-                                      index: {
-                                        $eval: 'return $getItemIndex(\'descriptionTemplateData.dependencies[]\')'
-                                      }
-                                    }
-                                  }
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            key: 'descriptionTemplateData.dependencies[]'
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    type             : 'div',
-                    titleTemplateData: {
-                      $eval       : 'return !$val.titleTemplateData.dependencies.length',
-                      dependencies: [
-                        'descriptionTemplateData'
-                      ]
-                    },
-                    items            : [
-                      {
-                        type     : 'span',
-                        htmlClass: 'd-block py-4 text-center',
-                        title    : 'No dependencies yet.'
-                      }
-                    ]
-                  },
-                  {
-                    type           : 'row',
-                    horizontalAlign: 'center',
-                    htmlClass      : 'mt-2',
-                    items          : [
-                      {
-                        type   : 'button',
-                        title  : 'Add dependency',
-                        onClick: {
-                          arrayItemAdd: {
-                            path: 'descriptionTemplateData.dependencies'
-                          }
-                        }
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                type : 'div',
-                items: [
-                  {
-                    type : 'heading',
-                    title: 'Icon',
-                    level: '5'
-                  },
-                  {
-                    key: 'icon.$eval'
-                  },
-                  {
-                    type : 'heading',
-                    title: 'Dependencies',
-                    level: 6
-                  },
-                  {
-                    type : 'array',
-                    key  : 'icon.dependencies',
-                    items: [
-                      {
-                        type : 'expansion-panel-content',
-                        items: [
-                          {
-                            type: 'hr'
-                          },
-                          {
-                            type     : 'div',
-                            htmlClass: 'd-flex justify-content-between',
-                            items    : [
-                              {
-                                type: 'div'
-                              },
-                              {
-                                type       : 'button',
-                                icon       : 'delete',
-                                color      : 'accent',
-                                preferences: {
-                                  variant: 'icon'
-                                },
-                                onClick    : [
-                                  {
-                                    arrayItemRemove: {
-                                      path : 'icon.dependencies',
-                                      index: {
-                                        $eval: 'return $getItemIndex(\'icon.dependencies[]\')'
-                                      }
-                                    }
-                                  }
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            key: 'icon.dependencies[]'
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    type : 'div',
-                    title: {
-                      $eval       : 'return !$val.title.dependencies.length',
-                      dependencies: [
-                        'icon'
-                      ]
-                    },
-                    items: [
-                      {
-                        type     : 'span',
-                        htmlClass: 'd-block py-4 text-center',
-                        title    : 'No dependencies yet.'
-                      }
-                    ]
-                  },
-                  {
-                    type           : 'row',
-                    horizontalAlign: 'center',
-                    htmlClass      : 'mt-2',
-                    items          : [
-                      {
-                        type   : 'button',
-                        title  : 'Add dependency',
-                        onClick: {
-                          arrayItemAdd: {
-                            path: 'icon.dependencies'
-                          }
-                        }
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                key: 'disabled'
-              },
-              {
-                type : 'div',
-                items: [
-                  {
-                    type : 'heading',
-                    title: 'Default',
-                    level: '5'
-                  },
-                  {
-                    key: 'disabled.$eval'
-                  },
-                  {
-                    type : 'heading',
-                    title: 'Dependencies',
-                    level: 6
-                  },
-                  {
-                    type : 'array',
-                    key  : 'disabled.dependencies',
-                    items: [
-                      {
-                        type : 'expansion-panel-content',
-                        items: [
-                          {
-                            type: 'hr'
-                          },
-                          {
-                            type     : 'div',
-                            htmlClass: 'd-flex justify-content-between',
-                            items    : [
-                              {
-                                type: 'div'
-                              },
-                              {
-                                type       : 'button',
-                                icon       : 'delete',
-                                color      : 'accent',
-                                preferences: {
-                                  variant: 'icon'
-                                },
-                                onClick    : [
-                                  {
-                                    arrayItemRemove: {
-                                      path : 'disabled.dependencies',
-                                      index: {
-                                        $eval: 'return $getItemIndex(\'disabled.dependencies[]\')'
-                                      }
-                                    }
-                                  }
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            key: 'disabled.dependencies[]'
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    type    : 'div',
-                    disabled: {
-                      $eval       : 'return !$val.disabled.dependencies.length',
-                      dependencies: [
-                        'disabled'
-                      ]
-                    },
-                    items   : [
-                      {
-                        type     : 'span',
-                        htmlClass: 'd-block py-4 text-center',
-                        title    : 'No dependencies yet.'
-                      }
-                    ]
-                  },
-                  {
-                    type           : 'row',
-                    horizontalAlign: 'center',
-                    htmlClass      : 'mt-2',
-                    items          : [
-                      {
-                        type   : 'button',
-                        title  : 'Add dependency',
-                        onClick: {
-                          arrayItemAdd: {
-                            path: 'disabled.dependencies'
-                          }
-                        }
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
+          ...EditorInterfaceLayoutFactory.outputKey('title', 'Title'),
+          ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('titleTemplateData.$eval', 'Title template data'),
+          ...EditorInterfaceLayoutFactory.outputKey('titleTemplateData.dependencies', 'Title dependencies'),
+
+          ...EditorInterfaceLayoutFactory.outputKey('description', 'Description'),
+          ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('descriptionTemplateData.$eval', 'Description template data'),
+          ...EditorInterfaceLayoutFactory.outputKey('descriptionTemplateData.dependencies', 'Description dependencies'),
+
+          ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('icon.$eval', 'Icon eval'),
+          ...EditorInterfaceLayoutFactory.outputKey('icon.dependencies', 'Icon dependencies'),
+
+          ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('disabled.$eval', 'disabled eval'),
+          ...EditorInterfaceLayoutFactory.outputKey('disabled.dependencies', 'disabled dependencies'),
         ]),
 
         ...jsfAbstractSpecialLayoutJsfDefinitionLayoutItems

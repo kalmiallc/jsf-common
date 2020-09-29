@@ -77,14 +77,124 @@ export const layoutTabsetJsfDefinition = {
   schema: {
     type      : 'object',
     properties: {
-      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties
+      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
 
+      preferences: {
+        type: 'object',
+        properties: {
+          dynamicHeight: {
+            type: 'boolean',
+            title: 'Dynamic height'
+          },
+          labelAlignment: {
+            type: 'string',
+            handler: {
+              type: 'common/dropdown',
+              values: [
+                {
+                  value: 'start',
+                  label: 'Start'
+                },
+                {
+                  value: 'center',
+                  label: 'Center'
+                },
+                {
+                  value: 'end',
+                  label: 'End'
+                },
+              ]
+            }
+          },
+          headerPosition: {
+            type: 'string',
+            handler: {
+              type: 'common/dropdown',
+              values: [
+                {
+                  value: 'above',
+                  label: 'Above'
+                },
+                {
+                  value: 'below',
+                  label: 'Below'
+                },
+              ]
+            }
+          },
+          color: {
+            type: 'string',
+            handler: {
+              type: 'common/dropdown',
+              values: [
+                {
+                  value: 'primary',
+                  label: 'Primary'
+                },
+                {
+                  value: 'accent',
+                  label: 'Accent'
+                },
+              ]
+            }
+          },
+          backgroundColor: {
+            type: 'string',
+            handler: {
+              type: 'common/dropdown',
+              values: [
+                {
+                  value: 'none',
+                  label: 'None'
+                },
+                {
+                  value: 'primary',
+                  label: 'Primary'
+                },
+                {
+                  value: 'accent',
+                  label: 'Accent'
+                },
+              ]
+            }
+          },
+          disableRipple: {
+            type: 'boolean',
+            title: 'Disable ripple'
+          },
+          headerType: {
+            type: 'string',
+            handler: {
+              type: 'common/dropdown',
+              values: [
+                {
+                  value: 'default',
+                  label: 'Default'
+                },
+                {
+                  value: 'round',
+                  label: 'Round'
+                },
+              ]
+            }
+          },
+        }
+      }
     }
   },
   layout: {
     type : 'div',
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
+        ...EditorInterfaceLayoutFactory.createPanel('Tabset', [
+          ...EditorInterfaceLayoutFactory.outputKey('preferences.dynamicHeight'),
+          ...EditorInterfaceLayoutFactory.outputKey('preferences.labelAlignment', 'Label alignment'),
+          ...EditorInterfaceLayoutFactory.outputKey('preferences.headerPosition', 'Header position'),
+          ...EditorInterfaceLayoutFactory.outputKey('preferences.color', 'Color'),
+          ...EditorInterfaceLayoutFactory.outputKey('preferences.backgroundColor', 'Background color'),
+          ...EditorInterfaceLayoutFactory.outputKey('preferences.disableRipple'),
+          ...EditorInterfaceLayoutFactory.outputKey('preferences.headerType', 'Header type'),
+        ]),
 
         ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems
       ])

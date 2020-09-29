@@ -49,7 +49,7 @@ export const layoutExpansionPanelStandaloneJsfDefinition = {
       multi: {
         type : 'boolean',
         title: 'Allow independent expansion state'
-      }
+      },
     }
   },
   layout: {

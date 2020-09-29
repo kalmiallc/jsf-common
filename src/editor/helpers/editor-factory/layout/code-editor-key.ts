@@ -1,6 +1,7 @@
 export enum CodeEditorKeyIconType {
   Eval = 'functions',
   EventCallback = 'functions',
+  Template = 'code',
 }
 
 export type CodeEditorLanguage = 'javascript' | 'json' | 'scss' | 'css';

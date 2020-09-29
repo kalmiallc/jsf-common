@@ -45,7 +45,7 @@ export const layoutSectionJsfDefinition = {
       },
       expanded  : {
         type : 'boolean',
-        title: 'Expand'
+        title: 'Expanded'
       }
     }
   },
@@ -54,17 +54,8 @@ export const layoutSectionJsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
         ...EditorInterfaceLayoutFactory.createPanel('Section', [
-          {
-            type : 'div',
-            items: [
-              {
-                key: 'expandable'
-              },
-              {
-                key: 'expanded'
-              }
-            ]
-          }
+          ...EditorInterfaceLayoutFactory.outputKey('expandable'),
+          ...EditorInterfaceLayoutFactory.outputKey('expanded'),
         ]),
 
         ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems

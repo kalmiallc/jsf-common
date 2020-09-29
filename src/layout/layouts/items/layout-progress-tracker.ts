@@ -8,6 +8,7 @@ import {
 }                                       from '../../../layout';
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { JsfRegister }                  from '../../../register';
+import { EditorInterfaceSchemaFactory } from '../../../editor/helpers/editor-factory';
 
 const layoutInfo: LayoutInfoInterface = {
   type        : 'progress-tracker',
@@ -50,55 +51,22 @@ export const layoutProgressTrackerJsfDefinition = {
     properties: {
       ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
 
-      step                     : {
-        type      : 'object',
-        properties: {
-          $eval       : {
-            type   : 'string',
-            title  : 'Eval',
-            handler: {
-              type   : 'common/code-editor',
-              options: {
-                language: 'javascript'
-              }
-            }
-          },
-          dependencies: {
-            type : 'array',
-            title: 'Dependenices',
-            items: {
-              type: 'string'
-            }
-          }
-        }
-      },
-      progressTitle            : {
-        type : 'string',
-        title: 'Progress title'
+      progressTitle       : {
+        type: 'string'
       },
       progressTitleTemplateData: {
         type      : 'object',
-        title     : 'Progress title template data',
         properties: {
-          $eval       : {
-            type   : 'string',
-            title  : 'Eval',
-            handler: {
-              type   : 'common/code-editor',
-              options: {
-                language: 'javascript'
-              }
-            }
-          },
-          dependencies: {
-            type : 'array',
-            title: 'Dependenices',
-            items: {
-              type: 'string'
-            }
-          }
+          ...EditorInterfaceSchemaFactory.createEvalPropertyWithDependencies()
         }
-      }
+      },
+
+      step: {
+        type      : 'object',
+        properties: {
+          ...EditorInterfaceSchemaFactory.createEvalPropertyWithDependencies()
+        }
+      },
     }
   },
   layout: {
@@ -106,104 +74,12 @@ export const layoutProgressTrackerJsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
         ...EditorInterfaceLayoutFactory.createPanel('Progress Tracker', [
-          {
-            type : 'div',
-            items: [
-              {
-                type : 'div',
-                items: [
-                  {
-                    type : 'heading',
-                    title: 'Step',
-                    level: 5
-                  },
-                  {
-                    key: 'step.$eval'
-                  },
-                  {
-                    type : 'div',
-                    items: [
-                      {
-                        type : 'heading',
-                        title: 'Dependencies',
-                        level: 6
-                      },
-                      {
-                        type : 'array',
-                        key  : 'step.dependencies',
-                        items: [
-                          {
-                            type : 'row',
-                            items: [
-                              {
-                                type : 'col',
-                                xs   : 'auto',
-                                items: [
-                                  {
-                                    key: 'step.dependencies[]'
-                                  }
-                                ]
-                              },
-                              {
-                                type : 'col',
-                                xs   : 'content',
-                                items: [
-                                  {
-                                    type       : 'button',
-                                    icon       : 'delete',
-                                    color      : 'accent',
-                                    preferences: {
-                                      variant: 'icon'
-                                    },
-                                    onClick    : [
-                                      {
-                                        arrayItemRemove: {
-                                          path : 'step.dependencies',
-                                          index: {
-                                            $eval: 'return $getItemIndex(\'step.dependencies[]\')'
-                                          }
-                                        }
-                                      }
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        type     : 'div',
-                        visibleIf: {
-                          $eval       : 'return !$val.step.dependencies.length',
-                          dependencies: [
-                            'step'
-                          ]
-                        },
-                        items    : [
-                          {
-                            type     : 'span',
-                            htmlClass: 'd-block py-4 text-center',
-                            title    : 'No dependencies yet.'
-                          }
-                        ]
-                      },
-                      {
-                        type   : 'button',
-                        icon   : 'add',
-                        title  : 'Add dependency',
-                        onClick: {
-                          arrayItemAdd: {
-                            path: 'step.dependencies'
-                          }
-                        }
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
+          ...EditorInterfaceLayoutFactory.outputKey('progressTitle', 'Title'),
+          ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('progressTitleTemplateData.$eval', 'Title template data'),
+          ...EditorInterfaceLayoutFactory.outputKey('progressTitleTemplateData.dependencies', 'Title dependencies'),
+
+          ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('step.$eval', 'Step eval'),
+          ...EditorInterfaceLayoutFactory.outputKey('step.dependencies', 'Step dependencies'),
         ]),
 
         ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems

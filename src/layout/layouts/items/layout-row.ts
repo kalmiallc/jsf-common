@@ -56,55 +56,52 @@ export const layoutRowJsfDefinition = {
       gutters        : {
         type       : 'boolean',
         title      : 'Gutters',
-        description: 'Toggle column gutters (gap between columns):'
       },
+
       verticalAlign  : {
         type       : 'string',
-        title      : 'Vertical align',
-        description: 'Vertically align children elements',
         handler    : {
           type  : 'common/dropdown',
           values: [
             {
-              label: 'start',
+              label: 'Start',
               value: 'start'
             },
             {
-              label: 'center',
+              label: 'Center',
               value: 'center'
             },
             {
-              label: 'end',
+              label: 'End',
               value: 'end'
             }
           ]
         }
       },
+
       horizontalAlign: {
         type       : 'string',
-        title      : 'Horizontal align',
-        description: 'Horizontally align children elements',
         handler    : {
           type  : 'common/dropdown',
           values: [
             {
-              label: 'start',
+              label: 'Start',
               value: 'start'
             },
             {
-              label: 'center',
+              label: 'Center',
               value: 'center'
             },
             {
-              label: 'end',
+              label: 'End',
               value: 'end'
             },
             {
-              label: 'around',
+              label: 'Around',
               value: 'around'
             },
             {
-              label: 'between',
+              label: 'Between',
               value: 'between'
             }
           ]
@@ -117,23 +114,9 @@ export const layoutRowJsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
         ...EditorInterfaceLayoutFactory.createPanel('Row', [
-          {
-            type : 'div',
-            items: [
-              {
-                key: 'verticalAlign'
-              },
-              {
-                key: 'horizontalAlign'
-              },
-              {
-                type: 'hr'
-              },
-              {
-                key: 'gutters'
-              }
-            ]
-          }
+          ...EditorInterfaceLayoutFactory.outputKey('gutters'),
+          ...EditorInterfaceLayoutFactory.outputKey('verticalAlign', 'Vertical align'),
+          ...EditorInterfaceLayoutFactory.outputKey('horizontalAlign', 'Horizontal align'),
         ]),
 
         ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems

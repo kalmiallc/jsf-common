@@ -44,13 +44,12 @@ export const layoutIconJsfDefinition = {
 
       icon : {
         type : 'string',
-        title: 'Icon'
       },
+
       color: {
         type   : 'string',
-        title  : 'Color',
         handler: {
-          type  : 'common/dropdown',
+          type  : 'common/radio',
           values: [
             {
               value: 'primary',
@@ -67,9 +66,10 @@ export const layoutIconJsfDefinition = {
           ]
         }
       },
+
       size : {
         type : 'string',
-        title: 'Size'
+        description: 'Example: 24px, 1rem, ...'
       }
     }
   },
@@ -78,20 +78,9 @@ export const layoutIconJsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
         ...EditorInterfaceLayoutFactory.createPanel('Icon', [
-          {
-            type : 'div',
-            items: [
-              {
-                key: 'icon'
-              },
-              {
-                key: 'color'
-              },
-              {
-                key: 'size'
-              }
-            ]
-          }
+          ...EditorInterfaceLayoutFactory.outputKey('icon', 'Icon'),
+          ...EditorInterfaceLayoutFactory.outputKey('color', 'Color'),
+          ...EditorInterfaceLayoutFactory.outputKey('size', 'Size'),
         ]),
 
         ...jsfAbstractSpecialLayoutJsfDefinitionLayoutItems

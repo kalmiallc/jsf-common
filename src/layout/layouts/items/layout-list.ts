@@ -46,14 +46,38 @@ export const layoutListJsfDefinition = {
   schema: {
     type      : 'object',
     properties: {
-      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties
+      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
 
+      preferences      : {
+        type      : 'object',
+        properties: {
+          type        : {
+            type   : 'string',
+            handler: {
+              type  : 'common/dropdown',
+              values: [
+                {
+                  value: 'unordered',
+                  label: 'Unordered'
+                },
+                {
+                  value: 'ordered',
+                  label: 'Ordered'
+                },
+              ]
+            }
+          },
+        }
+      }
     }
   },
   layout: {
     type : 'div',
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
+        ...EditorInterfaceLayoutFactory.createPanel('List', [
+          ...EditorInterfaceLayoutFactory.outputKey('preferences.type')
+        ]),
 
         ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems
       ])

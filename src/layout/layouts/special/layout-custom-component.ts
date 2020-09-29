@@ -48,34 +48,16 @@ export const layoutCustomComponentJsfDefinition = {
 
       component: {
         type      : 'object',
-        title     : 'Component',
-        properties: {
-          $eval: {
-            type   : 'string',
-            title  : 'Eval',
-            handler: {
-              type   : 'common/code-editor',
-              options: {
-                language: 'javascript'
-              }
-            }
-          }
+        properties: {},
+        handler: {
+          type: 'any'
         }
       },
       config   : {
         type      : 'object',
-        title     : 'Config',
-        properties: {
-          $eval: {
-            type   : 'string',
-            title  : 'Eval',
-            handler: {
-              type   : 'common/code-editor',
-              options: {
-                language: 'javascript'
-              }
-            }
-          }
+        properties: {},
+        handler: {
+          type: 'any'
         }
       }
     }
@@ -85,39 +67,8 @@ export const layoutCustomComponentJsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
         ...EditorInterfaceLayoutFactory.createPanel('Custom Component', [
-          {
-            type : 'div',
-            items: [
-              {
-                type     : 'div',
-                htmlClass: 'ml-2 mt-3',
-                items    : [
-                  {
-                    type : 'heading',
-                    title: 'Component',
-                    level: 5
-                  },
-                  {
-                    key: 'component.$eval'
-                  }
-                ]
-              },
-              {
-                type     : 'div',
-                htmlClass: 'ml-2 mt-3',
-                items    : [
-                  {
-                    type : 'heading',
-                    title: 'Configuration',
-                    level: 5
-                  },
-                  {
-                    key: 'config.$eval'
-                  }
-                ]
-              }
-            ]
-          }
+          ... EditorInterfaceLayoutFactory.outputKey('component', 'Component'),
+          ... EditorInterfaceLayoutFactory.outputKey('config', 'Config'),
         ]),
 
         ...jsfAbstractSpecialLayoutJsfDefinitionLayoutItems

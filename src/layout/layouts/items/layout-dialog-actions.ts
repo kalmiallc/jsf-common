@@ -41,7 +41,6 @@ export const layoutDialogActionsJsfDefinition = {
 
       align: {
         type   : 'string',
-        title  : 'Align',
         handler: {
           type  : 'common/dropdown',
           values: [
@@ -63,14 +62,7 @@ export const layoutDialogActionsJsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
         ...EditorInterfaceLayoutFactory.createPanel('Dialog Actions', [
-          {
-            type : 'div',
-            items: [
-              {
-                key: 'align'
-              }
-            ]
-          }
+          ...EditorInterfaceLayoutFactory.outputKey('align'),
         ]),
 
         ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems
