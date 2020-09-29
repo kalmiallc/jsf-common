@@ -420,6 +420,10 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
     const dataSource = this.dataSourcesInfo[dataSourceKey];
     let filters      = [];
     const components = [];
+
+    if (!dataSource) {
+      return { filters, components }
+    }
     for (const componentKey of Object.keys(dataSource.components)) {
       const component = dataSource.components[componentKey];
       if (component.filters) {
