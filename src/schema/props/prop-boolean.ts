@@ -12,7 +12,7 @@ import { jsfAbstractPropTranslatableProperties } from '../abstract';
 const propInfo: PropInfoInterface = {
   type        : 'boolean',
   title       : 'Boolean',
-  color       : '#efea5a',
+  color       : '#8959a8',
   localization: {
     translatableProperties: [...jsfAbstractPropTranslatableProperties]
   }

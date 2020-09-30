@@ -13,7 +13,7 @@ import { JsfRegister }                  from '../../register';
 const propInfo: PropInfoInterface = {
   type        : 'id',
   title       : 'ID',
-  color       : '#54478c',
+  color       : '#8e908c',
   localization: {
     translatableProperties: [...jsfAbstractPropTranslatableProperties]
   }

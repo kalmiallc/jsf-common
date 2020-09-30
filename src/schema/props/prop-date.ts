@@ -13,7 +13,7 @@ import { jsfAbstractPropTranslatableProperties } from '../abstract';
 const propInfo: PropInfoInterface = {
   type        : 'date',
   title       : 'Date',
-  color       : '#16db93',
+  color       : '#1a8c32',
   localization: {
     translatableProperties: [...jsfAbstractPropTranslatableProperties]
   }

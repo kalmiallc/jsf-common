@@ -14,14 +14,24 @@ import { JsfRegister }                             from '../../register';
 export interface JsfPropArrayValue extends Array<JsfPropValue> {} // TODO this is not working
 export interface JsfPropArrayJsonValue extends Array<JsfPropJsonValue> {}
 
-const propInfo: PropInfoInterface = {
+const propInfoArray: PropInfoInterface = {
   type        : 'array',
   title       : 'Array',
-  color       : '#f94144',
+  color       : '#f5871f',
   localization: {
     translatableProperties: [...jsfAbstractPropTranslatableProperties]
   }
 };
+
+const propInfoFixedArray: PropInfoInterface = {
+  type        : 'fixed-array',
+  title       : 'Fixed Array',
+  color       : '#f5871f',
+  localization: {
+    translatableProperties: [...jsfAbstractPropTranslatableProperties]
+  }
+};
+
 
 
 export class JsfPropArray extends JsfAbstractProp<JsfPropArrayValue[] | null, 'array', JsfHandlerArray> {
@@ -190,4 +200,5 @@ export const propArrayJsfDefinition = {
   }
 };
 
-JsfRegister.prop('array', propInfo, propArrayJsfDefinition);
+JsfRegister.prop('array', propInfoArray, propArrayJsfDefinition);
+JsfRegister.prop('fixed-array', propInfoFixedArray, propArrayJsfDefinition);

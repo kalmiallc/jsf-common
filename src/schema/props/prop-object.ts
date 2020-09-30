@@ -22,7 +22,7 @@ export interface JsfPropObjectJsonValue {
 const propInfo: PropInfoInterface = {
   type        : 'object',
   title       : 'Object',
-  color       : '#f29e4c',
+  color       : '#eab700',
   localization: {
     translatableProperties: [...jsfAbstractPropTranslatableProperties]
   }

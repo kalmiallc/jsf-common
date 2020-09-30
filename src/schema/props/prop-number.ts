@@ -15,7 +15,7 @@ import { jsfAbstractPropTranslatableProperties } from '../abstract';
 const propInfoNumber: PropInfoInterface = {
   type        : 'number',
   title       : 'Number',
-  color       : '#048ba8',
+  color       : '#3e999f',
   localization: {
     translatableProperties: [...jsfAbstractPropTranslatableProperties]
   }
@@ -24,7 +24,7 @@ const propInfoNumber: PropInfoInterface = {
 const propInfoInteger: PropInfoInterface = {
   type        : 'integer',
   title       : 'Integer',
-  color       : '#0db39e',
+  color       : '#4271ae',
   localization: {
     translatableProperties: [...jsfAbstractPropTranslatableProperties]
   }

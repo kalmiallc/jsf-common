@@ -12,7 +12,7 @@ import { JsfRegister, PropInfoInterface } from '../../register';
 const propInfo: PropInfoInterface = {
   type        : 'ref',
   title       : 'Reference',
-  color       : '#f77976',
+  color       : '#d6d6d6',
   localization: {
     translatableProperties: [...jsfAbstractPropTranslatableProperties]
   }

@@ -17,7 +17,7 @@ type Buffer = any;
 const propInfo: PropInfoInterface = {
   type        : 'binary',
   title       : 'Binary',
-  color       : '#240046',
+  color       : '#efefef',
   localization: {
     translatableProperties: [...jsfAbstractPropTranslatableProperties]
   }
