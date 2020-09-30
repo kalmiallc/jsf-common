@@ -20,6 +20,7 @@ export class JsfRegister {
   private static handlerBuilderStore: { [propBuilderKey: string]: (new (builder: JsfUnknownPropBuilder) => JsfAbstractHandlerBuilder<any>) } = {};
   private static handlerCompatibility: { [handlerKey: string]: HandlerCompatibilityInterface }                                               = {};
 
+  private static _builderFeatureSet: 'basic' | 'full' = 'basic';
   private static _toolboxLayoutWhitelist = defaultToolboxLayoutWhitelist;
 
   static setToolboxLayoutWhitelist(whitelist: string[] | null) {
@@ -28,6 +29,14 @@ export class JsfRegister {
 
   static getToolboxLayoutWhitelist() {
     return JsfRegister._toolboxLayoutWhitelist;
+  }
+
+  static setBuilderFeatureSet(featureSet: 'basic' | 'full') {
+    JsfRegister._builderFeatureSet = featureSet;
+  }
+
+  static getBuilderFeatureSet() {
+    return JsfRegister._builderFeatureSet;
   }
 
   static getAppEvalContextLambda(): (builder: JsfBuilder, options?: EvalContextOptions) => any {
@@ -68,10 +77,27 @@ export class JsfRegister {
   }
 
   static getPropFormDefinition(type: string) {
-    return JsfRegister.propStore[type] && JSON.parse(
+    const replaceValue = type !== 'boolean' ? `"${ type }"` : `"${ type }",
+        "handler": {
+          "type": "common/button-toggle",
+          "values": [
+            { "value": null, "label": "None" },
+            { "value": true, "label": "True" },
+            { "value": false, "label": "False" }
+          ]
+        }
+      `;
+
+    const definition = JsfRegister.propStore[type] && JSON.parse(
       JSON.stringify(JsfRegister.propStore[type])
-        .replace(/@@PROP_TYPE/g, type)
+        .replace(/"@@PROP_TYPE"/g, replaceValue)
     );
+
+    if (definition) {
+      definition.$modes = (definition.$modes || []).concat([this.getBuilderFeatureSet()])
+    }
+
+    return definition;
   }
 
   static getNewPropDefinition(type: string) {
@@ -127,7 +153,15 @@ export class JsfRegister {
   }
 
   static getLayoutFormDefinition(type: string) {
-    return JsfRegister.layoutStore[type];
+    const definition = JsfRegister.layoutStore[type];
+
+    if (definition) {
+      if (definition) {
+        definition.$modes = (definition.$modes || []).concat([this.getBuilderFeatureSet()])
+      }
+    }
+
+    return definition;
   }
 
   static getNewLayoutDefinition(type: string) {
@@ -161,9 +195,17 @@ export class JsfRegister {
       throw new Error(`Handler ${ type } does not have compatible type ${ prop.type }!`);
     }
 
-    return compatibleType.formDefinitionTransform
+    const definition = compatibleType.formDefinitionTransform
       ? compatibleType.formDefinitionTransform(JSON.parse(JSON.stringify(JsfRegister.handlerCompatibility[type].formDefinition)), prop)
       : JsfRegister.handlerCompatibility[type].formDefinition;
+
+    if (definition) {
+      if (definition) {
+        definition.$modes = (definition.$modes || []).concat([this.getBuilderFeatureSet()])
+      }
+    }
+
+    return definition;
   }
 
   static getHandlerLayoutDefinition(type: string, prop: JsfProp, options: { crashIfNotFound?: boolean } = {}) {
@@ -181,7 +223,15 @@ export class JsfRegister {
       throw new Error(`Handler ${ type } does not have compatible type ${ prop.type }!`);
     }
 
-    return JsfRegister.handlerCompatibility[type].layoutDefinition;
+    const definition = JsfRegister.handlerCompatibility[type].layoutDefinition;
+
+    if (definition) {
+      if (definition) {
+        definition.$modes = (definition.$modes || []).concat([this.getBuilderFeatureSet()])
+      }
+    }
+
+    return definition;
   }
 
   static getHandlerCompatibility(type: string) {

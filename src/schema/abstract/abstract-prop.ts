@@ -514,7 +514,7 @@ export const jsfAbstractBarePropJsfDefinitionLayoutItems = [
   ]),
 
   ...EditorInterfaceLayoutFactory.createPanel('Other', [
-    ...EditorInterfaceLayoutFactory.outputKey('$group', 'Groups'),
+    // ...EditorInterfaceLayoutFactory.outputKey('$group', 'Groups'),
     ...EditorInterfaceLayoutFactory.outputKey('$comment', 'Developer comments')
   ])
 ];
@@ -792,9 +792,15 @@ export const jsfAbstractPropJsfDefinitionLayoutItems = [
     },
     ...EditorInterfaceLayoutFactory.outputKey('default', 'Default value'),
     ...EditorInterfaceLayoutFactory.outputKey('const', 'Constant value'),
-    ...EditorInterfaceLayoutFactory.outputKey('searchable.byUser.enabled'),
-    ...EditorInterfaceLayoutFactory.outputKey('searchable.title', 'Searchable title'),
-    ...EditorInterfaceLayoutFactory.outputKey('searchable.byUser.$mode', 'Searchable mode')
+    ...EditorInterfaceLayoutFactory.outputKey('searchable.byUser.enabled', null, {
+      $mode: ['full']
+    }),
+    ...EditorInterfaceLayoutFactory.outputKey('searchable.title', 'Searchable title', {
+      $mode: ['full']
+    }),
+    ...EditorInterfaceLayoutFactory.outputKey('searchable.byUser.$mode', 'Searchable mode', {
+      $mode: ['full']
+    })
   ]),
 
   ...EditorInterfaceLayoutFactory.createPanel('Advanced default', [
