@@ -112,6 +112,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
   protected requestProcessDirtyDataSources: Subject<void> = new Subject<void>();
 
   onDataSourceFilterChange: Subject<DataSourceFilterChangeInterface> = new Subject<DataSourceFilterChangeInterface>();
+  onDataSourceReloadRequest: Subject<{ dataSourceKey: string; force?: boolean; }> = new Subject<{ dataSourceKey: string; force?: boolean; }>();
 
   pageDefinition: JsfPage;
 
@@ -371,6 +372,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
   }
 
   processDataSource(dataSourceKey: string) {
+    this.onDataSourceReloadRequest.next({ dataSourceKey });
     if (!this.dataSourcesInfo[dataSourceKey]) {
       return;
     }
@@ -382,6 +384,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
   }
 
   forceProcessDataSource(dataSourceKey: string) {
+    this.onDataSourceReloadRequest.next({ dataSourceKey, force: true });
     if (!this.dataSourcesInfo[dataSourceKey]) {
       return;
     }
@@ -400,6 +403,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
     for (const dataSourceKey of Object.keys(this.dataSourcesInfo)) {
       if (!this.dataSourceRequests.find(x => x.dataSource === dataSourceKey && !x.groupKey)) {
         this.dataSourcesInfo[dataSourceKey].dirty = true;
+        this.onDataSourceReloadRequest.next({ dataSourceKey });
       }
     }
     return this.processDirtyDataSources();
@@ -408,6 +412,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
   forceProcessDataSources() {
     for (const dataSourceKey of Object.keys(this.dataSourcesInfo)) {
       this.dataSourcesInfo[dataSourceKey].dirty = true;
+      this.onDataSourceReloadRequest.next({ dataSourceKey, force: true });
     }
     return this.processDirtyDataSources();
   }
