@@ -105,7 +105,7 @@ export const layoutProgressBarJsfDefinition = {
           ...EditorInterfaceLayoutFactory.outputKey('color', 'Color'),
 
           ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('progress.$eval', 'Progress eval'),
-          ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('progress.dependencies', 'Progress dependencies'),
+          ...EditorInterfaceLayoutFactory.outputKey('progress.dependencies', 'Progress dependencies'),
         ]),
 
         ...jsfAbstractSpecialLayoutJsfDefinitionLayoutItems

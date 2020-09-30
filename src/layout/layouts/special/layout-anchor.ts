@@ -16,8 +16,8 @@ const layoutInfo: LayoutInfoInterface = {
   icon             : 'layout-icons/anchor.svg',
   defaultDefinition: {
     type : 'anchor',
-    title: 'My link',
-    href : 'https://'
+    title: 'Link',
+    href : 'https://example.com'
   },
   localization     : {
     translatableProperties: [...jsfAbstractLayoutTranslatableProperties, 'title', 'href']

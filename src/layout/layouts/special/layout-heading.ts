@@ -16,8 +16,8 @@ const layoutInfo: LayoutInfoInterface = {
   icon             : 'layout-icons/heading.svg',
   defaultDefinition: {
     type : 'heading',
-    level: 3,
-    title: 'Heading text'
+    level: 1,
+    title: 'Heading'
   },
   localization     : {
     translatableProperties: [...jsfAbstractLayoutTranslatableProperties, 'title']

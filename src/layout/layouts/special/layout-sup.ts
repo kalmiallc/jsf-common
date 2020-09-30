@@ -14,6 +14,10 @@ const layoutInfo: LayoutInfoInterface = {
   title       : 'Superscript',
   category    : 'Text',
   icon        : 'layout-icons/sup.svg',
+  defaultDefinition: {
+    type : 'sup',
+    title: 'Superscript'
+  },
   localization: {
     translatableProperties: [...jsfAbstractLayoutTranslatableProperties, 'title']
   }

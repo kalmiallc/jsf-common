@@ -16,7 +16,7 @@ const layoutInfo: LayoutInfoInterface = {
   icon             : 'layout-icons/paragraph.svg',
   defaultDefinition: {
     type : 'paragraph',
-    title: 'Paragraph text'
+    title: 'Paragraph'
   },
   localization     : {
     translatableProperties: [...jsfAbstractLayoutTranslatableProperties, 'title']

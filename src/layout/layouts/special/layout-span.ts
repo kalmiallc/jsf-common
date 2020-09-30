@@ -16,7 +16,7 @@ const layoutInfo: LayoutInfoInterface = {
   icon             : 'layout-icons/span.svg',
   defaultDefinition: {
     type : 'span',
-    title: 'Span text'
+    title: 'Span'
   },
   localization     : {
     translatableProperties: [...jsfAbstractLayoutTranslatableProperties, 'title']

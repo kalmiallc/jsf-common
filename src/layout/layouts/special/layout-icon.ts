@@ -15,7 +15,7 @@ const layoutInfo: LayoutInfoInterface = {
   category         : 'Text',
   defaultDefinition: {
     type: 'icon',
-    icon: 'warning'
+    icon: 'help'
   },
   localization     : {
     translatableProperties: [...jsfAbstractLayoutTranslatableProperties]

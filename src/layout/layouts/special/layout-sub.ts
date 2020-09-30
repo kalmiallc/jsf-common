@@ -14,6 +14,10 @@ const layoutInfo: LayoutInfoInterface = {
   title       : 'Subscript',
   category    : 'Text',
   icon        : 'layout-icons/sub.svg',
+  defaultDefinition: {
+    type : 'sub',
+    title: 'Subscript'
+  },
   localization: {
     translatableProperties: [...jsfAbstractLayoutTranslatableProperties, 'title']
   }
