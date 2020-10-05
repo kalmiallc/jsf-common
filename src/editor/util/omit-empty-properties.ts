@@ -1,14 +1,24 @@
-import { isArray, isEmpty, isNil, isObject, omitBy } from 'lodash';
+import { isArray, isEmpty, isNil, isPlainObject, omitBy } from 'lodash';
 
-export function omitEmptyProperties(value: any) {
-  return omitEmptyPropertiesInternal(value);
+export function omitEmptyProperties(x: any) {
+  if (isArray(x)) {
+    return x.map(y => omitEmptyProperties(y)).filter(y => !isOmittableValue(y));
+  }
+  if (!isPlainObject(x)) {
+    return x;
+  }
+
+  return omitBy(x, (value: any, key: string) => {
+    if (isPlainObject(value)) {
+      value = omitEmptyProperties(value);
+    }
+    if (isArray(value)) {
+      x[key] = value = value.map(y => omitEmptyProperties(y)).filter(y => !isOmittableValue(y));
+    }
+    return isOmittableValue(value);
+  });
 }
 
-function omitEmptyPropertiesInternal(x: any) {
-  return omitBy(x, (value: any, key: string) => {
-    if (isObject(value)) {
-      value = omitEmptyPropertiesInternal(value);
-    }
-    return isNil(value) || ((isObject(value) || isArray(value)) && isEmpty(value));
-  });
+function isOmittableValue(value: any) {
+  return isNil(value) || ((isPlainObject(value) || isArray(value)) && isEmpty(value));
 }
