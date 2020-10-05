@@ -25,7 +25,7 @@ import {
   JsfLayoutHeading,
   JsfLayoutHr,
   JsfLayoutHtml,
-  JsfLayoutIcon,
+  JsfLayoutIcon, JsfLayoutIframe,
   JsfLayoutImage,
   JsfLayoutList,
   JsfLayoutListItem,
@@ -56,7 +56,7 @@ import {
   JsfLayoutSup,
   JsfLayoutTab,
   JsfLayoutTabSet
-}                                                 from './layouts';
+} from './layouts';
 import { JsfItemsStylesBase, JsfItemsStylesFlex } from './styles';
 
 export * from './jsf-layout-util';
@@ -114,6 +114,7 @@ export type JsfSpecialLayout =
   | JsfLayoutProgressBar
   | JsfLayoutOrderSummaryLineItem
   | JsfLayoutHtml
+  | JsfLayoutIframe
   | JsfLayoutD3
   | JsfLayoutChartJS
   | JsfLayoutCustomComponent

@@ -26,6 +26,7 @@ export * from './layout-app-breadcrumbs';
 export * from './layout-app-page-title';
 export * from './layout-powered-by';
 export * from './layout-progress-tracker-step';
+export * from './layout-iframe';
 
 
 export interface JsfLayoutSpecialPreferencesInterface {
