@@ -1,5 +1,5 @@
-import { JsfProp, JsfPropTypes } from '../index';
-import { JsfProviderExecutorInterface }               from '../../providers';
+import { JsfProp, JsfPropTypes }        from '../index';
+import { JsfProviderExecutorInterface } from '../../providers';
 import { JsfValueOptionsInterface }     from '../../layout/interfaces/value-options.type';
 import { EditorInterfaceLayoutFactory } from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { EditorInterfaceSchemaFactory } from '../../editor/helpers/editor-factory/editor-interface-schema-factory';
@@ -166,8 +166,8 @@ export abstract class JsfAbstractBareProp<TypeString, Handlers> {
 
 export const jsfAbstractBarePropJsfDefinitionSchemaProperties      = {
   $comment: {
-    type: 'string',
-    multiline: 3,
+    type     : 'string',
+    multiline: 3
   },
   $group  : {
     type   : 'array',
@@ -188,15 +188,15 @@ export const jsfAbstractBarePropJsfDefinitionSchemaProperties      = {
       type      : 'object',
       properties: {
         type: {
-          type    : 'string',
-          handler : {
+          type   : 'string',
+          handler: {
             type  : 'common/dropdown',
             values: [
               { label: 'Set', value: 'set' },
               { label: 'Eval', value: 'eval' }
             ]
           },
-          default : 'set'
+          default: 'set'
         },
         ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty('onInit[]', 'value', 'dynamic'),
         ...EditorInterfaceSchemaFactory.createEvalProperty()
@@ -204,117 +204,7 @@ export const jsfAbstractBarePropJsfDefinitionSchemaProperties      = {
     }
   },
 
-  provider: {
-    type      : 'object',
-    properties: {
-      key: {
-        type: 'string'
-      },
-
-      dependencies: {
-        type   : 'array',
-        handler: {
-          type: 'common/chip-list'
-        },
-        items  : {
-          type: 'string'
-        }
-      },
-
-      mode: {
-        type   : 'string',
-        handler: {
-          type  : 'common/radio',
-          values: [
-            { label: 'Set', value: 'set' },
-            { label: 'Patch', value: 'patch' }
-          ]
-        },
-        default: 'set'
-      },
-
-      hooks: {
-        type      : 'object',
-        properties: {
-          onIdle   : {
-            type      : 'object',
-            properties: {
-              ...EditorInterfaceSchemaFactory.createEvalProperty()
-            }
-          },
-          onPending: {
-            type      : 'object',
-            properties: {
-              ...EditorInterfaceSchemaFactory.createEvalProperty()
-            }
-          },
-          onFailed : {
-            type      : 'object',
-            properties: {
-              ...EditorInterfaceSchemaFactory.createEvalProperty()
-            }
-          }
-        }
-      },
-
-      debounce: {
-        type : 'boolean',
-        title: 'Debounce'
-      },
-
-      async: {
-        type : 'boolean',
-        title: 'Async'
-      },
-
-      condition: {
-        type      : 'object',
-        properties: {
-          ...EditorInterfaceSchemaFactory.createEvalProperty()
-        }
-      },
-
-      providerRequestData: {
-        type      : 'object',
-        properties: {
-          ...EditorInterfaceSchemaFactory.createEvalProperty()
-        }
-      },
-
-      mapResponseData: {
-        type      : 'object',
-        properties: {
-          ...EditorInterfaceSchemaFactory.createEvalProperty()
-        }
-      },
-
-      customTriggers: {
-        type : 'array',
-        items: {
-          type      : 'object',
-          properties: {
-            type    : {
-              type   : 'string',
-              handler: {
-                type  : 'common/radio',
-                values: [
-                  { label: 'Interval', value: 'interval' }
-                ]
-              },
-              default: 'interval'
-            },
-            interval: {
-              type     : 'number',
-              enabledIf: {
-                $eval       : `return $getPropValue('provider.customTriggers[].type') === 'interval'`,
-                dependencies: ['provider.customTriggers[].type']
-              }
-            }
-          }
-        }
-      }
-    }
-  },
+  ...EditorInterfaceSchemaFactory.createJsfProviderExecutorProperty('', 'provider'),
 
   enabledIf    : {
     type      : 'object',
@@ -476,41 +366,7 @@ export const jsfAbstractBarePropJsfDefinitionLayoutItems = [
   ]),
 
   ...EditorInterfaceLayoutFactory.createPanel('Provider', [
-    ...EditorInterfaceLayoutFactory.outputKey('provider.key', 'Provider key'),
-    ...EditorInterfaceLayoutFactory.outputKey('provider.dependencies', 'Dependencies'),
-    ...EditorInterfaceLayoutFactory.outputKey('provider.mode', 'Value update mode', {
-      handlerPreferences: {
-        layout: 'inline'
-      }
-    }),
-    ...EditorInterfaceLayoutFactory.outputKey('provider.debounce'),
-    ...EditorInterfaceLayoutFactory.outputKey('provider.async'),
-    ...EditorInterfaceLayoutFactory.createDivider(),
-    ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('provider.condition.$eval', 'Run condition'),
-    ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('provider.providerRequestData.$eval', 'Request data'),
-    ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('provider.mapResponseData.$eval', 'Map response data'),
-    ...EditorInterfaceLayoutFactory.createDivider(),
-    ...EditorInterfaceLayoutFactory.createLabel('Custom triggers'),
-    ...EditorInterfaceLayoutFactory.outputArrayCardListKey('provider.customTriggers',
-      { $eval: `return { value: 'Trigger' }`, dependencies: [] },
-      [
-        ...EditorInterfaceLayoutFactory.outputKey('provider.customTriggers[].type'),
-        {
-          type     : 'div',
-          visibleIf: {
-            $eval       : `return $getItemValue('provider.customTriggers[].type') === 'interval'`,
-            dependencies: ['provider.customTriggers[].type']
-          },
-          items    : [
-            ...EditorInterfaceLayoutFactory.outputKey('provider.customTriggers[].interval', 'Interval (ms)')
-          ]
-        }
-      ]
-    ),
-    ...EditorInterfaceLayoutFactory.createDivider(),
-    ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('provider.hooks.onIdle.$eval', 'Event: Idle', CodeEditorKeyIconType.EventCallback),
-    ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('provider.hooks.onPending.$eval', 'Event: Pending', CodeEditorKeyIconType.EventCallback),
-    ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor('provider.hooks.onFailed.$eval', 'Event: Failed', CodeEditorKeyIconType.EventCallback)
+    ...EditorInterfaceLayoutFactory.outputJsfProviderExecutorProperty('', 'provider')
   ]),
 
   ...EditorInterfaceLayoutFactory.createPanel('Other', [

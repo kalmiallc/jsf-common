@@ -1,5 +1,5 @@
 import { panel, panelGroup }                    from './layout/panels';
-import { codeEditorKey }                        from './layout/code-editor-key';
+import { codeEditorKey, CodeEditorKeyIconType } from './layout/code-editor-key';
 import { contentHeading, label as createLabel } from './layout/labels';
 import { arrayCardListKey }                     from './layout/array-card-list-key';
 import { key, keyWithItems }                    from './layout/key';
@@ -468,6 +468,48 @@ export abstract class EditorInterfaceLayoutFactory {
           ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor(`${ propFullPath }[].condition.$eval`, 'Condition')
         ])
     ];
+  };
+
+  static outputJsfProviderExecutorProperty = (basePath: string, propName: string) => {
+    const propFullPath       = `${ basePath ? basePath + '.' : '' }${ propName }`;
+
+    return [
+      ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }.key`, `Provider key`),
+      ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }.dependencies`, `Dependencies`),
+      ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }.mode`, `Value update mode`, {
+        handlerPreferences: {
+          layout: `inline`
+        }
+      }),
+      ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }.debounce`),
+      ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }.async`),
+      ...EditorInterfaceLayoutFactory.createDivider(),
+      ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor(`${ propFullPath }.condition.$eval`, `Run condition`),
+      ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor(`${ propFullPath }.providerRequestData.$eval`, `Request data`),
+      ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor(`${ propFullPath }.mapResponseData.$eval`, `Map response data`),
+      ...EditorInterfaceLayoutFactory.createDivider(),
+      ...EditorInterfaceLayoutFactory.createLabel(`Custom triggers`),
+      ...EditorInterfaceLayoutFactory.outputArrayCardListKey(`${ propFullPath }.customTriggers`,
+        { $eval: `return { value: 'Trigger' }`, dependencies: [] },
+        [
+          ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }.customTriggers[].type`),
+          {
+            type     : `div`,
+            visibleIf: {
+              $eval       : `return $getItemValue('provider.customTriggers[].type') === 'interval'`,
+              dependencies: [`${ propFullPath }.customTriggers[].type`]
+            },
+            items    : [
+              ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }.customTriggers[].interval`, `Interval (ms)`)
+            ]
+          }
+        ]
+      ),
+      ...EditorInterfaceLayoutFactory.createDivider(),
+      ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor(`${ propFullPath }.hooks.onIdle.$eval`, `Event: Idle`, CodeEditorKeyIconType.EventCallback),
+      ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor(`${ propFullPath }.hooks.onPending.$eval`, `Event: Pending`, CodeEditorKeyIconType.EventCallback),
+      ...EditorInterfaceLayoutFactory.outputKeyWithCodeEditor(`${ propFullPath }.hooks.onFailed.$eval`, `Event: Failed`, CodeEditorKeyIconType.EventCallback)
+    ]
   };
 }
 

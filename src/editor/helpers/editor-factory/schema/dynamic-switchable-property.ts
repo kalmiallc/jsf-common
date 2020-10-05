@@ -13,7 +13,7 @@ export function dynamicSwitchableProperty(basePath: string, propName: string, de
   const typeSwitcherPropName = `${ editorPropName(propName) }_type`;
   const typeValuePropName = `${ editorPropName(propName) }_value`;
 
-  return {
+  const output = {
     // Output prop with dynamic value
     [propName]: {
       type: 'object',
@@ -52,5 +52,10 @@ export function dynamicSwitchableProperty(basePath: string, propName: string, de
         }, {}),
       }
     },
-  }
+  };
+
+  return JSON.parse(
+    JSON.stringify(output)
+      .replace(/@@BASE_PATH/g, basePath ? `${ basePath }.${ typeValuePropName }.` : `${ typeValuePropName }.`)
+  );
 }

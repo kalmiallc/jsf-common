@@ -22,20 +22,20 @@ export abstract class EditorInterfaceSchemaFactory {
   static createJsfValueOptionsProperty = (basePath: string, propName: string, propType: 'dynamic' | 'any', keyExtraSchemaProperties?: any) => {
     return EditorInterfaceSchemaFactory.createDynamicSwitchableProperty(basePath, propName, [
       {
-        typeKey: 'key',
-        typeName: 'Key',
+        typeKey       : 'key',
+        typeName      : 'Key',
         propDefinition: {
           type: 'string'
         }
       },
       {
-        typeKey: 'const',
-        typeName: 'Constant',
+        typeKey       : 'const',
+        typeName      : 'Constant',
         propDefinition: propType === 'any'
           ? {
-            type: 'object',
+            type      : 'object',
             properties: {},
-            handler: {
+            handler   : {
               type: 'any'
             }
           }
@@ -44,18 +44,18 @@ export abstract class EditorInterfaceSchemaFactory {
           }
       },
       {
-        typeKey: 'eval',
-        typeName: 'Eval',
+        typeKey       : 'eval',
+        typeName      : 'Eval',
         propDefinition: {
-          type: 'object',
+          type      : 'object',
           properties: {
-            ... EditorInterfaceSchemaFactory.createEvalProperty()
+            ...EditorInterfaceSchemaFactory.createEvalProperty()
           }
         }
       },
       {
-        typeKey: 'paste',
-        typeName: 'Paste',
+        typeKey       : 'paste',
+        typeName      : 'Paste',
         propDefinition: {
           type: 'string'
         }
@@ -64,14 +64,14 @@ export abstract class EditorInterfaceSchemaFactory {
   };
 
   static createOnClickProperty = (basePath: string, propName: string) => {
-    const propFullPath = `${ basePath ? basePath + '.' : ''}${ propName }`;
-    const editorPropFullPath = `${ basePath ? basePath + '.' : ''}${ propName }[].${ editorPropName(propName) }`;
+    const propFullPath       = `${ basePath ? basePath + '.' : '' }${ propName }`;
+    const editorPropFullPath = `${ basePath ? basePath + '.' : '' }${ propName }[].${ editorPropName(propName) }`;
 
     return {
       [propName]: {
-        type: 'array',
+        type : 'array',
         items: {
-          type: 'object',
+          type      : 'object',
           properties: {
             // Type switcher
             [editorPropName(propName)]: {
@@ -114,7 +114,7 @@ export abstract class EditorInterfaceSchemaFactory {
             condition: {
               type      : 'object',
               properties: {
-                ...EditorInterfaceSchemaFactory.createEvalProperty(),
+                ...EditorInterfaceSchemaFactory.createEvalProperty()
               }
             },
 
@@ -137,7 +137,7 @@ export abstract class EditorInterfaceSchemaFactory {
                 enabledIf: {
                   $eval       : `return $getPropValue('${ editorPropFullPath }') === '$eval'`,
                   dependencies: [editorPropFullPath]
-                },
+                }
               }
             },
 
@@ -154,7 +154,7 @@ export abstract class EditorInterfaceSchemaFactory {
                   title: 'Run this action on linked form'
                 },
                 event   : {
-                  type: 'string',
+                  type: 'string'
                 },
                 ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].emit`, 'value', 'any')
               }
@@ -184,7 +184,7 @@ export abstract class EditorInterfaceSchemaFactory {
                 noValueChange: {
                   type : 'boolean',
                   title: 'No value change'
-                },
+                }
               }
             },
 
@@ -212,7 +212,7 @@ export abstract class EditorInterfaceSchemaFactory {
                 noValueChange: {
                   type : 'boolean',
                   title: 'No value change'
-                },
+                }
               }
             },
 
@@ -230,48 +230,48 @@ export abstract class EditorInterfaceSchemaFactory {
             // Submit
             ...EditorInterfaceSchemaFactory.createDynamicSwitchableProperty(`${ propFullPath }[]`, 'submit', [
               {
-                typeName: 'Basic',
-                typeKey: 'basic',
+                typeName      : 'Basic',
+                typeKey       : 'basic',
                 propDefinition: {
-                  type: 'boolean',
-                  title: 'Submit',
-                  const: true,
-                  enabledIf : {
+                  type     : 'boolean',
+                  title    : 'Submit',
+                  const    : true,
+                  enabledIf: {
                     $eval       : `return $getPropValue('${ editorPropFullPath }') === 'submit'`,
                     dependencies: [editorPropFullPath]
-                  },
+                  }
                 }
               },
               {
-                typeName: 'Advanced',
-                typeKey: 'advanced',
+                typeName      : 'Advanced',
+                typeKey       : 'advanced',
                 propDefinition: {
-                  type: 'object',
+                  type      : 'object',
                   enabledIf : {
                     $eval       : `return $getPropValue('${ editorPropFullPath }') === 'submit'`,
                     dependencies: [editorPropFullPath]
                   },
                   properties: {
-                    onLinked: {
-                      type: 'boolean',
+                    onLinked       : {
+                      type : 'boolean',
                       title: 'Run this action on linked form'
                     },
-                    createRevision: {
-                      type: 'boolean',
+                    createRevision : {
+                      type : 'boolean',
                       title: 'Create revision'
                     },
-                    createFork: {
-                      type: 'boolean',
+                    createFork     : {
+                      type : 'boolean',
                       title: 'Create fork'
                     },
                     mapResponseData: {
-                      type: 'object',
+                      type      : 'object',
                       properties: {
-                        ... EditorInterfaceSchemaFactory.createEvalProperty()
+                        ...EditorInterfaceSchemaFactory.createEvalProperty()
                       }
                     }
                   }
-                },
+                }
               }
             ]),
 
@@ -283,25 +283,25 @@ export abstract class EditorInterfaceSchemaFactory {
                 dependencies: [editorPropFullPath]
               },
               properties: {
-                onLinked     : {
+                onLinked: {
                   type : 'boolean',
                   title: 'Run this action on linked form'
                 },
-                path         : {
-                  type       : 'string',
+                path    : {
+                  type: 'string'
                 },
-                mode: {
-                  type    : 'string',
-                  handler : {
+                mode    : {
+                  type   : 'string',
+                  handler: {
                     type  : 'common/dropdown',
                     values: [
                       { label: 'Set', value: 'set' },
                       { label: 'Eval', value: 'eval' }
                     ]
                   },
-                  default : 'set'
+                  default: 'set'
                 },
-                ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].arrayItemAdd`, 'value', 'any'),
+                ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].arrayItemAdd`, 'value', 'any')
               }
             },
 
@@ -313,14 +313,14 @@ export abstract class EditorInterfaceSchemaFactory {
                 dependencies: [editorPropFullPath]
               },
               properties: {
-                onLinked     : {
+                onLinked: {
                   type : 'boolean',
                   title: 'Run this action on linked form'
                 },
-                path         : {
-                  type       : 'string',
+                path    : {
+                  type: 'string'
                 },
-                ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].arrayItemRemove`, 'index', 'any'),
+                ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].arrayItemRemove`, 'index', 'any')
               }
             },
 
@@ -332,37 +332,37 @@ export abstract class EditorInterfaceSchemaFactory {
                 dependencies: [editorPropFullPath]
               },
               properties: {
-                reload     : {
+                reload             : {
                   type : 'boolean',
                   title: 'Reload page'
                 },
                 ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].navigateTo`, 'path', 'any'),
                 ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].navigateTo`, 'query', 'any'),
-                queryParamsHandling     : {
-                  type : 'string',
+                queryParamsHandling: {
+                  type   : 'string',
                   handler: {
-                    type: 'common/dropdown',
+                    type  : 'common/dropdown',
                     values: [
                       { label: 'Merge', value: 'merge' },
-                      { label: 'Preserve', value: 'preserve' },
-                    ],
-                  },
+                      { label: 'Preserve', value: 'preserve' }
+                    ]
+                  }
                 },
-                relative     : {
+                relative           : {
                   type : 'boolean',
                   title: 'Relative to current page'
                 },
-                openInNewWindow     : {
+                openInNewWindow    : {
                   type : 'boolean',
                   title: 'Open in new window'
                 },
-                transferFormValue: {
-                  type: 'object',
+                transferFormValue  : {
+                  type      : 'object',
                   properties: {
                     path: {
                       type: 'string'
                     },
-                    ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].navigateTo.transferFormValue`, 'value', 'any'),
+                    ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].navigateTo.transferFormValue`, 'value', 'any')
                   }
                 }
               }
@@ -376,28 +376,28 @@ export abstract class EditorInterfaceSchemaFactory {
                 dependencies: [editorPropFullPath]
               },
               properties: {
-                onLinked     : {
+                onLinked: {
                   type : 'boolean',
                   title: 'Run this action on linked form'
                 },
-                action         : {
-                  type       : 'string',
+                action  : {
+                  type   : 'string',
                   handler: {
-                    type: 'common/dropdown',
+                    type  : 'common/dropdown',
                     values: [
                       { label: 'Load', value: 'load' },
                       { label: 'Save', value: 'save' },
                       { label: 'Delete', value: 'delete' },
                       { label: 'Retry', value: 'retry' },
                       { label: 'Run custom event', value: 'runCustomEvent' },
-                      { label: 'Run virtual event', value: 'runVirtualEvent' },
+                      { label: 'Run virtual event', value: 'runVirtualEvent' }
                     ]
                   }
                 },
                 ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].dff`, 'value', 'any'),
 
                 mapResponseData: {
-                  type: 'object',
+                  type      : 'object',
                   properties: {
                     ...EditorInterfaceSchemaFactory.createEvalProperty()
                   }
@@ -413,22 +413,22 @@ export abstract class EditorInterfaceSchemaFactory {
                 dependencies: [editorPropFullPath]
               },
               properties: {
-                key         : {
-                  type       : 'string',
+                key: {
+                  type: 'string'
                 },
-                ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].showDialog`, 'data', 'any'),
+                ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].showDialog`, 'data', 'any')
               }
             },
 
             // Hide dialog
             hideDialog: {
-              type: 'boolean',
-              enabledIf : {
+              type     : 'boolean',
+              enabledIf: {
                 $eval       : `return $getPropValue('${ editorPropFullPath }') === 'hideDialog'`,
                 dependencies: [editorPropFullPath]
               },
-              title: 'Hide dialog',
-              const: true
+              title    : 'Hide dialog',
+              const    : true
             },
 
             // Open form dialog
@@ -442,23 +442,23 @@ export abstract class EditorInterfaceSchemaFactory {
                 ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].openFormDialog`, 'dffKey', 'any'),
                 ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].openFormDialog`, 'documentId', 'any'),
                 transferFormValue: {
-                  type: 'object',
+                  type      : 'object',
                   properties: {
                     path: {
                       type: 'string'
                     },
-                    ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].openFormDialog.transferFormValue`, 'value', 'any'),
+                    ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].openFormDialog.transferFormValue`, 'value', 'any')
                   }
                 },
                 ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].openFormDialog`, 'abortOnDismiss', 'any'),
-                proxy: {
-                  type: 'boolean',
+                proxy            : {
+                  type : 'boolean',
                   title: 'Proxy'
                 },
-                mapResponseData: {
-                  type: 'object',
+                mapResponseData  : {
+                  type      : 'object',
                   properties: {
-                    ... EditorInterfaceSchemaFactory.createEvalProperty()
+                    ...EditorInterfaceSchemaFactory.createEvalProperty()
                   }
                 }
               }
@@ -467,109 +467,109 @@ export abstract class EditorInterfaceSchemaFactory {
             // Close form dialog
             ...EditorInterfaceSchemaFactory.createDynamicSwitchableProperty(`${ propFullPath }[]`, 'closeFormDialog', [
               {
-                typeName: 'Basic',
-                typeKey: 'basic',
+                typeName      : 'Basic',
+                typeKey       : 'basic',
                 propDefinition: {
-                  type: 'boolean',
-                  title: 'Close form dialog',
-                  const: true,
-                  enabledIf : {
+                  type     : 'boolean',
+                  title    : 'Close form dialog',
+                  const    : true,
+                  enabledIf: {
                     $eval       : `return $getPropValue('${ editorPropFullPath }') === 'closeFormDialog'`,
                     dependencies: [editorPropFullPath]
-                  },
+                  }
                 }
               },
               {
-                typeName: 'Advanced',
-                typeKey: 'advanced',
+                typeName      : 'Advanced',
+                typeKey       : 'advanced',
                 propDefinition: {
-                  type: 'object',
+                  type      : 'object',
                   enabledIf : {
                     $eval       : `return $getPropValue('${ editorPropFullPath }') === 'closeFormDialog'`,
                     dependencies: [editorPropFullPath]
                   },
                   properties: {
                     dismiss: {
-                      type: 'boolean',
+                      type : 'boolean',
                       title: 'Dismiss'
-                    },
+                    }
                   }
-                },
+                }
               }
             ]),
 
             // Show loading indicator
             showLoadingIndicator: {
-              type: 'boolean',
-              title: 'Show loading indicator',
-              const: true,
-              enabledIf : {
+              type     : 'boolean',
+              title    : 'Show loading indicator',
+              const    : true,
+              enabledIf: {
                 $eval       : `return $getPropValue('${ editorPropFullPath }') === 'showLoadingIndicator'`,
                 dependencies: [editorPropFullPath]
-              },
+              }
             },
 
             // Hide loading indicator
             hideLoadingIndicator: {
-              type: 'boolean',
-              title: 'Hide loading indicator',
-              const: true,
-              enabledIf : {
+              type     : 'boolean',
+              title    : 'Hide loading indicator',
+              const    : true,
+              enabledIf: {
                 $eval       : `return $getPropValue('${ editorPropFullPath }') === 'hideLoadingIndicator'`,
                 dependencies: [editorPropFullPath]
-              },
+              }
             },
 
             // Stepper next
             stepperNext: {
-              type: 'object',
+              type      : 'object',
               enabledIf : {
                 $eval       : `return $getPropValue('${ editorPropFullPath }') === 'stepperNext'`,
                 dependencies: [editorPropFullPath]
               },
               properties: {
                 id: {
-                  type: 'string',
+                  type: 'string'
                 }
               }
             },
 
             // Stepper next
             stepperPrevious: {
-              type: 'object',
+              type      : 'object',
               enabledIf : {
                 $eval       : `return $getPropValue('${ editorPropFullPath }') === 'stepperPrevious'`,
                 dependencies: [editorPropFullPath]
               },
               properties: {
                 id: {
-                  type: 'string',
+                  type: 'string'
                 }
               }
             },
 
             // Clipboard
             clipboard: {
-              type: 'object',
+              type      : 'object',
               enabledIf : {
                 $eval       : `return $getPropValue('${ editorPropFullPath }') === 'clipboard'`,
                 dependencies: [editorPropFullPath]
               },
               properties: {
                 clear: {
-                  type: 'array',
+                  type   : 'array',
                   handler: {
                     type: 'common/chip-list'
                   },
-                  items: {
+                  items  : {
                     type: 'string'
-                  },
+                  }
                 },
-                copy: {
-                  type: 'object',
+                copy : {
+                  type      : 'object',
                   properties: {
                     ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].clipboard.copy`, 'key', 'any'),
-                    ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].clipboard.copy`, 'value', 'any'),
+                    ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].clipboard.copy`, 'value', 'any')
                   }
                 }
               }
@@ -577,7 +577,7 @@ export abstract class EditorInterfaceSchemaFactory {
 
             // Show notification
             showNotification: {
-              type: 'object',
+              type      : 'object',
               enabledIf : {
                 $eval       : `return $getPropValue('${ editorPropFullPath }') === 'showNotification'`,
                 dependencies: [editorPropFullPath]
@@ -585,14 +585,14 @@ export abstract class EditorInterfaceSchemaFactory {
               properties: {
                 ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].showNotification`, 'message', 'any'),
                 level: {
-                  type: 'string',
+                  type   : 'string',
                   handler: {
-                    type: 'common/dropdown',
+                    type  : 'common/dropdown',
                     values: [
                       { label: 'Info', value: 'info' },
                       { label: 'Success', value: 'success' },
                       { label: 'Warn', value: 'warn' },
-                      { label: 'Error', value: 'error' },
+                      { label: 'Error', value: 'error' }
                     ]
                   },
                   default: 'info'
@@ -602,7 +602,7 @@ export abstract class EditorInterfaceSchemaFactory {
 
             // Run service action
             runServiceAction: {
-              type: 'object',
+              type      : 'object',
               enabledIf : {
                 $eval       : `return $getPropValue('${ editorPropFullPath }') === 'runServiceAction'`,
                 dependencies: [editorPropFullPath]
@@ -614,30 +614,148 @@ export abstract class EditorInterfaceSchemaFactory {
                 },
                 ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].runServiceAction`, 'service', 'any'),
                 ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].runServiceAction`, 'action', 'any'),
-                ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].runServiceAction`, 'data', 'any'),
+                ...EditorInterfaceSchemaFactory.createJsfValueOptionsProperty(`${ propFullPath }[].runServiceAction`, 'data', 'any')
               }
             },
 
             // Run service action
             dataSourceReload: {
-              type: 'object',
+              type      : 'object',
               enabledIf : {
                 $eval       : `return $getPropValue('${ editorPropFullPath }') === 'dataSourceReload'`,
                 dependencies: [editorPropFullPath]
               },
               properties: {
-                force: {
+                force        : {
                   type : 'boolean',
                   title: 'Force'
                 },
                 dataSourceKey: {
-                  type : 'string',
-                },
+                  type: 'string'
+                }
               }
             }
           }
         }
       }
-    }
-  }
+    };
+  };
+
+  static createJsfProviderExecutorProperty = (basePath: string, propName: string) => {
+    const propFullPath = `${ basePath ? basePath + '.' : '' }${ propName }`;
+
+    return {
+      [propFullPath]: {
+        type      : 'object',
+        properties: {
+          key: {
+            type: 'string'
+          },
+
+          dependencies: {
+            type   : 'array',
+            handler: {
+              type: 'common/chip-list'
+            },
+            items  : {
+              type: 'string'
+            }
+          },
+
+          mode: {
+            type   : 'string',
+            handler: {
+              type  : 'common/radio',
+              values: [
+                { label: 'Set', value: 'set' },
+                { label: 'Patch', value: 'patch' }
+              ]
+            }
+          },
+
+          hooks: {
+            type      : 'object',
+            properties: {
+              onIdle   : {
+                type      : 'object',
+                properties: {
+                  ...EditorInterfaceSchemaFactory.createEvalProperty()
+                }
+              },
+              onPending: {
+                type      : 'object',
+                properties: {
+                  ...EditorInterfaceSchemaFactory.createEvalProperty()
+                }
+              },
+              onFailed : {
+                type      : 'object',
+                properties: {
+                  ...EditorInterfaceSchemaFactory.createEvalProperty()
+                }
+              }
+            }
+          },
+
+          debounce: {
+            type : 'boolean',
+            title: 'Debounce'
+          },
+
+          async: {
+            type : 'boolean',
+            title: 'Async'
+          },
+
+          condition: {
+            type      : 'object',
+            properties: {
+              ...EditorInterfaceSchemaFactory.createEvalProperty()
+            }
+          },
+
+          providerRequestData: {
+            type      : 'object',
+            properties: {
+              ...EditorInterfaceSchemaFactory.createEvalProperty()
+            }
+          },
+
+          mapResponseData: {
+            type      : 'object',
+            properties: {
+              ...EditorInterfaceSchemaFactory.createEvalProperty()
+            }
+          },
+
+          customTriggers: {
+            type : 'array',
+            items: {
+              type      : 'object',
+              properties: {
+                type    : {
+                  type   : 'string',
+                  handler: {
+                    type  : 'common/radio',
+                    values: [
+                      { label: 'Interval', value: 'interval' }
+                    ]
+                  },
+                  default: 'interval'
+                },
+                interval: {
+                  type     : 'number',
+                  enabledIf: {
+                    $eval       : `return $getPropValue('${ propFullPath }.customTriggers[].type') === 'interval'`,
+                    dependencies: [`${ propFullPath }.customTriggers[].type`]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    };
+  };
 }
+

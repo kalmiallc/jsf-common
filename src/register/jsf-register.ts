@@ -77,21 +77,7 @@ export class JsfRegister {
   }
 
   static getPropFormDefinition(type: string) {
-    const replaceValue = type !== 'boolean' ? `"${ type }"` : `"${ type }",
-        "handler": {
-          "type": "common/button-toggle",
-          "values": [
-            { "value": null, "label": "None" },
-            { "value": true, "label": "True" },
-            { "value": false, "label": "False" }
-          ]
-        }
-      `;
-
-    const definition = JsfRegister.propStore[type] && JSON.parse(
-      JSON.stringify(JsfRegister.propStore[type])
-        .replace(/"@@PROP_TYPE"/g, replaceValue)
-    );
+    const definition = JsfRegister.injectPropType(JsfRegister.propStore[type], type);
 
     if (definition) {
       definition.$modes = (definition.$modes || []).concat([this.getBuilderFeatureSet()])
@@ -195,9 +181,11 @@ export class JsfRegister {
       throw new Error(`Handler ${ type } does not have compatible type ${ prop.type }!`);
     }
 
-    const definition = compatibleType.formDefinitionTransform
+    let definition = compatibleType.formDefinitionTransform
       ? compatibleType.formDefinitionTransform(JSON.parse(JSON.stringify(JsfRegister.handlerCompatibility[type].formDefinition)), prop)
       : JsfRegister.handlerCompatibility[type].formDefinition;
+
+    definition = JsfRegister.injectPropType(definition, prop.type);
 
     if (definition) {
       if (definition) {
@@ -269,5 +257,24 @@ export class JsfRegister {
       };
       JsfRegister.handlerCompatibility[type]                                    = compatibility;
     }
+  }
+
+
+  private static injectPropType(definition: any, type: string) {
+    const replaceValue = type !== 'boolean' ? `"${ type }"` : `"${ type }",
+        "handler": {
+          "type": "common/button-toggle",
+          "values": [
+            { "value": null, "label": "None" },
+            { "value": true, "label": "True" },
+            { "value": false, "label": "False" }
+          ]
+        }
+      `;
+
+    return definition && JSON.parse(
+      JSON.stringify(definition)
+        .replace(/"@@PROP_TYPE"/g, replaceValue)
+    );
   }
 }
