@@ -74,6 +74,7 @@ export class JsfPropBuilderObject
     super.onDestroy();
 
     this.properties = null;
+    this.propertyKeys = [];
   }
 
   onChildPropsInit() {
