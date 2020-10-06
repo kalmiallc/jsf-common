@@ -10,7 +10,7 @@ export function omitEmptyProperties(x: any) {
 
   return omitBy(x, (value: any, key: string) => {
     if (isPlainObject(value)) {
-      value = omitEmptyProperties(value);
+      x[key] = value = omitEmptyProperties(value);
     }
     if (isArray(value)) {
       x[key] = value = value.map(y => omitEmptyProperties(y)).filter(y => !isOmittableValue(y));
