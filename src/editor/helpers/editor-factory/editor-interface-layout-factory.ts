@@ -74,7 +74,7 @@ export abstract class EditorInterfaceLayoutFactory {
         layoutDefinition: {
           type : 'div',
           items: [
-            ...EditorInterfaceLayoutFactory.outputKey(wrapKeyDynamic('key'), 'Key')
+            ...EditorInterfaceLayoutFactory.outputKey(wrapKeyDynamic('key.key'), 'Key')
           ]
         }
       },
@@ -83,7 +83,7 @@ export abstract class EditorInterfaceLayoutFactory {
         layoutDefinition: {
           type : 'div',
           items: [
-            ...EditorInterfaceLayoutFactory.outputKey(wrapKeyDynamic('const'), 'Constant value')
+            ...EditorInterfaceLayoutFactory.outputKey(wrapKeyDynamic('const.const'), 'Constant value')
           ]
         }
       },
@@ -101,7 +101,7 @@ export abstract class EditorInterfaceLayoutFactory {
         layoutDefinition: {
           type : 'div',
           items: [
-            ...EditorInterfaceLayoutFactory.outputKey(wrapKeyDynamic('paste'), 'Paste key')
+            ...EditorInterfaceLayoutFactory.outputKey(wrapKeyDynamic('paste.paste'), 'Paste key')
           ]
         }
       }

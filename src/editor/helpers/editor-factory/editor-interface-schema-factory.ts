@@ -25,7 +25,12 @@ export abstract class EditorInterfaceSchemaFactory {
         typeKey       : 'key',
         typeName      : 'Key',
         propDefinition: {
-          type: 'string'
+          type      : 'object',
+          properties: {
+            key: {
+              type: 'string'
+            }
+          }
         }
       },
       {
@@ -34,13 +39,23 @@ export abstract class EditorInterfaceSchemaFactory {
         propDefinition: propType === 'any'
           ? {
             type      : 'object',
-            properties: {},
-            handler   : {
-              type: 'any'
+            properties: {
+              const: {
+                type      : 'object',
+                properties: {},
+                handler   : {
+                  type: 'any'
+                }
+              }
             }
           }
           : {
-            type: '@@PROP_TYPE'
+            type      : 'object',
+            properties: {
+              const: {
+                type: '@@PROP_TYPE'
+              }
+            }
           }
       },
       {
@@ -57,7 +72,12 @@ export abstract class EditorInterfaceSchemaFactory {
         typeKey       : 'paste',
         typeName      : 'Paste',
         propDefinition: {
-          type: 'string'
+          type      : 'object',
+          properties: {
+            paste: {
+              type: 'string'
+            }
+          }
         }
       }
     ], keyExtraSchemaProperties);
