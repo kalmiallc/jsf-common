@@ -1,7 +1,6 @@
 import { JsfProp }              from './schema';
 import { JsfUnknownLayout }     from './layout';
 import { JsfTranslations }      from './translations';
-import { JsfAnalytics }         from './analytics';
 import { JsfProviderInterface } from './providers';
 import { TranslatedMessage }    from './editor/localization';
 
@@ -79,9 +78,9 @@ export class JsfDefinition {
    * List of services to load for this document.
    */
   $services?: ({
-    name: string;
-    config?: { [key: string]: any }
-  } | string)[];
+                 name: string;
+                 config?: { [key: string]: any }
+               } | string)[];
 
   /**
    * What fields should be considered as indexes for better performance.
@@ -240,11 +239,6 @@ export class JsfDefinition {
     translations: TranslatedMessage[]
   };
 
-
-  /**
-   * Analytics configuration.
-   */
-  $analytics?: JsfAnalytics;
 
   /**
    * If not set all is used for marking form $dirty, if empty form is never dirty.

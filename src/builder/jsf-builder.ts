@@ -1,5 +1,5 @@
-import { JsfDocument }                                                                     from '../jsf-document';
-import { JsfPropBuilderFactory }                                                           from './util/prop-builder-factory';
+import { JsfDocument }                         from '../jsf-document';
+import { JsfPropBuilderFactory }               from './util/prop-builder-factory';
 import {
   JsfAbstractBuilder,
   JsfComponentBuilder,
@@ -7,25 +7,42 @@ import {
   PropStatus,
   ValidationError,
   ValueChangeInterface
-}                                                                                          from './abstract/index';
-import { JsfLayoutBuilderFactory, JsfUnknownLayoutBuilder }                                from './layout/index';
-import { JsfTranslatableMessage, JsfTranslationServer }                                    from '../translations';
-import { filter, flattenDeep, uniq, uniqWith }                                             from 'lodash';
-import { Observable, Subject }                                                             from 'rxjs';
-import { JsfDependencyResolver }                                                           from './jsf-dependency-resolver';
+}                                              from './abstract/index';
+import {
+  JsfLayoutBuilderFactory,
+  JsfUnknownLayoutBuilder
+}                                              from './layout/index';
+import {
+  JsfTranslatableMessage,
+  JsfTranslationServer
+}                                              from '../translations';
+import { filter, flattenDeep, uniq, uniqWith } from 'lodash';
+import { Observable, Subject }                 from 'rxjs';
+import { JsfDependencyResolver }               from './jsf-dependency-resolver';
 import {
   PatchValueOptionsInterface,
   SetValueOptionsInterface
-}                                                                                          from './interfaces/set-value-options.interface';
-import { EvalContextOptions, evalService }                                                 from './util/eval.service';
-import { JsfAbstractAuthCustomerProvider, JsfAbstractAuthUserProvider, JsfAbstractRouter } from '../abstract';
-import { JsfProvider }                                                                     from '../providers/jsf-provider';
-import { JsfProviderExecutor }                                                             from '../providers';
-import { jsfEnv }                                                                          from '../jsf-env';
-import { JsfAbstractService }                                                              from '../abstract/abstract-service';
-import { JsfNotificationInterface, JsfRuntimeContext }                                     from './interfaces';
-import ObjectID                                                                            from 'bson-objectid';
-import { JsfDefinition }                                                                   from '../jsf-definition';
+}                                              from './interfaces/set-value-options.interface';
+import {
+  EvalContextOptions,
+  evalService
+}                                              from './util/eval.service';
+import {
+  JsfAbstractAuthCustomerProvider,
+  JsfAbstractAuthUserProvider,
+  JsfAbstractRouter
+}                                              from '../abstract';
+import { JsfProvider }                         from '../providers/jsf-provider';
+import { JsfProviderExecutor }                 from '../providers';
+import { jsfEnv }                              from '../jsf-env';
+import { JsfAbstractService }                  from '../abstract/abstract-service';
+import {
+  JsfNotificationInterface,
+  JsfRuntimeContext
+}                                              from './interfaces';
+import ObjectID                                from 'bson-objectid';
+import { JsfDefinition }                       from '../jsf-definition';
+import { JsfAnalyticsService }                 from '../analytics/jsf-analytics.service';
 
 
 export interface PropValueChangeInterface {
@@ -170,6 +187,8 @@ export class JsfBuilder extends JsfAbstractBuilder {
   innerScrollEnabled: boolean;
   apiService: any; // HTTP
   appRouter: JsfAbstractRouter;
+
+  analyticsService: JsfAnalyticsService;
 
   ////// This is only acceptable data from outside world!
   runtimeContext?: JsfRuntimeContext;
@@ -319,7 +338,7 @@ export class JsfBuilder extends JsfAbstractBuilder {
    * Extra events registered dynamically.
    * @private
    */
-  private externalEventListeners: {[eventKey: string]: ((eventKey: string, eventData: any) => void)[]} = {};
+  private externalEventListeners: { [eventKey: string]: ((eventKey: string, eventData: any) => void)[] } = {};
 
   get valid() {
     return this.propBuilder.valid;
@@ -350,12 +369,13 @@ export class JsfBuilder extends JsfAbstractBuilder {
 
     if (!jsfEnv.isApi && this.doc.$lifeCycle?.$beforeFormInit?.$eval) {
       this.runEvalWithContext((this.doc.$lifeCycle.$beforeFormInit as any).$evalTranspiled || this.doc.$lifeCycle.$beforeFormInit.$eval, {
-        $doc: doc,
+        $doc    : doc,
         $options: options
       });
     }
 
-    this.resolver          = new JsfDependencyResolver(this);
+    this.resolver         = new JsfDependencyResolver(this);
+    this.analyticsService = new JsfAnalyticsService(this);
     this.initTranslations();
     this.initEvalObject();
 
@@ -525,7 +545,7 @@ export class JsfBuilder extends JsfAbstractBuilder {
       // New translations format.
       const translations = {};
       for (const translation of this.doc.$localization.translations) {
-        const sourceIdentifier = translation.sourceId ? `@@${ translation.sourceId }:${ translation.sourceText }` : translation.sourceText;
+        const sourceIdentifier         = translation.sourceId ? `@@${ translation.sourceId }:${ translation.sourceText }` : translation.sourceText;
         translations[sourceIdentifier] = translation.targetText;
       }
       this.translationServer = new JsfTranslationServer(translations);
@@ -782,10 +802,10 @@ export class JsfBuilder extends JsfAbstractBuilder {
     if (!jsfEnv.isApi && this.doc.$lifeCycle?.$onFormValueChange?.$eval) {
       this.runEvalWithContext((this.doc.$lifeCycle.$onFormValueChange as any).$evalTranspiled || this.doc.$lifeCycle.$onFormValueChange.$eval,
         this.getEvalContext({
-          propBuilder: this.propBuilder,
+          propBuilder       : this.propBuilder,
           extraContextParams: {
             $path: path,
-            $data: data,
+            $data: data
           }
         })
       );
@@ -813,10 +833,10 @@ export class JsfBuilder extends JsfAbstractBuilder {
     if (!jsfEnv.isApi && this.doc.$lifeCycle?.$onFormStatusChange?.$eval) {
       this.runEvalWithContext((this.doc.$lifeCycle.$onFormStatusChange as any).$evalTranspiled || this.doc.$lifeCycle.$onFormStatusChange.$eval,
         this.getEvalContext({
-          propBuilder: this.propBuilder,
+          propBuilder       : this.propBuilder,
           extraContextParams: {
             $from: from,
-            $data: data,
+            $data: data
           }
         })
       );
@@ -888,7 +908,7 @@ export class JsfBuilder extends JsfAbstractBuilder {
     return this.propBuilder.getValue(opt);
   }
 
-  getJsonValue(opt?: { virtual?: boolean, skipGetter?: boolean  }) {
+  getJsonValue(opt?: { virtual?: boolean, skipGetter?: boolean }) {
     return this.propBuilder.getJsonValue(opt);
   }
 

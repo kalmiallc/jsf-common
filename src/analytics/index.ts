@@ -1,2 +1,3 @@
-export * from './jsf-analytics';
-export * from './vendors';
+export * from './jsf-analytics-event.interface';
+export * from './jsf-analytics.service';
+
