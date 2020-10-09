@@ -842,7 +842,7 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
 
         // CONDITION
         let condition = true;
-        if (udv.condition) {
+        if (udv.condition && udv.condition.$eval) {
 
           // prepare builder or linked builder
           let builderCondition = this.rootBuilder;
