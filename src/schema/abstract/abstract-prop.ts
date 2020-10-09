@@ -599,7 +599,9 @@ export const jsfAbstractPropJsfDefinitionSchemaProperties = {
           type   : 'string',
           handler: {
             type    : 'common/code-editor',
-            language: 'javascript'
+            options: {
+              language: 'javascript'
+            }
           }
         }
       },
