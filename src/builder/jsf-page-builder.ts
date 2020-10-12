@@ -299,7 +299,12 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
     }
   }
 
-  onFilterChange(dataSource: string, componentPath: string, filterPath: string) {
+  onFilterChange(
+    dataSource: string,
+    componentPath: string,
+    filterPath: string,
+    options: { skipProcessDirtyDataSources?: boolean } = {}
+    ) {
     const jb              = this.components[componentPath].jsfBuilder;
     const { value, hash } = jb.getProp(filterPath).getValueWithHash();
     const filterState     = this.dataSourcesInfo[dataSource].components[componentPath].filters.find(x => x.path === filterPath);
@@ -311,7 +316,9 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
 
     this.dataSourcesInfo[dataSource].dirty = true;
 
-    this.processDirtyDataSources();
+    if (!options.skipProcessDirtyDataSources) {
+      this.processDirtyDataSources();
+    }
   }
 
   private registerComponentDataSourceSubscription(componentPath: string) {
@@ -459,6 +466,19 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
         });
       }
     }
+  }
+
+  forceAllFiltersUpdate() {
+    for (const dataSourceKey of Object.keys(this.dataSourcesInfo)) {
+      const dataSource = this.dataSourcesInfo[dataSourceKey];
+      for (const componentPath of Object.keys(dataSource.components)) {
+        const cmpInfo = this.dataSourcesInfo[dataSourceKey].components[componentPath];
+        for (const filter of cmpInfo.filters || []) {
+          this.onFilterChange(dataSourceKey, componentPath, filter.path, { skipProcessDirtyDataSources: true })
+        }
+      }
+    }
+    this.processDirtyDataSources();
   }
 
   makeDataSourceListRequest(dataSourceKey: string, data?: DataSourceReqFunArg, options?: DataSourceReqFunOptions) {
