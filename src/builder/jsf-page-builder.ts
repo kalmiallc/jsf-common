@@ -7,6 +7,9 @@ import { interval, Observable, Subject, timer, Subscription, of } from 'rxjs';
 import { JsfDefinition }                                          from '../jsf-definition';
 import { debounce, finalize, takeUntil, throttleTime }            from 'rxjs/operators';
 import { DataSourceInterface }                                    from '../jsf-component';
+import { JsfUnknownPropBuilder }                                  from './abstract';
+import { isPropArray }                                            from '../schema/props';
+import { isPropBuilderArray }                                     from './props';
 
 /**
  * Global counter so each page can have uniq ID.
@@ -20,7 +23,7 @@ export interface JsfPageBuilderOptionsInterface {
 }
 
 export interface DataSourceReqFunArg {
-  filters?: any[],
+  filters?: DataSourceFilterInterface[],
   groupKey?: string,
   payload?: {
     /**
@@ -64,7 +67,7 @@ export interface DataSourceProviderRequestInterface {
   /**
    * Filters for given data source. Filters are gathered in array, it's implementors job to merge them.
    */
-  filters?: any[];
+  filters?: DataSourceFilterInterface[];
 
   payload?: {
     /**
@@ -93,7 +96,7 @@ export interface DataSourceProviderResponseInterface {
   /**
    * Check @DataSourceRequestInterface.filter
    */
-  filters?: any[];
+  filters?: DataSourceFilterInterface[];
 
   /**
    * Response from data source provider.
@@ -103,7 +106,14 @@ export interface DataSourceProviderResponseInterface {
 
 export interface DataSourceFilterChangeInterface {
   dataSourceKey: string;
-  filters: any[];
+  filters: DataSourceFilterInterface[];
+}
+
+export interface DataSourceFilterInterface {
+  groupKey?: string;
+  path: string;
+  hash: string;
+  value: any;
 }
 
 export class JsfPageBuilder extends JsfAbstractBuilder {
@@ -111,7 +121,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
   protected onDestroy: Subject<void>                      = new Subject<void>();
   protected requestProcessDirtyDataSources: Subject<void> = new Subject<void>();
 
-  onDataSourceFilterChange: Subject<DataSourceFilterChangeInterface> = new Subject<DataSourceFilterChangeInterface>();
+  onDataSourceFilterChange: Subject<DataSourceFilterChangeInterface>              = new Subject<DataSourceFilterChangeInterface>();
   onDataSourceReloadRequest: Subject<{ dataSourceKey: string; force?: boolean; }> = new Subject<{ dataSourceKey: string; force?: boolean; }>();
 
   pageDefinition: JsfPage;
@@ -131,12 +141,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
           [componentPath: string]: {
             refreshInterval?: number;
             subscribed?: boolean;
-            filters?: {
-              groupKey?: string;
-              path: string;
-              hash: string;
-              value: any;
-            }[]
+            filters?: DataSourceFilterInterface[]
           }
         }
       }
@@ -285,29 +290,68 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
     }
     for (const filter of this.components[componentPath].jsfComponentDefinition.dataSourcesFilters || []) {
       this.initDataSourcesInfoChunk(filter.dataSource, componentPath);
-      const { value, hash }                         = jb.getProp(filter.filterPath).getValueWithHash();
-      this.dataSourcesInfo[filter.dataSource].dirty = true;
-      this.dataSourcesInfo[filter.dataSource].components[componentPath].filters.push({
-        value, hash, path: filter.filterPath
-      });
-      jb.getProp(filter.filterPath)
-        .valueChange
-        .pipe(takeUntil(this.onDestroy), debounce(() => timer(100)))
-        .subscribe((x) => {
-          this.onFilterChange(filter.dataSource, componentPath, filter.filterPath);
-        });
+      this.subscribeFilterProp(jb.getProp(filter.filterPath), filter.dataSource, componentPath, filter.filterPath);
     }
+  }
+
+  subscribeFilterProp(
+    prop: JsfUnknownPropBuilder,
+    dataSource: string,
+    componentPath: string,
+    filterPath: string
+  ) {
+    this.dataSourcesInfo[dataSource].dirty = true;
+    if (isPropBuilderArray(prop)) {
+      (prop.items || []).forEach((propItem, i) => {
+        const { value, hash }  = propItem.getValueWithHash();
+        const groupKey = value?._groupKey || i;
+        this.dataSourcesInfo[dataSource].components[componentPath].filters.push({
+          value, hash, path: filterPath, groupKey
+        });
+        this._subscribeFilterProp(propItem, dataSource, componentPath, filterPath, groupKey);
+      });
+      prop.onItemAdd.subscribe(x => {
+        const { value, hash }  = x.item.getValueWithHash();
+        const groupKey = value?._groupKey || x.index;
+        this.dataSourcesInfo[dataSource].components[componentPath].filters.push({
+          value, hash, path: filterPath, groupKey
+        });
+        this._subscribeFilterProp(x.item, dataSource, componentPath, filterPath, groupKey);
+      });
+    } else {
+      const { value, hash }                         = prop.getValueWithHash();
+      this.dataSourcesInfo[dataSource].components[componentPath].filters.push({
+        value, hash, path: filterPath
+      });
+      this._subscribeFilterProp(prop, dataSource, componentPath, filterPath);
+    }
+  }
+
+  _subscribeFilterProp(
+    prop: JsfUnknownPropBuilder,
+    dataSource: string,
+    componentPath: string,
+    filterPath: string,
+    groupKey?: string
+  ) {
+    prop
+      .valueChange
+      .pipe(takeUntil(prop.unsubscribe), takeUntil(this.onDestroy), debounce(() => timer(100)))
+      .subscribe((x) => {
+        this.onFilterChange(dataSource, componentPath, filterPath, { groupKey });
+      });
   }
 
   onFilterChange(
     dataSource: string,
     componentPath: string,
     filterPath: string,
-    options: { skipProcessDirtyDataSources?: boolean } = {}
-    ) {
+    options: { groupKey?: string, skipProcessDirtyDataSources?: boolean } = {}
+  ) {
     const jb              = this.components[componentPath].jsfBuilder;
     const { value, hash } = jb.getProp(filterPath).getValueWithHash();
-    const filterState     = this.dataSourcesInfo[dataSource].components[componentPath].filters.find(x => x.path === filterPath);
+    const filterState     = this.dataSourcesInfo[dataSource].components[componentPath].filters
+      .find(x => x.path === filterPath && x.groupKey === options.groupKey);
     if (filterState.hash === hash) {
       return;
     }
@@ -571,7 +615,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
       'jsf-page://activeRequests/status-change',
       {
         activeRequestsCount: this.dataSourceRequests.length,
-        newRequest: {
+        newRequest         : {
           dataSourceKey: reqKey.dataSource,
           groupKey     : reqKey.groupKey
         }

@@ -430,7 +430,7 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
   /**
    * This is "on destroy" we might need better name for this.
    */
-  protected unsubscribe: Subject<void> = new Subject<void>();
+  public unsubscribe: Subject<void> = new Subject<void>();
 
 
   // ════════════════════════════════════════════════════════════════════════════════════════
