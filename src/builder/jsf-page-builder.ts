@@ -508,15 +508,21 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
           filters
         });
 
+        let filtersDirty = false;
         const filterGroups: { [k: string]: DataSourceFilterInterface[] } = filters.reduce(
           (a, c) => {
             if (dataSource.forceDirty || c.dirty) {
               a[c.groupKey || '*'] = a[c.groupKey || '*'] || [];
               a[c.groupKey || '*'].push(c);
               c.dirty = false;
+              filtersDirty = true;
             }
             return a;
           }, { '*': [] } as { [k: string]: DataSourceFilterInterface[] });
+
+        if (!filtersDirty && !dataSource.forceDirty) {
+          return;
+        }
         dataSource.forceDirty                                            = false;
 
         if (this.dataSourceSupportsBatchRequest(dataSourceKey)) {
