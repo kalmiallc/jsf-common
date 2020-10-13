@@ -257,18 +257,15 @@ export class JsfBuilder extends JsfAbstractBuilder {
     return this._onDirtyChange.asObservable();
   }
 
-  private _onAnyEvent = new Subject<{
-    type: string,
+  private onAnyEvent = new Subject<{
+    type: 'internal' | 'external' | any,
+    customEvent?: any;
     externalEvent?: { key: string, data: any },
     internalEvent?: JsfFormEventInterface
   }>();
 
-  get onAnyEvent() {
-    return this._onAnyEvent.asObservable();
-  }
-
   /**
-   * Fires when form is done building.
+   onAnyEvent.asObservable   * Fires when form is done building.
    */
   private _formInit = new Subject<JsfBuilder>();
   get formInit() {
@@ -602,7 +599,7 @@ export class JsfBuilder extends JsfAbstractBuilder {
   }
 
   public async runOnFormEventHook(event: JsfFormEventInterface) {
-    this._onAnyEvent.next({ type: 'internal', internalEvent: event });
+    this.onAnyEvent.next({ type: 'internal', internalEvent: event });
     if (this.onFormEvent) {
       return this.onFormEvent(event);
     }
@@ -667,7 +664,7 @@ export class JsfBuilder extends JsfAbstractBuilder {
       }
     }
 
-    this._onAnyEvent.next({ type: 'external', externalEvent: { key: eventKey, data: eventData } });
+    this.onAnyEvent.next({ type: 'external', externalEvent: { key: eventKey, data: eventData } });
 
     if (!this.doc.$events) {
       return;
