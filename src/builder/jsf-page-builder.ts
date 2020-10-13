@@ -24,6 +24,7 @@ export interface JsfPageBuilderOptionsInterface {
 
 export interface DataSourceReqFunArg {
   filters?: DataSourceFilterInterface[],
+  filterGroups?: { [groupKey: string]: DataSourceFilterInterface[] },
   groupKey?: string,
   payload?: {
     /**
@@ -68,6 +69,7 @@ export interface DataSourceProviderRequestInterface {
    * Filters for given data source. Filters are gathered in array, it's implementors job to merge them.
    */
   filters?: DataSourceFilterInterface[];
+  filterGroups?: { [groupKey: string]: DataSourceFilterInterface[] },
 
   payload?: {
     /**
@@ -113,6 +115,7 @@ export interface DataSourceFilterInterface {
   groupKey?: string;
   path: string;
   hash: string;
+  dirty: boolean;
   value: any;
 }
 
@@ -135,7 +138,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
   dataSourcesInfo: {
     [dataSource: string]:
       {
-        dirty: boolean;
+        forceDirty: boolean;
         interval?: Subscription;
         components: {
           [componentPath: string]: {
@@ -204,6 +207,10 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
         throttleTime(250, undefined, { leading: true, trailing: true })
       )
       .subscribe(() => this.processDirtyDataSources());
+  }
+
+  dataSourceSupportsBatchRequest(dataSourceKey: string) {
+    return false;
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////
@@ -275,7 +282,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
   private initDataSourcesInfoChunk(dataSource: string, componentPath: string) {
     this.dataSourcesInfo[dataSource]                                   = this.dataSourcesInfo[dataSource] || {
       components: {},
-      dirty     : true
+      forceDirty: true
     };
     this.dataSourcesInfo[dataSource].components[componentPath]         = this.dataSourcesInfo[dataSource].components[componentPath]
       || {};
@@ -300,28 +307,27 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
     componentPath: string,
     filterPath: string
   ) {
-    this.dataSourcesInfo[dataSource].dirty = true;
     if (isPropBuilderArray(prop)) {
       (prop.items || []).forEach((propItem, i) => {
-        const { value, hash }  = propItem.getValueWithHash();
-        const groupKey = value?._groupKey || i;
+        const { value, hash } = propItem.getValueWithHash();
+        const groupKey        = value?._groupKey || i;
         this.dataSourcesInfo[dataSource].components[componentPath].filters.push({
-          value, hash, path: filterPath, groupKey
+          value, hash, path: filterPath, groupKey, dirty: true
         });
         this._subscribeFilterProp(propItem, dataSource, componentPath, filterPath, groupKey);
       });
       prop.onItemAdd.subscribe(x => {
-        const { value, hash }  = x.item.getValueWithHash();
-        const groupKey = value?._groupKey || x.index;
+        const { value, hash } = x.item.getValueWithHash();
+        const groupKey        = value?._groupKey || x.index;
         this.dataSourcesInfo[dataSource].components[componentPath].filters.push({
-          value, hash, path: filterPath, groupKey
+          value, hash, path: filterPath, groupKey, dirty: true
         });
         this._subscribeFilterProp(x.item, dataSource, componentPath, filterPath, groupKey);
       });
     } else {
-      const { value, hash }                         = prop.getValueWithHash();
+      const { value, hash } = prop.getValueWithHash();
       this.dataSourcesInfo[dataSource].components[componentPath].filters.push({
-        value, hash, path: filterPath
+        value, hash, path: filterPath, dirty: true
       });
       this._subscribeFilterProp(prop, dataSource, componentPath, filterPath);
     }
@@ -357,8 +363,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
     }
     filterState.hash  = hash;
     filterState.value = value;
-
-    this.dataSourcesInfo[dataSource].dirty = true;
+    filterState.dirty = true;
 
     if (!options.skipProcessDirtyDataSources) {
       this.processDirtyDataSources();
@@ -379,7 +384,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
     this.initDataSourcesInfoChunk(dataSource.key, componentPath);
     this.dataSourcesInfo[dataSource.key].components[componentPath].refreshInterval = dataSource.refreshInterval;
     this.dataSourcesInfo[dataSource.key].components[componentPath].subscribed      = true;
-    this.dataSourcesInfo[dataSource.key].dirty                                     = true;
+    this.dataSourcesInfo[dataSource.key].forceDirty                                = true;
     this.repairDataSourceInterval(dataSource.key);
   }
 
@@ -430,7 +435,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
     if (this.dataSourceRequests.find(x => x.dataSource === dataSourceKey && !x.groupKey)) {
       return;
     }
-    this.dataSourcesInfo[dataSourceKey].dirty = true;
+    this.dataSourcesInfo[dataSourceKey].forceDirty = true;
     this.processDirtyDataSources();
   }
 
@@ -439,7 +444,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
     if (!this.dataSourcesInfo[dataSourceKey]) {
       return;
     }
-    this.dataSourcesInfo[dataSourceKey].dirty = true;
+    this.dataSourcesInfo[dataSourceKey].forceDirty = true;
     return this.processDirtyDataSources();
   }
 
@@ -453,7 +458,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
   processDataSources() {
     for (const dataSourceKey of Object.keys(this.dataSourcesInfo)) {
       if (!this.dataSourceRequests.find(x => x.dataSource === dataSourceKey && !x.groupKey)) {
-        this.dataSourcesInfo[dataSourceKey].dirty = true;
+        this.dataSourcesInfo[dataSourceKey].forceDirty = true;
         this.onDataSourceReloadRequest.next({ dataSourceKey });
       }
     }
@@ -462,7 +467,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
 
   forceProcessDataSources() {
     for (const dataSourceKey of Object.keys(this.dataSourcesInfo)) {
-      this.dataSourcesInfo[dataSourceKey].dirty = true;
+      this.dataSourcesInfo[dataSourceKey].forceDirty = true;
       this.onDataSourceReloadRequest.next({ dataSourceKey, force: true });
     }
     return this.processDirtyDataSources();
@@ -473,9 +478,9 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
    * @param dataSourceKey
    */
   getFiltersForDataSource(dataSourceKey: string) {
-    const dataSource = this.dataSourcesInfo[dataSourceKey];
-    let filters      = [];
-    const components = [];
+    const dataSource                         = this.dataSourcesInfo[dataSourceKey];
+    let filters: DataSourceFilterInterface[] = [];
+    const components                         = [];
 
     if (!dataSource) {
       return { filters, components }
@@ -494,20 +499,45 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
 
   processDirtyDataSources() {
     for (const dataSourceKey of Object.keys(this.dataSourcesInfo)) {
-      const dataSource = this.dataSourcesInfo[dataSourceKey];
-      if (!dataSource.dirty) {
-        continue;
-      }
+      const dataSource              = this.dataSourcesInfo[dataSourceKey];
       const { filters, components } = this.getFiltersForDataSource(dataSourceKey);
+
       if (components.length) {
-        dataSource.dirty = false;
         this.onDataSourceFilterChange.next({
           dataSourceKey,
           filters
         });
-        this.makeDataSourceRequest(dataSourceKey, {
-          filters
-        });
+
+        const filterGroups: { [k: string]: DataSourceFilterInterface[] } = filters.reduce(
+          (a, c) => {
+            if (dataSource.forceDirty || c.dirty) {
+              a[c.groupKey || '*'] = a[c.groupKey || '*'] || [];
+              a[c.groupKey || '*'].push(c);
+              c.dirty = false;
+            }
+            return a;
+          }, { '*': [] } as { [k: string]: DataSourceFilterInterface[] });
+        dataSource.forceDirty                                            = false;
+
+        if (this.dataSourceSupportsBatchRequest(dataSourceKey)) {
+          this.makeDataSourceRequest(dataSourceKey, {
+            filters,
+            filterGroups
+          });
+        } else {
+          for (const filterGroupKey of Object.keys(filterGroups)) {
+            if (filterGroupKey === '*') {
+              this.makeDataSourceRequest(dataSourceKey, {
+                filters: filterGroups[filterGroupKey],
+              });
+            } else {
+              this.makeDataSourceRequest(dataSourceKey, {
+                filters : filterGroups['*'].concat(filterGroups[filterGroupKey]),
+                groupKey: filterGroupKey
+              });
+            }
+          }
+        }
       }
     }
   }
@@ -550,10 +580,11 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
       throw new Error('[JSF-PAGE] Missing data source provider.');
     }
     const request$ = this.dataSourceProvider({
-      groupKey  : data.groupKey,
-      dataSource: dataSourceKey,
-      filters   : data.filters,
-      payload   : data.payload
+      groupKey    : data.groupKey,
+      dataSource  : dataSourceKey,
+      filters     : data.filters,
+      filterGroups: data.filterGroups,
+      payload     : data.payload
     });
     if (request$ === null) {
       return of(null);
