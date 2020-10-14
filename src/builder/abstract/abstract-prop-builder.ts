@@ -638,6 +638,12 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
 
     if (this.rootBuilder.pathsCache[this.path]) {
       this.rootBuilder.pathsCache[this.path] = undefined;
+      const paths = Object.keys(this.rootBuilder.pathsCache);
+      for (const p of paths) {
+        if (p.startsWith(this.path)) {
+          this.rootBuilder.pathsCache[p] = undefined;
+        }
+      }
     }
 
     this.unsubscribe.next();
