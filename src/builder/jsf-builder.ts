@@ -257,7 +257,7 @@ export class JsfBuilder extends JsfAbstractBuilder {
     return this._onDirtyChange.asObservable();
   }
 
-  private onAnyEvent = new Subject<{
+  public onAnyEvent = new Subject<{
     type: 'internal' | 'external' | any,
     customEvent?: any;
     externalEvent?: { key: string, data: any },
