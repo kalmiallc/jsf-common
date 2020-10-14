@@ -10,6 +10,8 @@ import { DataSourceInterface }                                    from '../jsf-c
 import { JsfUnknownPropBuilder }                                  from './abstract';
 import { isPropArray }                                            from '../schema/props';
 import { isPropBuilderArray }                                     from './props';
+import { isNil } from 'lodash';
+
 
 /**
  * Global counter so each page can have uniq ID.
@@ -312,17 +314,17 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
         const { value, hash } = propItem.getValueWithHash();
         const groupKey        = value?._groupKey || i;
         this.dataSourcesInfo[dataSource].components[componentPath].filters.push({
-          value, hash, path: filterPath, groupKey, dirty: true
+          value, hash, path: filterPath + `[${ i }]`, groupKey, dirty: true
         });
-        this._subscribeFilterProp(propItem, dataSource, componentPath, filterPath, groupKey);
+        this._subscribeFilterProp(propItem, dataSource, componentPath, filterPath + `[${ i }]`, groupKey);
       });
       prop.onItemAdd.subscribe(x => {
         const { value, hash } = x.item.getValueWithHash();
         const groupKey        = value?._groupKey || x.index;
         this.dataSourcesInfo[dataSource].components[componentPath].filters.push({
-          value, hash, path: filterPath, groupKey, dirty: true
+          value, hash, path: filterPath + `[${ x.index }]`, groupKey, dirty: true
         });
-        this._subscribeFilterProp(x.item, dataSource, componentPath, filterPath, groupKey);
+        this._subscribeFilterProp(x.item, dataSource, componentPath, filterPath + `[${ x.index }]`, groupKey);
       });
     } else {
       const { value, hash } = prop.getValueWithHash();
@@ -502,18 +504,18 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
       const dataSource              = this.dataSourcesInfo[dataSourceKey];
       const { filters, components } = this.getFiltersForDataSource(dataSourceKey);
 
-      if (components.length) {
-        this.onDataSourceFilterChange.next({
-          dataSourceKey,
-          filters
-        });
+      this.onDataSourceFilterChange.next({
+        dataSourceKey,
+        filters
+      });
 
+      if (components.length) {
         let filtersDirty = false;
         const filterGroups: { [k: string]: DataSourceFilterInterface[] } = filters.reduce(
           (a, c) => {
             if (dataSource.forceDirty || c.dirty) {
-              a[c.groupKey || '*'] = a[c.groupKey || '*'] || [];
-              a[c.groupKey || '*'].push(c);
+              a[c.groupKey ?? '*'] = a[c.groupKey ?? '*'] || [];
+              a[c.groupKey ?? '*'].push(c);
               c.dirty = false;
               filtersDirty = true;
             }

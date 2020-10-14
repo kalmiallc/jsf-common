@@ -877,7 +877,8 @@ export class JsfBuilder extends JsfAbstractBuilder {
     if (this.warnings) {
       // Check if path accesses any array element by index and issue a warning.
       if (/\[\d]/.test(path)) {
-        console.error(`Unsafe access to prop "${ path }": accessing array path by index may return an outdated cached value!`);
+        console.warn(`Accessing array prop "${ path }" by index - returning without cache.`);
+        return this.propBuilder.getControlByPath(path);
       }
     }
 
