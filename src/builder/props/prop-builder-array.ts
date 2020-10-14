@@ -436,6 +436,7 @@ Non-existing path: "${ path }"`);
       for (let i = 0; i < itemsLen; i++) {
         this.items[i].onDestroy();
       }
+      this.items = null;
     }
     super.onDestroy();
   }
