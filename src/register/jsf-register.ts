@@ -21,7 +21,7 @@ export class JsfRegister {
   private static handlerCompatibility: { [handlerKey: string]: HandlerCompatibilityInterface }                                               = {};
 
   private static _builderFeatureSet: 'basic' | 'full' = 'basic';
-  private static _toolboxLayoutWhitelist = defaultToolboxLayoutWhitelist;
+  private static _toolboxLayoutWhitelist              = defaultToolboxLayoutWhitelist;
 
   static setToolboxLayoutWhitelist(whitelist: string[] | null) {
     JsfRegister._toolboxLayoutWhitelist = whitelist;
@@ -80,7 +80,7 @@ export class JsfRegister {
     const definition = JsfRegister.injectPropType(JsfRegister.propStore[type], type);
 
     if (definition) {
-      definition.$modes = (definition.$modes || []).concat([this.getBuilderFeatureSet()])
+      definition.$modes = (definition.$modes || []).concat([this.getBuilderFeatureSet()]);
     }
 
     return definition;
@@ -143,7 +143,7 @@ export class JsfRegister {
 
     if (definition) {
       if (definition) {
-        definition.$modes = (definition.$modes || []).concat([this.getBuilderFeatureSet()])
+        definition.$modes = (definition.$modes || []).concat([this.getBuilderFeatureSet()]);
       }
     }
 
@@ -189,7 +189,7 @@ export class JsfRegister {
 
     if (definition) {
       if (definition) {
-        definition.$modes = (definition.$modes || []).concat([this.getBuilderFeatureSet()])
+        definition.$modes = (definition.$modes || []).concat([this.getBuilderFeatureSet()]);
       }
     }
 
@@ -215,7 +215,7 @@ export class JsfRegister {
 
     if (definition) {
       if (definition) {
-        definition.$modes = (definition.$modes || []).concat([this.getBuilderFeatureSet()])
+        definition.$modes = (definition.$modes || []).concat([this.getBuilderFeatureSet()]);
       }
     }
 
@@ -261,16 +261,25 @@ export class JsfRegister {
 
 
   private static injectPropType(definition: any, type: string) {
-    const replaceValue = type !== 'boolean' ? `"${ type }"` : `"${ type }",
-        "handler": {
-          "type": "common/button-toggle",
-          "values": [
-            { "value": null, "label": "None" },
-            { "value": true, "label": "True" },
-            { "value": false, "label": "False" }
-          ]
-        }
-      `;
+    let replaceValue = `"${ type }"`;
+    switch (type) {
+      case 'boolean':
+        replaceValue = `"${ type }",
+          "handler": {
+            "type": "common/button-toggle",
+            "values": [
+              { "value": null, "label": "None" },
+              { "value": true, "label": "True" },
+              { "value": false, "label": "False" }
+            ]
+          }
+        `;
+        break;
+      case 'array': {
+        replaceValue = `"object", "handler": { "type": "any" }`;
+      }
+    }
+
 
     return definition && JSON.parse(
       JSON.stringify(definition)
