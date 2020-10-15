@@ -13,7 +13,7 @@ export function codeEditorKey(key: string, label: string, iconType: CodeEditorKe
       items: [
         {
           type: 'col',
-          xs: 6,
+          xs: 9,
           items: [
             {
               type: 'icon',
@@ -29,7 +29,7 @@ export function codeEditorKey(key: string, label: string, iconType: CodeEditorKe
         },
         {
           type: 'col',
-          xs: 6,
+          xs: 3,
           htmlClass: 'text-right',
           items: [
             {
