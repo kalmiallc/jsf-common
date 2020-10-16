@@ -1,10 +1,6 @@
 import { JsfBuilder }                                                 from '../jsf-builder';
 import { JsfLayoutPreferencesInterface }                              from '../../layout/layouts';
-import {
-  isItemsLayout,
-  JsfAbstractLayout,
-  JsfUnknownLayout
-}                                                                     from '../../layout';
+import { isItemsLayout, JsfAbstractLayout, JsfUnknownLayout }         from '../../layout';
 import { compact, get }                                               from 'lodash';
 import { isI18nObject, JsfTranslatableMessage, JsfTranslationServer } from '../../translations';
 import { BehaviorSubject, Subject }                                   from 'rxjs';
@@ -12,7 +8,6 @@ import { layoutClickHandlerService }                                  from '../u
 import { JsfLayoutOnClickInterface }                                  from '../../layout/interfaces/layout-on-click.interface';
 import { PropStatus }                                                 from '../interfaces';
 import { takeUntil }                                                  from 'rxjs/operators';
-import { jsfEnv }                                                     from '../../jsf-env';
 
 /**
  * Used for __id.
@@ -38,6 +33,8 @@ export abstract class JsfAbstractLayoutBuilder<LayoutType extends JsfAbstractLay
   public preferences: JsfLayoutPreferencesInterface;
 
   protected unsubscribe: Subject<void> = new Subject();
+
+  public decrementLoadingCountCalled = false;
 
   abstract get type(): string;
 
@@ -94,6 +91,8 @@ export abstract class JsfAbstractLayoutBuilder<LayoutType extends JsfAbstractLay
     this.rootBuilder   = rootBuilder;
     this.parentBuilder = parentBuilder;
     this.resetItemsPropMap(arrayPropMap);
+
+    this.rootBuilder.increaseLayoutLoadingCount(this);
   }
 
   private computeId(parentBuilder: JsfAbstractLayoutBuilder<JsfUnknownLayout>, options: JsfLayoutBuilderOptionsInterface) {
@@ -117,6 +116,15 @@ export abstract class JsfAbstractLayoutBuilder<LayoutType extends JsfAbstractLay
   onDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
+
+    this.decreaseLayoutLoadingCount();
+  }
+
+  decreaseLayoutLoadingCount() {
+    if (!this.decrementLoadingCountCalled) {
+      this.rootBuilder.decreaseLayoutLoadingCount(this);
+      this.decrementLoadingCountCalled = true;
+    }
   }
 
   updateStatus() {
@@ -228,13 +236,13 @@ export abstract class JsfAbstractLayoutBuilder<LayoutType extends JsfAbstractLay
   resetItemsPropMap(arrayPropMap: { [propKey: string]: string }) {
     this.arrayPropMap  = arrayPropMap;
     this.arrayPropKeys = Object.keys(this.arrayPropMap)
-      .sort((a, b) => b.length - a.length)
+      .sort((a, b) => b.length - a.length);
   }
 
   setItemPropMap(propKey: string, propItemId: string) {
     this.arrayPropMap[propKey] = propItemId;
     this.arrayPropKeys         = Object.keys(this.arrayPropMap)
-      .sort((a, b) => b.length - a.length)
+      .sort((a, b) => b.length - a.length);
   }
 
   get translationServer(): JsfTranslationServer {
@@ -255,8 +263,8 @@ export abstract class JsfAbstractLayoutBuilder<LayoutType extends JsfAbstractLay
         const message = get(layout as any, x);
         if (message) {
           return isI18nObject(message) ?
-                 new JsfTranslatableMessage(message.val, message.id) :
-                 new JsfTranslatableMessage(message);
+            new JsfTranslatableMessage(message.val, message.id) :
+            new JsfTranslatableMessage(message);
         }
         return null;
       })
@@ -294,11 +302,11 @@ export abstract class JsfAbstractLayoutBuilder<LayoutType extends JsfAbstractLay
       }) => Promise<boolean> | boolean,
       extraContextParams?: { [key: string]: any }
       $event?: any
-      } = {}) {
+    } = {}) {
     return layoutClickHandlerService.handleOnClick(onClickData, {
-      rootBuilder  : this.rootBuilder,
-      layoutBuilder: this,
-      extraContextParams: options.extraContextParams,
+      rootBuilder        : this.rootBuilder,
+      layoutBuilder      : this,
+      extraContextParams : options.extraContextParams,
       customActionHandler: options.customActionHandler
     }, options.$event);
   }

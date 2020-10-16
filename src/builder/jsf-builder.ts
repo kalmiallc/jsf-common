@@ -7,31 +7,31 @@ import {
   PropStatus,
   ValidationError,
   ValueChangeInterface
-}                                              from './abstract/index';
+}                                               from './abstract/index';
 import {
   JsfLayoutBuilderFactory,
   JsfUnknownLayoutBuilder
-}                                              from './layout/index';
+}                                               from './layout/index';
 import {
   JsfTranslatableMessage,
   JsfTranslationServer
-}                                              from '../translations';
-import { filter, flattenDeep, uniq, uniqWith } from 'lodash';
-import { Observable, Subject }                 from 'rxjs';
-import { JsfDependencyResolver }               from './jsf-dependency-resolver';
+}                                               from '../translations';
+import { filter, flattenDeep, uniq, uniqWith }  from 'lodash';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { JsfDependencyResolver }                from './jsf-dependency-resolver';
 import {
   PatchValueOptionsInterface,
   SetValueOptionsInterface
-}                                              from './interfaces/set-value-options.interface';
+}                                               from './interfaces/set-value-options.interface';
 import {
   EvalContextOptions,
   evalService
-}                                              from './util/eval.service';
+}                                               from './util/eval.service';
 import {
   JsfAbstractAuthCustomerProvider,
   JsfAbstractAuthUserProvider,
   JsfAbstractRouter
-}                                              from '../abstract';
+}                                               from '../abstract';
 import { JsfProvider }                         from '../providers/jsf-provider';
 import { JsfProviderExecutor }                 from '../providers';
 import { jsfEnv }                              from '../jsf-env';
@@ -189,6 +189,9 @@ export class JsfBuilder extends JsfAbstractBuilder {
   appRouter: JsfAbstractRouter;
 
   analyticsService: JsfAnalyticsService;
+
+  layoutLoadingCount: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  layoutLoadingInstances = [];
 
   ////// This is only acceptable data from outside world!
   runtimeContext?: JsfRuntimeContext;
@@ -733,6 +736,16 @@ export class JsfBuilder extends JsfAbstractBuilder {
       return false;
     }
     return this.layoutState[id].store[key] !== undefined;
+  }
+
+  increaseLayoutLoadingCount(lb: any) {
+    this.layoutLoadingCount.next(this.layoutLoadingCount.value + 1);
+    this.layoutLoadingInstances.push(lb);
+  }
+
+  decreaseLayoutLoadingCount(lb: any) {
+    this.layoutLoadingCount.next(Math.max(0, this.layoutLoadingCount.value - 1));
+    this.layoutLoadingInstances = this.layoutLoadingInstances.filter(x => x !== lb);
   }
 
   getProvider(key: string) {

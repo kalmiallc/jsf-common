@@ -51,6 +51,13 @@ export class JsfDefinition {
   $config?: any;
 
   /**
+   * JSF engine options
+   */
+  $engine?: {
+    layoutRenderingMode: 'sync' | 'async';
+  };
+
+  /**
    * What to do when document is initialized and value is set.
    */
   $lifeCycle?: {
