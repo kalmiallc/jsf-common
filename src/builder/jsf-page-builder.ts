@@ -10,7 +10,7 @@ import { DataSourceInterface }                                    from '../jsf-c
 import { JsfUnknownPropBuilder }                                  from './abstract';
 import { isPropArray }                                            from '../schema/props';
 import { isPropBuilderArray }                                     from './props';
-import { isNil } from 'lodash';
+import { isNil }                                                  from 'lodash';
 
 
 /**
@@ -111,6 +111,7 @@ export interface DataSourceProviderResponseInterface {
 export interface DataSourceFilterChangeInterface {
   dataSourceKey: string;
   filters: DataSourceFilterInterface[];
+  filterGroups: { [k: string]: DataSourceFilterInterface[] };
 }
 
 export interface DataSourceFilterInterface {
@@ -504,43 +505,46 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
       const dataSource              = this.dataSourcesInfo[dataSourceKey];
       const { filters, components } = this.getFiltersForDataSource(dataSourceKey);
 
+      const dirtyFilters: DataSourceFilterInterface[]                       = [];
+      const dirtyFilterGroups: { [k: string]: DataSourceFilterInterface[] } = { '*': [] };
+      const filtersHaveDirtyGroups                                          = dataSource.forceDirty || filters.findIndex(x => x.groupKey != null) > -1;
+
+      for (const filter of filters) {
+        if (filter.dirty || dataSource.forceDirty || (filtersHaveDirtyGroups && filter.groupKey == null)) {
+          filter.dirty = false;
+
+          dirtyFilters.push(filter);
+          dirtyFilterGroups[filter.groupKey ?? '*'] = dirtyFilterGroups[filter.groupKey ?? '*'] || [];
+          dirtyFilterGroups[filter.groupKey ?? '*'].push(filter);
+        }
+      }
+      dataSource.forceDirty = false;
+
+      if (!dirtyFilters.length) {
+        return;
+      }
+
       this.onDataSourceFilterChange.next({
         dataSourceKey,
-        filters
+        filters: dirtyFilters,
+        filterGroups: dirtyFilterGroups
       });
 
       if (components.length) {
-        let filtersDirty = false;
-        const filterGroups: { [k: string]: DataSourceFilterInterface[] } = filters.reduce(
-          (a, c) => {
-            if (dataSource.forceDirty || c.dirty) {
-              a[c.groupKey ?? '*'] = a[c.groupKey ?? '*'] || [];
-              a[c.groupKey ?? '*'].push(c);
-              c.dirty = false;
-              filtersDirty = true;
-            }
-            return a;
-          }, { '*': [] } as { [k: string]: DataSourceFilterInterface[] });
-
-        if (!filtersDirty && !dataSource.forceDirty) {
-          return;
-        }
-        dataSource.forceDirty                                            = false;
-
         if (this.dataSourceSupportsBatchRequest(dataSourceKey)) {
           this.makeDataSourceRequest(dataSourceKey, {
-            filters,
-            filterGroups
+            filters: dirtyFilters,
+            filterGroups: dirtyFilterGroups
           });
         } else {
-          for (const filterGroupKey of Object.keys(filterGroups)) {
+          for (const filterGroupKey of Object.keys(dirtyFilterGroups)) {
             if (filterGroupKey === '*') {
               this.makeDataSourceRequest(dataSourceKey, {
-                filters: filterGroups[filterGroupKey],
+                filters: dirtyFilterGroups[filterGroupKey],
               });
             } else {
               this.makeDataSourceRequest(dataSourceKey, {
-                filters : filterGroups['*'].concat(filterGroups[filterGroupKey]),
+                filters : dirtyFilterGroups['*'].concat(dirtyFilterGroups[filterGroupKey]),
                 groupKey: filterGroupKey
               });
             }
