@@ -518,11 +518,11 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
           dirtyFilterGroups[filter.groupKey ?? '*'].push(filter);
         }
       }
-      dataSource.forceDirty = false;
 
-      if (!dirtyFilters.length) {
+      if (!dirtyFilters.length && !dataSource.forceDirty) {
         return;
       }
+      dataSource.forceDirty = false;
 
       this.onDataSourceFilterChange.next({
         dataSourceKey,
