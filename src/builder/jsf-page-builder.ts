@@ -508,9 +508,10 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
       const dirtyFilters: DataSourceFilterInterface[]                       = [];
       const dirtyFilterGroups: { [k: string]: DataSourceFilterInterface[] } = { '*': [] };
       const filtersHaveDirtyGroups                                          = dataSource.forceDirty || (filters.findIndex(x => x.dirty && x.groupKey != null) > -1);
+      const sharedFiltersAreDirty                                          = dataSource.forceDirty || (filters.findIndex(x => x.dirty && x.groupKey == null) > -1);
 
       for (const filter of filters) {
-        if (filter.dirty || dataSource.forceDirty || (filtersHaveDirtyGroups && filter.groupKey == null)) {
+        if (sharedFiltersAreDirty || filter.dirty || dataSource.forceDirty || (filtersHaveDirtyGroups && filter.groupKey == null)) {
           filter.dirty = false;
 
           dirtyFilters.push(filter);
