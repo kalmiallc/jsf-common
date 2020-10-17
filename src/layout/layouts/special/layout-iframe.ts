@@ -26,6 +26,7 @@ const layoutInfo: LayoutInfoInterface = {
 export class JsfLayoutIframe extends JsfAbstractSpecialLayout<'iframe'> {
 
   src?: string;
+  sameOriginSrc?: string;
 
   templateData?: {
     $eval: string,
