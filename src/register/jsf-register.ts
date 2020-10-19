@@ -83,6 +83,10 @@ export class JsfRegister {
       definition.$modes = (definition.$modes || []).concat([this.getBuilderFeatureSet()]);
     }
 
+    definition.$engine = {
+      layoutRenderingMode: 'sync'
+    };
+
     return definition;
   }
 
@@ -147,6 +151,10 @@ export class JsfRegister {
       }
     }
 
+    definition.$engine = {
+      layoutRenderingMode: 'sync'
+    };
+
     return definition;
   }
 
@@ -193,6 +201,10 @@ export class JsfRegister {
       }
     }
 
+    definition.$engine = {
+      layoutRenderingMode: 'sync'
+    };
+
     return definition;
   }
 
@@ -218,6 +230,10 @@ export class JsfRegister {
         definition.$modes = (definition.$modes || []).concat([this.getBuilderFeatureSet()]);
       }
     }
+
+    definition.$engine = {
+      layoutRenderingMode: 'sync'
+    };
 
     return definition;
   }
