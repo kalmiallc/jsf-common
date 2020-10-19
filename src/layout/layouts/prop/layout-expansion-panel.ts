@@ -47,6 +47,10 @@ export class JsfLayoutPropExpansionPanel extends JsfAbstractPropLayout {
 
   filter?: JsfLayoutArrayFilter;
 
+  onPanelStateChange?: {
+    $eval: string;
+  };
+
   constructor(data: JsfLayoutPropExpansionPanel) {
     super();
     Object.assign(this, data);
