@@ -135,8 +135,7 @@ export abstract class JsfAbstractPropEditor<PropDefinition extends JsfUnknownPro
     const definition: any = omitEmptyProperties(this._definition);
 
     return {
-      ...definition,
-      id: this.id.startsWith('#/tmp/') ? undefined : this.id
+      ...definition
     };
   }
 

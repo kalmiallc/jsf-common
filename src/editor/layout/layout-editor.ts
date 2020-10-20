@@ -168,10 +168,7 @@ export class JsfLayoutEditor {
       key  : this.key,
       items: !opt.skipItems && this.supportsItems
         ? this.items.map(x => x.getDefinition())
-        : undefined,
-      id   : this.id.startsWith('#/tmp/')
-        ? undefined
-        : this.id
+        : undefined
     } as any;
   }
 
