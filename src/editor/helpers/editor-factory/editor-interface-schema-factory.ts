@@ -92,6 +92,18 @@ export abstract class EditorInterfaceSchemaFactory {
         type : 'array',
         items: {
           type      : 'object',
+          set: {
+            $eval: `/***** Autofix *****/
+            const typeSwitcherValue = $args.value['${ editorPropName(propName) }'];
+              if (!typeSwitcherValue) {
+                return {
+                  ... $args.value,
+                  ['${ editorPropName(propName) }']: Object.keys($args.value).filter(x => x !== 'condition')[0]
+                }
+              }
+            
+              return $args.value;`
+          },
           properties: {
             // Type switcher
             [editorPropName(propName)]: {
@@ -151,13 +163,11 @@ export abstract class EditorInterfaceSchemaFactory {
             },
 
             // Eval
-            ...{
-              $eval: {
-                ...EditorInterfaceSchemaFactory.createEvalProperty().$eval,
-                enabledIf: {
-                  $eval       : `return $getPropValue('${ editorPropFullPath }') === '$eval'`,
-                  dependencies: [editorPropFullPath]
-                }
+            $eval: {
+              ...EditorInterfaceSchemaFactory.createEvalProperty().$eval,
+              enabledIf: {
+                $eval       : `return $getPropValue('${ editorPropFullPath }') === '$eval'`,
+                dependencies: [editorPropFullPath]
               }
             },
 

@@ -162,6 +162,13 @@ export abstract class JsfAbstractBareProp<TypeString, Handlers> {
    * Value getter
    */
   get?: JsfValueOptionsInterface;
+
+  /**
+   * Property order weight.
+   *
+   * Defines the initialization and execution order of this property when placed inside a parent object prop.
+   */
+  propertyOrderWeight?: number;
 }
 
 export const jsfAbstractBarePropJsfDefinitionSchemaProperties      = {

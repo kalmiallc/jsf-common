@@ -75,8 +75,8 @@ export abstract class JsfBasicHandlerBuilder<BuilderType extends JsfUnknownPropB
     return this.builder._validateViaProp();
   }
 
-  getValue() {
-    if (this.builder.hasGetter) {
+  getValue(opt?: { virtual?: boolean, skipGetter?: boolean }) {
+    if (this.builder.hasGetter && !opt?.skipGetter) {
       return this.builder._getValueFromGetter();
     }
     return this.builder._getValueViaProp();

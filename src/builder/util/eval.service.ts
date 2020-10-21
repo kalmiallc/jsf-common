@@ -65,7 +65,7 @@ export const evalService = new class {
    */
   getEvalContext(builder: JsfBuilder, options: EvalContextOptions = {}): any {
     if (options.propBuilder && options.layoutBuilder) {
-      throw new Error(`You cannot provide both propBuilder and layoutBuilder for the eval context.`)
+      throw new Error(`You cannot provide both propBuilder and layoutBuilder for the eval context.`);
     }
 
     if (!builder.propBuilder) {
@@ -135,6 +135,7 @@ export const evalService = new class {
       $form   : builder,
       $builder: builder.propBuilder,
       $objects: builder.$evalObjects,
+      $prop   : options.propBuilder,
 
       $layoutState: (id, key) => builder.getLayoutState(id, key),
       $i18n       : (source: string | JsfI18nObject) => builder.translationServer.get(source),
@@ -189,7 +190,7 @@ export const evalService = new class {
       },
 
       $dataSource: {
-        list: (dataSourceKey: string, data?: DataSourceReqFunArg) => {
+        list  : (dataSourceKey: string, data?: DataSourceReqFunArg) => {
           if (!builder.jsfPageBuilder) {
             throw new Error(`'$dataSource' is only available if using JSfPage.`);
           }
@@ -201,7 +202,7 @@ export const evalService = new class {
           }
           return builder.jsfPageBuilder.makeDataSourceInsertRequest(dataSourceKey, data);
         },
-        get: (dataSourceKey: string, data?: DataSourceReqFunArg) => {
+        get   : (dataSourceKey: string, data?: DataSourceReqFunArg) => {
           if (!builder.jsfPageBuilder) {
             throw new Error(`'$dataSource' is only available if using JSfPage.`);
           }

@@ -6,6 +6,7 @@ import {
 }                                     from '../../builder/interfaces/set-value-options.interface';
 import { JsfUnknownPropBuilder }      from '../../builder/abstract/index';
 import { jsfHandlerAnyCompatibility } from './any.schema';
+import { isArray, isPlainObject, isNil } from 'lodash';
 
 export class JsfHandlerBuilderAny extends JsfBasicHandlerBuilder<JsfUnknownPropBuilder> {
   type: 'any';
@@ -50,23 +51,37 @@ export class JsfHandlerBuilderAny extends JsfBasicHandlerBuilder<JsfUnknownPropB
       return this.builder._modifyValueViaSetter(
         value,
         'patch',
-        x => this.value = { ...this.value, ...x },
+        x => this.patchValueInternal(x),
         options
       );
     }
-    this.value = { ...this.value, ...value };
+    this.patchValueInternal(value);
   }
 
   async validate(): Promise<boolean> {
     return this.builder._validateViaProp();
   }
 
-  getJsonValue() {
-    return this.getValue();
+
+  private patchValueInternal(value: any) {
+    if (isNil(this.value)) {
+      return this.value = value;
+    }
+    if (isPlainObject(this.value)) {
+      return this.value = { ...this.value, ...value };
+    }
+    if (isArray(this.value)) {
+      return this.value = value;
+    }
+    this.value = value;
   }
 
-  getValue() {
-    if (this.builder.hasGetter) {
+  getJsonValue(opt?: { virtual?: boolean, skipGetter?: boolean }) {
+    return this.getValue(opt);
+  }
+
+  getValue(opt?: { virtual?: boolean, skipGetter?: boolean }) {
+    if (this.builder.hasGetter && !opt?.skipGetter) {
       return this.builder._getValueFromGetter();
     }
     return this.value;

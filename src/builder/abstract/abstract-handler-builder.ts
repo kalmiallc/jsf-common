@@ -54,8 +54,8 @@ export abstract class JsfAbstractHandlerBuilder<BuilderType extends JsfUnknownPr
 
   afterDynamicInit(): void {}
 
-  getJsonValue() {
-    return this.builder.getJsonValue();
+  getJsonValue(opt?: { virtual?: boolean, skipGetter?: boolean }) {
+    return this.builder.getJsonValue(opt);
   }
 
   getDependenciesForEnabledIf() {

@@ -4,9 +4,9 @@ export abstract class JsfAbstractBuilder {
 
   abstract validate(options?: { force?: boolean }): Promise<boolean>;
 
-  abstract getJsonValue(opt?: { virtual?: boolean, skipGetter?: boolean  }): any;
+  abstract getJsonValue(opt?: { virtual?: boolean, skipGetter?: boolean }): any;
 
-  abstract getValue(): any;
+  abstract getValue(opt?: { virtual?: boolean, skipGetter?: boolean }): any;
 
   abstract lock(lockKey?: Symbol): Symbol;
 

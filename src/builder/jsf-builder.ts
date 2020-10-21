@@ -515,9 +515,7 @@ export class JsfBuilder extends JsfAbstractBuilder {
   }
 
   registerPropForOnInitCallback(propBuilder: JsfUnknownPropBuilder) {
-    if (this.ready) {
-      propBuilder.runOnInitUserActions();
-    } else {
+    if (!this.ready) {
       this.propWaitingForOnInitCallback.push(propBuilder.path);
     }
   }

@@ -1,15 +1,11 @@
 import { GetControlOptions, JsfAbstractPropBuilder, JsfUnknownPropBuilder } from '../abstract/abstract-prop-builder';
 import { JsfPropObject, JsfPropObjectJsonValue, JsfPropObjectValue }        from '../../schema/props/index';
 import { JsfHandlerBuilderObject }                                          from '../../handlers/index';
-import { JsfPropBuilderFactory }   from '../util/prop-builder-factory';
-import { RequiredValidationError } from '../validation-errors';
-import { JsfTranslatableMessage }  from '../../translations';
-import {
-  PatchValueOptionsInterface,
-  SetValueOptionsInterface
-}                                  from '../interfaces/set-value-options.interface';
-import { jsfEnv }                  from '../../jsf-env';
-import { ValueChangeInterface }    from '../interfaces';
+import { JsfPropBuilderFactory }                                            from '../util/prop-builder-factory';
+import { JsfTranslatableMessage }                                           from '../../translations';
+import { PatchValueOptionsInterface, SetValueOptionsInterface }             from '../interfaces/set-value-options.interface';
+import { jsfEnv }                                                           from '../../jsf-env';
+import { ValueChangeInterface }                                             from '../interfaces';
 
 export class JsfPropBuilderObject
   extends JsfAbstractPropBuilder<JsfPropObject, JsfHandlerBuilderObject, JsfPropObjectValue, JsfPropObjectJsonValue> {
@@ -81,7 +77,11 @@ export class JsfPropBuilderObject
     if (!this.prop.properties) {
       this.prop.properties = null;
     } else {
-      this.propertyKeys = Object.keys(this.prop.properties);
+      this.propertyKeys = Object.keys(this.prop.properties).sort((a, b) => {
+        const weightA = this.prop.properties[a].propertyOrderWeight ?? Number.MAX_SAFE_INTEGER;
+        const weightB = this.prop.properties[b].propertyOrderWeight ?? Number.MAX_SAFE_INTEGER;
+        return weightA - weightB;
+      });
 
       this.properties = {};
       for (let i = 0; i < this.propertyKeys.length; i++) {

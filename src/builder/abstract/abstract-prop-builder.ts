@@ -562,6 +562,11 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
     if (this.hasHandler) {
       this.handler.afterDynamicInit();
     }
+
+    if (this.rootBuilder.ready) {
+      this.runOnInitUserActions();
+    }
+
     for (const child of this.getChildDependencies()) {
       child.afterDynamicInit();
     }
@@ -965,7 +970,7 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
     }
 
     if (this.hasHandlerGetValue) {
-      return this.handler.getValue();
+      return this.handler.getValue(opt);
     }
     if (this.hasGetter && !opt?.skipGetter) {
       return this._getValueFromGetter(opt);
