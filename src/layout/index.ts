@@ -25,7 +25,8 @@ import {
   JsfLayoutHeading,
   JsfLayoutHr,
   JsfLayoutHtml,
-  JsfLayoutIcon, JsfLayoutIframe,
+  JsfLayoutIcon,
+  JsfLayoutIframe,
   JsfLayoutImage,
   JsfLayoutList,
   JsfLayoutListItem,
@@ -47,6 +48,7 @@ import {
   JsfLayoutPropTable,
   JsfLayoutRef,
   JsfLayoutRender2D,
+  JsfLayoutRender3D,
   JsfLayoutRow,
   JsfLayoutSection,
   JsfLayoutSpan,
@@ -56,7 +58,7 @@ import {
   JsfLayoutSup,
   JsfLayoutTab,
   JsfLayoutTabSet
-} from './layouts';
+}                                                 from './layouts';
 import { JsfItemsStylesBase, JsfItemsStylesFlex } from './styles';
 
 export * from './jsf-layout-util';
@@ -119,6 +121,7 @@ export type JsfSpecialLayout =
   | JsfLayoutChartJS
   | JsfLayoutCustomComponent
   | JsfLayoutRender2D
+  | JsfLayoutRender3D
   | JsfLayoutAppBreadcrumbs
   | JsfLayoutAppPageTitle
   | JsfLayoutPoweredBy

@@ -17,6 +17,7 @@ export * from './layout-image';
 export * from './layout-order-summary-line-item';
 export * from './layout-paragraph';
 export * from './layout-render-2d';
+export * from './layout-render-3d';
 export * from './layout-span';
 export * from './layout-sup';
 export * from './layout-sub';
