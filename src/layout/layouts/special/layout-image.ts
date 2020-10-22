@@ -91,7 +91,7 @@ export const layoutImageJsfDefinition = {
               layoutDefinition: {
                 type: 'div',
                 items: [
-                  ... EditorInterfaceLayoutFactory.outputKey(wrapKeyDynamic('basic'), 'URL)'),
+                  ... EditorInterfaceLayoutFactory.outputKey(wrapKeyDynamic('basic'), 'URL'),
                 ]
               }
             },

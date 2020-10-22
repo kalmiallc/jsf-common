@@ -1,12 +1,13 @@
-import { LayoutInfoInterface }          from '../../../register/interfaces';
+import { LayoutInfoInterface }                          from '../../../register/interfaces';
 import {
   jsfAbstractLayoutTranslatableProperties,
   JsfAbstractSpecialLayout,
   jsfAbstractSpecialLayoutJsfDefinitionLayoutItems,
   jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties
-} from '../../../layout';
-import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
-import { JsfRegister }                  from '../../../register';
+}                                                       from '../../../layout';
+import { EditorInterfaceLayoutFactory, wrapKeyDynamic } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
+import { JsfRegister }                                  from '../../../register';
+import { EditorInterfaceSchemaFactory }                 from '../../../editor/helpers/editor-factory';
 
 const layoutInfo: LayoutInfoInterface = {
   type    : 'render-3d',
@@ -20,7 +21,10 @@ const layoutInfo: LayoutInfoInterface = {
 
 export class JsfLayoutRender3D extends JsfAbstractSpecialLayout<'render-3d'> {
 
-  sourceUrl: string;
+  sourceUrl: string | {
+    $eval: string,
+    dependencies?: string[]
+  };
 
   width?: string;
   height?: string;
@@ -37,10 +41,25 @@ export const layoutRender3DJsfDefinition = {
     properties: {
       ...jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties,
 
-      sourceUrl: {
-        type: 'string',
-        required: true,
-      },
+      ... EditorInterfaceSchemaFactory.createDynamicSwitchableProperty('', 'sourceUrl', [
+        {
+          typeKey: 'basic',
+          typeName: 'Basic',
+          propDefinition: {
+            type: 'string'
+          }
+        },
+        {
+          typeKey: 'eval',
+          typeName: 'Eval',
+          propDefinition: {
+            type      : 'object',
+            properties: {
+              ... EditorInterfaceSchemaFactory.createEvalPropertyWithDependencies()
+            }
+          }
+        }
+      ]),
 
       width: {
         type: 'string',
@@ -55,7 +74,28 @@ export const layoutRender3DJsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
         ...EditorInterfaceLayoutFactory.createPanel('Render 3D', [
-          ... EditorInterfaceLayoutFactory.outputKey('sourceUrl', 'Source URL'),
+          ...EditorInterfaceLayoutFactory.outputDynamicSwitchablePropKey('', 'sourceUrl', 'Source URL', [
+            {
+              typeKey: 'basic',
+              layoutDefinition: {
+                type: 'div',
+                items: [
+                  ... EditorInterfaceLayoutFactory.outputKey(wrapKeyDynamic('basic'), 'URL'),
+                ]
+              }
+            },
+            {
+              typeKey: 'eval',
+              layoutDefinition: {
+                type: 'div',
+                items: [
+                  ... EditorInterfaceLayoutFactory.outputKeyWithCodeEditor(wrapKeyDynamic('eval.$eval'), 'Eval'),
+                  ... EditorInterfaceLayoutFactory.outputKey(wrapKeyDynamic('eval.dependencies'), 'Dependencies'),
+                ]
+              }
+            }
+          ]),
+
           ... EditorInterfaceLayoutFactory.outputKey('width', 'Width (px, rem, ...)'),
           ... EditorInterfaceLayoutFactory.outputKey('height', 'Height (px, rem, ...)')
         ]),
