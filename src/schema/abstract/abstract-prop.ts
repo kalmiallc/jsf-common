@@ -442,12 +442,23 @@ export abstract class JsfAbstractProp<Type, TypeString, Handlers> extends JsfAbs
   const?: Type | null;
 
   /**
+   * Similar to readOnly, but used by ACL.
+   */
+  readGroups?: string[];
+
+  /**
+   * Similar to writeOnly, but used by ACL.
+   */
+  writeGroups?: string[];
+
+  /**
    * If "readOnly" has a value of boolean true, it indicates that the value of the instance is managed exclusively by
    * the owning authority, and attempts by an application to modify the value of this property are expected to be
    * ignored or rejected by that owning authority.
    *
    * An instance document that is marked as "readOnly for the entire document MAY be ignored if sent to the owning
    * authority, or MAY result in an error, at the authority's discretion.
+   * @deprecated
    */
   readOnly?: boolean | {
     /**
@@ -470,6 +481,7 @@ export abstract class JsfAbstractProp<Type, TypeString, Handlers> extends JsfAbs
    *
    * For example, "readOnly" would be used to mark a database-generated serial number as read-only, while "writeOnly"
    * would be used to mark a password input field.
+   * @deprecated
    */
   writeOnly?: boolean;
 
