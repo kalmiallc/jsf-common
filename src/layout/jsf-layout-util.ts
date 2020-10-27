@@ -1,10 +1,6 @@
-import {
-  JsfAbstractItemsLayout,
-  JsfAbstractLayout,
-  JsfAbstractPropLayout,
-  JsfAbstractSpecialLayout
-}                                                                                            from './abstract/abstract-layout';
-import { JsfLayoutPropArray, JsfLayoutPropExpansionPanel, JsfLayoutPropTable, JsfLayoutRef } from './index';
+import { JsfAbstractItemsLayout, JsfAbstractLayout, JsfAbstractPropLayout, JsfAbstractSpecialLayout } from './abstract/abstract-layout';
+import { JsfLayoutPropArray, JsfLayoutPropExpansionPanel, JsfLayoutPropTable, JsfLayoutRef }          from './index';
+import { flattenDeep }                                                                                from 'lodash';
 
 export function isRefLayout(layout: JsfAbstractLayout): layout is JsfLayoutRef {
   return (layout as any).type === 'ref' && (layout as any)['$ref'];
@@ -32,4 +28,20 @@ export function isPropTableLayout(layout: JsfAbstractLayout): layout is JsfLayou
 
 export function isPropExpansionPanelLayout(layout: JsfAbstractLayout): layout is JsfLayoutPropExpansionPanel {
   return (layout as any).key && (layout as any).type === 'expansion-panel';
+}
+
+/**
+ * Returns all child prop keys of given layout.
+ */
+export function getLayoutChildAbstractPropKeys(layout: any) {
+  const keys = [];
+
+  if (layout.key) {
+    keys.push(layout.key);
+  }
+  if (layout.items) {
+    keys.push(...layout.items.map(x => getLayoutChildAbstractPropKeys(x)));
+  }
+
+  return flattenDeep(keys);
 }

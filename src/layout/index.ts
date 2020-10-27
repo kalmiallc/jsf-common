@@ -57,7 +57,12 @@ import {
   JsfLayoutSub,
   JsfLayoutSup,
   JsfLayoutTab,
-  JsfLayoutTabSet
+  JsfLayoutTabSet,
+  JsfLayoutWizard,
+  JsfLayoutWizardSection,
+  JsfLayoutWizardStep,
+  JsfLayoutWizardStepperContent,
+  JsfLayoutWizardStepperHeader
 }                                                 from './layouts';
 import { JsfItemsStylesBase, JsfItemsStylesFlex } from './styles';
 
@@ -95,7 +100,11 @@ export type JsfItemsLayout =
   | JsfLayoutExpansionPanelStandalone
   | JsfLayoutExpansionPanelStandalonePanel
   | JsfLayoutExpansionPanelStandaloneHeader
-  | JsfLayoutExpansionPanelStandaloneContent;
+  | JsfLayoutExpansionPanelStandaloneContent
+  | JsfLayoutWizard
+  | JsfLayoutWizardSection
+  | JsfLayoutWizardStepperContent
+  | JsfLayoutWizardStep;
 
 export type JsfPropLayout = JsfLayoutProp | JsfLayoutPropArray | JsfLayoutPropTable | JsfLayoutPropExpansionPanel;
 
@@ -126,7 +135,8 @@ export type JsfSpecialLayout =
   | JsfLayoutAppPageTitle
   | JsfLayoutPoweredBy
   | JsfLayoutRef
-  | JsfLayoutProgressTrackerStep;
+  | JsfLayoutProgressTrackerStep
+  | JsfLayoutWizardStepperHeader;
 
 export type JsfUnknownLayout = JsfItemsLayout | JsfPropLayout | JsfSpecialLayout;
 export type JsfStyles = JsfItemsStylesBase & JsfItemsStylesFlex;

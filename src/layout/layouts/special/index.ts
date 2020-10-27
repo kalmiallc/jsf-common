@@ -28,6 +28,7 @@ export * from './layout-app-page-title';
 export * from './layout-powered-by';
 export * from './layout-progress-tracker-step';
 export * from './layout-iframe';
+export * from './layout-wizard-stepper-header';
 
 
 export interface JsfLayoutSpecialPreferencesInterface {
