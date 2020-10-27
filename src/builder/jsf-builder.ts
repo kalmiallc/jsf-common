@@ -1,5 +1,5 @@
-import { JsfDocument }                         from '../jsf-document';
-import { JsfPropBuilderFactory }               from './util/prop-builder-factory';
+import { JsfDocument }                                  from '../jsf-document';
+import { JsfPropBuilderFactory }                        from './util/prop-builder-factory';
 import {
   JsfAbstractBuilder,
   JsfComponentBuilder,
@@ -7,43 +7,42 @@ import {
   PropStatus,
   ValidationError,
   ValueChangeInterface
-}                                               from './abstract/index';
+}                                                       from './abstract/index';
 import {
   JsfLayoutBuilderFactory,
   JsfUnknownLayoutBuilder
-}                                               from './layout/index';
+}                                                       from './layout/index';
 import {
   JsfTranslatableMessage,
   JsfTranslationServer
-}                                               from '../translations';
-import { filter, flattenDeep, uniq, uniqWith }  from 'lodash';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { JsfDependencyResolver }                from './jsf-dependency-resolver';
+}                                                       from '../translations';
+import { filter, flattenDeep, isEqual, uniq, uniqWith } from 'lodash';
+import { BehaviorSubject, Observable, Subject }         from 'rxjs';
+import { JsfDependencyResolver }                        from './jsf-dependency-resolver';
 import {
   PatchValueOptionsInterface,
   SetValueOptionsInterface
-}                                               from './interfaces/set-value-options.interface';
+}                                                       from './interfaces/set-value-options.interface';
 import {
   EvalContextOptions,
   evalService
-}                                               from './util/eval.service';
+}                                                       from './util/eval.service';
 import {
   JsfAbstractAuthCustomerProvider,
   JsfAbstractAuthUserProvider,
   JsfAbstractRouter
-}                                               from '../abstract';
-import { JsfProvider }                         from '../providers/jsf-provider';
-import { JsfProviderExecutor }                 from '../providers';
-import { jsfEnv }                              from '../jsf-env';
-import { JsfAbstractService }                  from '../abstract/abstract-service';
+}                                                       from '../abstract';
+import { JsfProvider }                                  from '../providers/jsf-provider';
+import { JsfProviderExecutor }                          from '../providers';
+import { jsfEnv }                                       from '../jsf-env';
+import { JsfAbstractService }                           from '../abstract/abstract-service';
 import {
   JsfNotificationInterface,
   JsfRuntimeContext
-}                                              from './interfaces';
-import ObjectID                                from 'bson-objectid';
-import { JsfDefinition }                       from '../jsf-definition';
-import { JsfAnalyticsService }                 from '../analytics/jsf-analytics.service';
-
+}                                                       from './interfaces';
+import ObjectID                                         from 'bson-objectid';
+import { JsfDefinition }                                from '../jsf-definition';
+import { JsfAnalyticsService }                          from '../analytics/jsf-analytics.service';
 
 export interface PropValueChangeInterface {
   value: any;
@@ -191,7 +190,7 @@ export class JsfBuilder extends JsfAbstractBuilder {
   analyticsService: JsfAnalyticsService;
 
   layoutLoadingCount: BehaviorSubject<number> = new BehaviorSubject<number>(0);
-  layoutLoadingInstances = [];
+  layoutLoadingInstances                      = [];
 
   ////// This is only acceptable data from outside world!
   runtimeContext?: JsfRuntimeContext;
@@ -246,6 +245,10 @@ export class JsfBuilder extends JsfAbstractBuilder {
   }
 
   private _isDirty = false;
+  private _isDirtyValueCache: {
+    [path: string]: any
+  }                = {};
+
   get isDirty() {
     return this._isDirty;
   }
@@ -253,6 +256,9 @@ export class JsfBuilder extends JsfAbstractBuilder {
   set isDirty(val: boolean) {
     this._isDirty = val;
     this._onDirtyChange.next(this._isDirty);
+    if (!val) {
+      this._isDirtyValueCache = {};
+    }
   }
 
   private _onDirtyChange = new Subject<boolean>();
@@ -813,14 +819,23 @@ export class JsfBuilder extends JsfAbstractBuilder {
       this.valueChangeListeners[path].next(data);
     }
 
+    let shouldMarkAsDirty = false;
     if (this.ready) {
       if (this.doc.$dirtyList) {
         if (this.doc.$dirtyList.find(x => (x === path) || path.startsWith(x + '.') || path.startsWith(x + '['))) {
-          this.isDirty = true;
+          shouldMarkAsDirty = true;
         } else {
           this.log(`Prop "${ path }" is excluded from dirtyList.`);
         }
       } else {
+        shouldMarkAsDirty = true;
+      }
+    }
+
+    if (shouldMarkAsDirty) {
+      const cachedDirtyValue = this._isDirtyValueCache[path];
+      if (cachedDirtyValue === void 0 || !isEqual(this._isDirtyValueCache[path], data.value)) {
+        this._isDirtyValueCache[path] = data.value;
         this.isDirty = true;
       }
     }
