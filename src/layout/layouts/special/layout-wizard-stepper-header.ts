@@ -9,16 +9,21 @@ import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-fac
 import { JsfRegister }                  from '../../../register';
 
 const layoutInfo: LayoutInfoInterface = {
-  type             : 'wizard-stepper-header',
-  title            : 'Wizard stepper header',
-  icon             : 'layout-icons/icon.svg',
-  category         : 'Layout',
-  localization     : {
+  type        : 'wizard-stepper-header',
+  title       : 'Wizard stepper header',
+  icon        : 'layout-icons/icon.svg',
+  category    : 'Layout',
+  localization: {
     translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
   }
 };
 
 export class JsfLayoutWizardStepperHeader extends JsfAbstractSpecialLayout<'wizard-stepper-header'> {
+
+  breakpoints?: {
+    desktopLayout?: string;
+  };
+
   constructor(data: JsfLayoutWizardStepperHeader) {
     super();
     Object.assign(this, data);
@@ -29,7 +34,7 @@ export const layoutWizardStepperHeaderJsfDefinition = {
   schema: {
     type      : 'object',
     properties: {
-      ...jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties,
+      ...jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties
 
       // TODO
     }

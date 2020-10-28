@@ -8,8 +8,6 @@ import {
 }                                       from '../../../layout';
 import { JsfRegister }                  from '../../../register';
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
-import { EditorInterfaceSchemaFactory } from '../../../editor/helpers/editor-factory/editor-interface-schema-factory';
-import { CodeEditorKeyIconType }        from '../../../editor/helpers/editor-factory/layout/code-editor-key';
 
 const layoutInfo: LayoutInfoInterface = {
   type        : 'wizard-step',
@@ -28,7 +26,7 @@ const layoutInfo: LayoutInfoInterface = {
 export class JsfLayoutWizardStep extends JsfAbstractItemsLayout<'wizard-step'> {
   items: JsfUnknownLayout[];
 
-  stepId: string;
+  stepIds: string[];
 
   constructor(data: JsfLayoutWizardStep) {
     super();
@@ -40,7 +38,7 @@ export const layoutWizardStepJsfDefinition = {
   schema: {
     type      : 'object',
     properties: {
-      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties
 
       // TODO
     }

@@ -31,6 +31,7 @@ export class JsfLayoutWizardSection extends JsfAbstractItemsLayout<'wizard-secti
   sectionType: 'header' | 'content' | 'sidebar' | 'footer';
 
   sectionOptions?: {
+    stepIds?: string[];
     noStyles: boolean;
   };
 

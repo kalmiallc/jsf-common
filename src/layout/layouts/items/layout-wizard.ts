@@ -8,8 +8,6 @@ import {
 }                                       from '../../../layout';
 import { JsfRegister }                  from '../../../register';
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
-import { EditorInterfaceSchemaFactory } from '../../../editor/helpers/editor-factory/editor-interface-schema-factory';
-import { CodeEditorKeyIconType }        from '../../../editor/helpers/editor-factory/layout/code-editor-key';
 
 const layoutInfo: LayoutInfoInterface = {
   type        : 'wizard',
@@ -40,8 +38,12 @@ export class JsfLayoutWizard extends JsfAbstractItemsLayout<'wizard'> {
   primary?: boolean;
   linear?: boolean;
 
-  initialStep?: number | {
+  initialStep?: string | {
     $eval: string;
+  };
+
+  breakpoints?: {
+    desktopLayout?: string;
   };
 
   // Event - step change
@@ -59,7 +61,7 @@ export const layoutWizardJsfDefinition = {
   schema: {
     type      : 'object',
     properties: {
-      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
+      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties
 
       // TODO
     }
