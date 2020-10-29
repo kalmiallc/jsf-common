@@ -33,6 +33,10 @@ export * from './layout-list-item';
 export * from './layout-dialog-content';
 export * from './layout-dialog-actions';
 export * from './layout-progress-tracker';
+export * from './layout-wizard';
+export * from './layout-wizard-section';
+export * from './layout-wizard-step';
+export * from './layout-wizard-stepper-content';
 
 
 export interface JsfLayoutItemsPreferencesInterface {
