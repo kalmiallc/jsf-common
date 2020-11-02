@@ -81,12 +81,12 @@ export class JsfRegister {
 
     if (definition) {
       definition.$modes = (definition.$modes || []).concat([this.getBuilderFeatureSet()]);
+
+      definition.$engine = {
+        layoutRenderingMode: 'sync'
+      };
     }
-
-    definition.$engine = {
-      layoutRenderingMode: 'sync'
-    };
-
+    
     return definition;
   }
 
@@ -146,14 +146,12 @@ export class JsfRegister {
     const definition = JsfRegister.layoutStore[type];
 
     if (definition) {
-      if (definition) {
-        definition.$modes = (definition.$modes || []).concat([this.getBuilderFeatureSet()]);
-      }
-    }
+      definition.$modes = (definition.$modes || []).concat([this.getBuilderFeatureSet()]);
 
-    definition.$engine = {
-      layoutRenderingMode: 'sync'
-    };
+      definition.$engine = {
+        layoutRenderingMode: 'sync'
+      };
+    }
 
     return definition;
   }
@@ -196,14 +194,12 @@ export class JsfRegister {
     definition = JsfRegister.injectPropType(definition, prop.type);
 
     if (definition) {
-      if (definition) {
-        definition.$modes = (definition.$modes || []).concat([this.getBuilderFeatureSet()]);
-      }
-    }
+      definition.$modes = (definition.$modes || []).concat([this.getBuilderFeatureSet()]);
 
-    definition.$engine = {
-      layoutRenderingMode: 'sync'
-    };
+      definition.$engine = {
+        layoutRenderingMode: 'sync'
+      };
+    }
 
     return definition;
   }
@@ -226,14 +222,12 @@ export class JsfRegister {
     const definition = JsfRegister.handlerCompatibility[type].layoutDefinition;
 
     if (definition) {
-      if (definition) {
-        definition.$modes = (definition.$modes || []).concat([this.getBuilderFeatureSet()]);
-      }
-    }
+      definition.$modes = (definition.$modes || []).concat([this.getBuilderFeatureSet()]);
 
-    definition.$engine = {
-      layoutRenderingMode: 'sync'
-    };
+      definition.$engine = {
+        layoutRenderingMode: 'sync'
+      };
+    }
 
     return definition;
   }
