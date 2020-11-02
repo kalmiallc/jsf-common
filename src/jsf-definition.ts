@@ -54,7 +54,8 @@ export class JsfDefinition {
    * JSF engine options
    */
   $engine?: {
-    layoutRenderingMode: 'sync' | 'async';
+    layoutRenderingMode?: 'sync' | 'async';
+    dialogSizeBehaviour?: 'dynamic' | 'fullscreen'
   };
 
   /**
