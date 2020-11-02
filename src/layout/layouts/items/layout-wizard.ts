@@ -25,6 +25,7 @@ const layoutInfo: LayoutInfoInterface = {
 export interface JsfWizardStep {
   id: string;
   title?: string;
+  analyticsStepIndex?: number;
 }
 
 export class JsfLayoutWizard extends JsfAbstractItemsLayout<'wizard'> {
