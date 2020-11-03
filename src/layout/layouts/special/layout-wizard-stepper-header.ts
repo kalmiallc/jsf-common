@@ -34,9 +34,16 @@ export const layoutWizardStepperHeaderJsfDefinition = {
   schema: {
     type      : 'object',
     properties: {
-      ...jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties
+      ...jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties,
 
-      // TODO
+      breakpoints: {
+        type      : 'object',
+        properties: {
+          desktopLayout: {
+            type: 'string'
+          }
+        }
+      }
     }
   },
   layout: {
@@ -45,7 +52,7 @@ export const layoutWizardStepperHeaderJsfDefinition = {
       ...EditorInterfaceLayoutFactory.createPanelGroup([
         ...EditorInterfaceLayoutFactory.createPanel('Wizard stepper header', [
 
-          // TODO
+          ...EditorInterfaceLayoutFactory.outputKey('breakpoints.desktopLayout', 'Breakpoint: Desktop layout')
         ]),
 
         ...jsfAbstractSpecialLayoutJsfDefinitionLayoutItems

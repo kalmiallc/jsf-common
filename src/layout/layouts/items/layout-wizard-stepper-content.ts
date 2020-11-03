@@ -36,9 +36,7 @@ export const layoutWizardStepperContentJsfDefinition = {
   schema: {
     type      : 'object',
     properties: {
-      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties
-
-      // TODO
+      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
     }
   },
   layout: {
@@ -46,7 +44,7 @@ export const layoutWizardStepperContentJsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
         ...EditorInterfaceLayoutFactory.createPanel('Wizard stepper content', [
-          // TODO
+          ...EditorInterfaceLayoutFactory.createLabel('No configuration available.')
         ]),
 
         ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems

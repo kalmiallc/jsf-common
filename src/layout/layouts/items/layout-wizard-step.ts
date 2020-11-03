@@ -38,9 +38,17 @@ export const layoutWizardStepJsfDefinition = {
   schema: {
     type      : 'object',
     properties: {
-      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties
+      ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
 
-      // TODO
+      stepIds: {
+        type: 'array',
+        items: {
+          type: 'string'
+        },
+        handler: {
+          type: 'common/chip-list'
+        }
+      },
     }
   },
   layout: {
@@ -48,7 +56,7 @@ export const layoutWizardStepJsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
         ...EditorInterfaceLayoutFactory.createPanel('Wizard step', [
-          // TODO
+          ...EditorInterfaceLayoutFactory.outputKey('stepIds', 'Steps ids:'),
         ]),
 
         ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems

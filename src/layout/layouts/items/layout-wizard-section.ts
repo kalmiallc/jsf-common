@@ -47,7 +47,37 @@ export const layoutWizardSectionJsfDefinition = {
     properties: {
       ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
 
-      // TODO
+      sectionType: {
+        type:  'string',
+        handler: {
+          type: 'common/dropdown',
+          values: [
+            { value: 'header', label: 'Header' },
+            { value: 'sidebar', label: 'Sidebar' },
+            { value: 'content', label: 'Content' },
+            { value: 'footer', label: 'Footer' },
+          ]
+        }
+      },
+
+      sectionOptions: {
+        type: 'object',
+        properties: {
+          stepIds: {
+            type: 'array',
+            items: {
+              type: 'string'
+            },
+            handler: {
+              type: 'common/chip-list'
+            }
+          },
+          noStyles: {
+            type: 'boolean',
+            title: 'No styles'
+          }
+        }
+      }
     }
   },
   layout: {
@@ -55,7 +85,9 @@ export const layoutWizardSectionJsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
         ...EditorInterfaceLayoutFactory.createPanel('Wizard section', [
-          // TODO
+          ...EditorInterfaceLayoutFactory.outputKey('sectionType', 'Section type'),
+          ...EditorInterfaceLayoutFactory.outputKey('sectionOptions.stepIds', 'Steps ids:'),
+          ...EditorInterfaceLayoutFactory.outputKey('sectionOptions.noStyles'),
         ]),
 
         ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems
