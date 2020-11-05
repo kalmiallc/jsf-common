@@ -1,50 +1,50 @@
-import { ValidationError }                                                                                     from './abstract-validation-error';
+import { ValidationError }                    from './abstract-validation-error';
 import {
   JsfAbstractHandlerBuilder,
   JsfUnknownHandlerBuilder
-}                                                                                                              from './abstract-handler-builder';
-import { isPropBuilderArray, JsfPropBuilder }                                                                  from '../props';
+}                                             from './abstract-handler-builder';
+import { isPropBuilderArray, JsfPropBuilder } from '../props';
 import {
   JsfAbstractProp,
   JsfUnknownProp
-}                                        from '../../schema/abstract/abstract-prop';
-import { JsfAbstractBuilder }            from './abstract-builder';
-import { EvalValidationError }           from '../validation-errors';
+}                                             from '../../schema/abstract/abstract-prop';
+import { JsfAbstractBuilder }                 from './abstract-builder';
+import { EvalValidationError }                from '../validation-errors';
 import {
   Observable,
   Subject
-}                                        from 'rxjs';
+}                                             from 'rxjs';
 import {
   JsfTranslatableMessage,
   JsfTranslationServer
-}                                        from '../../translations';
-import { JsfRegister }                   from '../../register/jsf-register';
-import { JsfBuilder }                    from '../jsf-builder';
-import { JsfBasicHandlerBuilder }        from './abstract-basic-handler-builder';
-import { JsfEvalRuntimeError }           from '../../errors';
+}                                             from '../../translations';
+import { JsfRegister }                        from '../../register/jsf-register';
+import { JsfBuilder }                         from '../jsf-builder';
+import { JsfBasicHandlerBuilder }             from './abstract-basic-handler-builder';
+import { JsfEvalRuntimeError }                from '../../errors';
 import {
   PropStatus
-}                                        from '../interfaces/prop-status.enum';
-import { ValueChangeInterface }          from '../interfaces/value-change.interface';
+}                                             from '../interfaces/prop-status.enum';
+import { ValueChangeInterface }               from '../interfaces/value-change.interface';
 import {
   ConsumeProviderValueOptionsInterface,
   PatchValueOptionsInterface,
   SetValueOptionsInterface
-}                                        from '../interfaces/set-value-options.interface';
-import { canActivateFilterItem }         from '../../filters';
+}                                             from '../interfaces/set-value-options.interface';
+import { canActivateFilterItem }              from '../../filters';
 import {
   isJsfProviderExecutor,
   JsfProviderConsumerInterface,
   JsfProviderExecutor,
   JsfProviderExecutorStatus
-}                                        from '../../providers';
-import { takeUntil }                     from 'rxjs/operators';
+}                                             from '../../providers';
+import { takeUntil }                          from 'rxjs/operators';
 
-import { getEvalValidatorsDependencies }                                                                       from '../util/abstarct-prop-util';
-import { safeModeCompatibleHandlers }                                                                          from '../../handlers';
-import { isNil, isString }                                                                                     from 'lodash';
-import * as hash                                                                                               from 'object-hash';
-import { layoutClickHandlerService }                                                                           from '../util';
+import { getEvalValidatorsDependencies } from '../util/abstarct-prop-util';
+import { safeModeCompatibleHandlers }    from '../../handlers';
+import { isNil, isString }               from 'lodash';
+import * as hash                         from 'object-hash';
+import { layoutClickHandlerService }     from '../util';
 
 export type JsfUnknownPropBuilder = JsfAbstractPropBuilder<JsfUnknownProp, JsfUnknownHandlerBuilder, any, any>;
 
@@ -402,7 +402,7 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
   }
 
   get hasPersist(): boolean {
-    return !!(this.prop  as JsfAbstractProp<any, any, any>).persist?.type;
+    return !!(this.prop as JsfAbstractProp<any, any, any>).persist?.type;
   }
 
   get hasHandlerSetValue(): boolean {
@@ -517,9 +517,9 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
       switch (x.type) {
         case 'set':
           this.setValue(layoutClickHandlerService.getValue(x.value, {
-              propBuilder: this,
-              rootBuilder: this.rootBuilder
-            }))
+            propBuilder: this,
+            rootBuilder: this.rootBuilder
+          }))
             .catch(console.error);
           break;
         case 'eval':
@@ -1019,11 +1019,18 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
     if (!this.rootBuilder.setPersistedValue) {
       return;
     }
-    const key = (this.prop  as JsfAbstractProp<any, any, any>).persist?.key || this.path;
-    const persistType = (this.prop  as JsfAbstractProp<any, any, any>).persist?.type;
+    const key         = (this.prop as JsfAbstractProp<any, any, any>).persist?.key || this.path;
+    const persistType = (this.prop as JsfAbstractProp<any, any, any>).persist?.type;
 
     if (persistType) {
-      this.rootBuilder.setPersistedValue(persistType, key, this.getJsonValue());
+      const x = this.getJsonValue();
+      if (x !== undefined) {
+        try {
+          this.rootBuilder.setPersistedValue(persistType, key, JSON.stringify(x));
+        } catch (e) {
+          console.error(`Failed persist value [key=${ key }, persistType=${persistType}].`, e);
+        }
+      }
     }
   }
 
@@ -1031,13 +1038,17 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
     if (!this.rootBuilder.getPersistedValue) {
       return;
     }
-    const key = (this.prop  as JsfAbstractProp<any, any, any>).persist?.key || this.path;
-    const persistType = (this.prop  as JsfAbstractProp<any, any, any>).persist?.type;
+    const key         = (this.prop as JsfAbstractProp<any, any, any>).persist?.key || this.path;
+    const persistType = (this.prop as JsfAbstractProp<any, any, any>).persist?.type;
 
     if (persistType) {
-      const x = this.rootBuilder.getPersistedValue(persistType, key);
-      if (x !== undefined && x !== null) {
-        this.setJsonValueNoResolve(x, { noValueChange: options.noValueChange });
+      try {
+        const x = this.rootBuilder.getPersistedValue(persistType, key);
+        if (x !== undefined && x !== null) {
+          this.setJsonValueNoResolve(JSON.parse(x), { noValueChange: options.noValueChange });
+        }
+      } catch (e) {
+        console.error(`Failed to restore persisted value [key=${ key }, persistType=${persistType}].`, e);
       }
     }
   }
@@ -1175,7 +1186,7 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
 
   _modifyValueViaSetter(value: any, mode: 'patch' | 'set', cbForSetVal: (val: any) => void, options: PatchValueOptionsInterface | SetValueOptionsInterface) {
     const $skip = {};
-    const ctx = this.rootBuilder.getEvalContext({
+    const ctx   = this.rootBuilder.getEvalContext({
       propBuilder       : this,
       extraContextParams: {
         $args: {
@@ -1186,7 +1197,7 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
         $skip
       }
     });
-    const res = this.rootBuilder.runEvalWithContext((this.prop.set as any).$evalTranspiled || this.prop.set.$eval, ctx);
+    const res   = this.rootBuilder.runEvalWithContext((this.prop.set as any).$evalTranspiled || this.prop.set.$eval, ctx);
     if (res === $skip) {
       return false;
     }

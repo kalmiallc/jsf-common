@@ -435,10 +435,10 @@ export abstract class JsfAbstractProp<Type, TypeString, Handlers> extends JsfAbs
      */
     key?: string;
 
-    /**
-     * Prefix key applies to both cases auto generated key or set one.
-     */
-    keyPrefix?: string;
+    // /**
+    //  * Prefix key applies to both cases auto generated key or set one.
+    //  */
+    // keyPrefix?: string;
   };
 
   /**
