@@ -17,7 +17,8 @@ export function dynamicSwitchableProperty(basePath: string, propName: string, de
         const firstLevelProperties = Object.keys(def.propDefinition.properties);
         return `if (_.isPlainObject(AUTOFIX_VALUE) && Object.keys(AUTOFIX_VALUE).filter(x => [${ firstLevelProperties.map(x => `'${ x }'`).join(', ') } ].indexOf(x) > -1).length >= 1) {
           AUTOFIX_KEY = '${ def.typeKey }';
-        }`;
+        }
+        firstObjectTypeKey = firstObjectTypeKey || '${ def.typeKey }'`;
       }
       case 'array': {
         return `if (_.isArray(AUTOFIX_VALUE)) {
@@ -78,9 +79,17 @@ export function dynamicSwitchableProperty(basePath: string, propName: string, de
                   if (!selectedType || !selectedTypeValue || !_.isEqual(selectedTypeValue, AUTOFIX_VALUE)) {
                     
                     let AUTOFIX_KEY;
+                    let firstObjectTypeKey;
+                    
                     ${ autoFixConditions.join('\n') }
-                    if (AUTOFIX_VALUE === null) {
+                    
+                    // Additional check for an object in case no properties were matched.
+                    if (_.isPlainObject(AUTOFIX_VALUE) && !AUTOFIX_KEY && firstObjectTypeKey) {
+                      AUTOFIX_KEY = firstObjectTypeKey;
+                    }
+                    if (AUTOFIX_VALUE === null || !AUTOFIX_KEY) {
                       // We can't really determine the type in this case, so just pick the first one since all prop types can handle null in some way.
+                      // This is also the fallback option in case nothing else was matched above.
                       AUTOFIX_KEY = '${ definitions[0].typeKey }';
                     }
                     
