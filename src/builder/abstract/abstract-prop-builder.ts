@@ -1023,7 +1023,7 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
     const persistType = (this.prop  as JsfAbstractProp<any, any, any>).persist?.type;
 
     if (persistType) {
-      this.rootBuilder.setPersistedValue(persistType, key, this.getValue());
+      this.rootBuilder.setPersistedValue(persistType, key, this.getJsonValue());
     }
   }
 
@@ -1036,7 +1036,9 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
 
     if (persistType) {
       const x = this.rootBuilder.getPersistedValue(persistType, key);
-      this.setJsonValueNoResolve(x, { noValueChange: options.noValueChange });
+      if (x !== undefined && x !== null) {
+        this.setJsonValueNoResolve(x, { noValueChange: options.noValueChange });
+      }
     }
   }
 
