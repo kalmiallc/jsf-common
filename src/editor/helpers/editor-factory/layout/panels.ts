@@ -1,10 +1,11 @@
-export function panelGroup(panelItems: any[]) {
+export function panelGroup(panelItems: any[], options?: { startCollapsed: boolean }) {
   return [{
     type : 'expansion-panel-standalone',
     multi: true,
     items: [
       ...panelItems
-    ]
+    ],
+    ... (options?.startCollapsed === true ? { preferences: { startCollapsed: true }} : {})
   }];
 }
 

@@ -9,6 +9,11 @@ import {
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { JsfRegister }                  from '../../../register';
 
+
+export class JsfLayoutPropExpansionPanelStandalonePreferences {
+  startCollapsed: boolean;
+}
+
 const layoutInfo: LayoutInfoInterface = {
   type        : 'expansion-panel-standalone',
   title       : 'Expansion panel standalone',
@@ -34,6 +39,8 @@ export class JsfLayoutExpansionPanelStandalone extends JsfAbstractItemsLayout<'e
    */
   multi?: boolean;
 
+  preferences?: JsfLayoutPropExpansionPanelStandalonePreferences;
+
   constructor(data: JsfLayoutExpansionPanelStandalone) {
     super();
     Object.assign(this, data);
@@ -50,6 +57,16 @@ export const layoutExpansionPanelStandaloneJsfDefinition = {
         type : 'boolean',
         title: 'Allow independent expansion state'
       },
+
+      preferences: {
+        type: 'object',
+        properties: {
+          startCollapsed: {
+            type: 'boolean',
+            title: 'Start collapsed'
+          }
+        }
+      },
     }
   },
   layout: {
@@ -57,7 +74,11 @@ export const layoutExpansionPanelStandaloneJsfDefinition = {
     items: [
       ...EditorInterfaceLayoutFactory.createPanelGroup([
         ...EditorInterfaceLayoutFactory.createPanel('Expansion Panel Standalone', [
-          ...EditorInterfaceLayoutFactory.outputKey('multi')
+          ...EditorInterfaceLayoutFactory.outputKey('multi'),
+
+          ...EditorInterfaceLayoutFactory.createDivider(),
+
+          ...EditorInterfaceLayoutFactory.outputKey('preferences.startCollapsed', 'Start collapsed'),
         ]),
 
         ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems
