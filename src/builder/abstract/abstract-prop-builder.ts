@@ -1016,7 +1016,7 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
   }
 
   persistValue() {
-    if (!this.rootBuilder.setPersistedValue) {
+    if (!this.rootBuilder.setPersistedValue || !(window as any) || !this.rootBuilder.ready) {
       return;
     }
     const key         = (this.prop as JsfAbstractProp<any, any, any>).persist?.key || this.path;
@@ -1035,7 +1035,7 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
   }
 
   tryRestorePersistedValueNoResolve(options: SetValueOptionsInterface = {}) {
-    if (!this.rootBuilder.getPersistedValue) {
+    if (!this.rootBuilder.getPersistedValue || !(window as any)) {
       return;
     }
     const key         = (this.prop as JsfAbstractProp<any, any, any>).persist?.key || this.path;
