@@ -3,7 +3,6 @@ import { JsfProviderExecutorInterface } from '../../providers';
 import { JsfValueOptionsInterface }     from '../../layout/interfaces/value-options.type';
 import { EditorInterfaceLayoutFactory } from '../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { EditorInterfaceSchemaFactory } from '../../editor/helpers/editor-factory/editor-interface-schema-factory';
-import { CodeEditorKeyIconType }        from '../../editor/helpers/editor-factory/layout/code-editor-key';
 
 export type JsfUnknownProp = JsfAbstractBareProp<JsfPropTypes, any>;
 
@@ -585,6 +584,25 @@ export const jsfAbstractPropJsfDefinitionSchemaProperties = {
     }
   },
 
+  persist: {
+    type      : 'object',
+    properties: {
+      type: {
+        type   : 'string',
+        handler: {
+          type  : 'common/dropdown',
+          values: [
+            { value: 'localStorage', label: 'Local storage' },
+            { value: 'query', label: 'Query' }
+          ]
+        }
+      },
+      key : {
+        type: 'string'
+      }
+    }
+  },
+
   searchable    : {
     type      : 'object',
     title     : 'Searchable',
@@ -631,7 +649,7 @@ export const jsfAbstractPropJsfDefinitionSchemaProperties = {
         items: {
           type   : 'string',
           handler: {
-            type    : 'common/code-editor',
+            type   : 'common/code-editor',
             options: {
               language: 'javascript'
             }
@@ -737,6 +755,11 @@ export const jsfAbstractPropJsfDefinitionLayoutItems = [
       ]
     ),
     ...EditorInterfaceLayoutFactory.outputKey('evalValidators.dependencies', 'Dependencies')
+  ]),
+
+  ...EditorInterfaceLayoutFactory.createPanel('Persist', [
+    ...EditorInterfaceLayoutFactory.outputKey('persist.type', 'Type'),
+    ...EditorInterfaceLayoutFactory.outputKey('persist.key', 'Persist key')
   ]),
 
   ...jsfAbstractBarePropJsfDefinitionLayoutItems
