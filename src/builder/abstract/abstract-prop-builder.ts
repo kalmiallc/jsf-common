@@ -401,6 +401,10 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
     return !!this.prop.set;
   }
 
+  get hasPersist(): boolean {
+    return !!(this.prop  as JsfAbstractProp<any, any, any>).persist?.type;
+  }
+
   get hasHandlerSetValue(): boolean {
     return !!(this.handler && this.handler.setValue);
   }
@@ -587,6 +591,7 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
         this.jsonToValue((this.prop as any).const),
         { skipConst: true, noValueChange: options.noValueChange }
       );
+      return;
     } else if (this.prop.hasOwnProperty('default')) {
       this.setJsonValueNoResolve((this.prop as any).default, { noValueChange: options.noValueChange });
     } else if (this.prop.hasOwnProperty('advancedDefault')) {
@@ -625,6 +630,10 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
       if (value !== undefined) {
         this.setJsonValueNoResolve(value, { noValueChange: options.noValueChange });
       }
+    }
+
+    if (this.hasPersist) {
+      this.tryRestorePersistedValueNoResolve({ noValueChange: options.noValueChange });
     }
   }
 
@@ -1006,6 +1015,31 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
     }
   }
 
+  persistValue() {
+    if (!this.rootBuilder.setPersistedValue) {
+      return;
+    }
+    const key = (this.prop  as JsfAbstractProp<any, any, any>).persist?.key || this.path;
+    const persistType = (this.prop  as JsfAbstractProp<any, any, any>).persist?.type;
+
+    if (persistType) {
+      this.rootBuilder.setPersistedValue(persistType, key, this.getValue());
+    }
+  }
+
+  tryRestorePersistedValueNoResolve(options: SetValueOptionsInterface = {}) {
+    if (!this.rootBuilder.getPersistedValue) {
+      return;
+    }
+    const key = (this.prop  as JsfAbstractProp<any, any, any>).persist?.key || this.path;
+    const persistType = (this.prop  as JsfAbstractProp<any, any, any>).persist?.type;
+
+    if (persistType) {
+      const x = this.rootBuilder.getPersistedValue(persistType, key);
+      this.setJsonValueNoResolve(x, { noValueChange: options.noValueChange });
+    }
+  }
+
   async setValue(value: PropValue, options: SetValueOptionsInterface = {}): Promise<void> {
     if (!options.skipConst && this.prop.hasOwnProperty('const')) {
       return;
@@ -1026,6 +1060,10 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
       }
     } else {
       this._setValueViaProp(value, options);
+    }
+
+    if (this.hasPersist) {
+      this.persistValue();
     }
 
     this._recalculateEnabledIfStatusOnNextResolve = true;

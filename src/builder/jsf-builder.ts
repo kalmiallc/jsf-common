@@ -107,6 +107,9 @@ export interface JsfBuilderOptions {
   onError?: (error: any) => Promise<any>;
   onNotification?: (notification: JsfNotificationInterface) => Promise<any>;
 
+  setPersistedValue?: (persistType: string, key: string, value: any) => void;
+  getPersistedValue?: (persistType: string, key: string) => any;
+
   jsfComponentBuilder?: JsfComponentBuilder;
   jsfDefinitionProvider?: (key: string) => Observable<JsfDefinition>
 }
@@ -312,6 +315,9 @@ export class JsfBuilder extends JsfAbstractBuilder {
   public onNotification: (notification: JsfNotificationInterface) => Promise<any>;
 
 
+  public setPersistedValue: (persistType: string, key: string, value: any) => void;
+  public getPersistedValue: (persistType: string, key: string) => any;
+
   /**
    * Warning! not same on API and APP.
    */
@@ -414,6 +420,9 @@ export class JsfBuilder extends JsfAbstractBuilder {
     this.onVirtualEvent = options.onVirtualEvent;
     this.onError        = options.onError;
     this.onNotification = options.onNotification;
+
+    this.setPersistedValue = options.setPersistedValue;
+    this.getPersistedValue = options.getPersistedValue;
 
     if (doc.$config) {
       this.clientConfig = doc.$config;

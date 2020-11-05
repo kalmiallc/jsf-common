@@ -427,6 +427,20 @@ export abstract class JsfAbstractProp<Type, TypeString, Handlers> extends JsfAbs
     $eval: string;
   };
 
+  persist?: {
+    type: 'localStorage' | 'query';
+
+    /**
+     * Force key under which to persist value.
+     */
+    key?: string;
+
+    /**
+     * Prefix key applies to both cases auto generated key or set one.
+     */
+    keyPrefix?: string;
+  };
+
   /**
    * If true value can be null else null will be converted into undefined. If object has only undefined
    * properties whole section will be converted into
