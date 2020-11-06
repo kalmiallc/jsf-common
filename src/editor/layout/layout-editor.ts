@@ -281,7 +281,7 @@ export class JsfLayoutEditor {
     newParent.addItem(instance, index);
   }
 
-  createItem(itemDefinition: JsfUnknownLayout, index?: number) {
+  createItem(itemDefinition: JsfUnknownLayout, index?: number): JsfLayoutEditor {
     if (!this.canAddItem(itemDefinition, index)) {
       this.updateLayout$.next();
       throw new Error(`Parent "${ this.id }:${ this.path }" does not accept child of type "${ itemDefinition.type }" on index ${ index }`);
@@ -301,6 +301,8 @@ export class JsfLayoutEditor {
     this._items = this._items.slice(); // intentional reference change (FP)
 
     this.updateLayout$.next();
+
+    return item;
   }
 
   addItem(instance: JsfLayoutEditor, index?: number) {
