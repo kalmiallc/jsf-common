@@ -434,6 +434,20 @@ export abstract class JsfAbstractProp<Type, TypeString, Handlers> extends JsfAbs
      */
     key?: string;
 
+    $mode?: string | string[] | {
+      /**
+       * Return true or false, only input available is $modes (list of modes).
+       * Example: `return $modes.indexOf('public') > -1 && $modes.indexOf('new') === -1`
+       */
+      $eval: string;
+
+      /**
+       * Auto generated do not change.
+       * @ignore
+       */
+      $evalTranspiled?: string;
+    };
+
     // /**
     //  * Prefix key applies to both cases auto generated key or set one.
     //  */

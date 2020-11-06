@@ -1,8 +1,16 @@
-import { JsfAbstractLayout }            from '../../layout';
 import { isBoolean, isString, isArray } from 'lodash';
 import { evalService }                  from '../util/eval.service';
 
-export function canActivateLayoutItem(modes: string[], item: JsfAbstractLayout): boolean {
+export function canActivateLayoutItem(modes: string[], item: {
+  $mode?: string | string[] | {
+    /**
+     * Return true or false, only input available is $modes (list of modes).
+     * Example: `return $modes.indexOf('public') > -1 && $modes.indexOf('new') === -1`
+     */
+    $eval: string;
+    $evalTranspiled?: string;
+  }
+}): boolean {
   if (!item.$mode) {
     return true;
   }
