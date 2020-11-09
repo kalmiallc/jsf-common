@@ -323,14 +323,14 @@ export interface JsfLayoutOnClickInterface {
   hideLoadingIndicator?: boolean;
 
   /**
-   * Moves the stepper with provided id to the next step if possible.
+   * Moves the stepper or wizard with provided id to the next step if possible.
    */
   stepperNext?: {
     id: string;
   };
 
   /**
-   * Moves the stepper with provided id to the previous step if possible.
+   * Moves the stepper or wizard with provided id to the previous step if possible.
    */
   stepperPrevious?: {
     id: string;
@@ -391,6 +391,9 @@ export interface JsfLayoutOnClickInterface {
     data?: JsfValueOptionsType;
   };
 
+  /**
+   * Reload data source.
+   */
   dataSourceReload?: {
     force?: boolean;
 
@@ -405,7 +408,7 @@ export interface JsfLayoutOnClickInterface {
    */
   dataSourceRequest?: {
     /**
-     * Example: datasource://weather
+     * Example: data-source://weather
      */
     key: string;
 
@@ -429,5 +432,14 @@ export interface JsfLayoutOnClickInterface {
      * Optional script after failed request.
      */
     onFailure?: { $eval: string }
+  }
+
+  /**
+   * Reload provider.
+   */
+  providerReload?: {
+    reloadType: 'key' | 'tag';
+
+    key?: string;
   }
 }

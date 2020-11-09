@@ -873,7 +873,7 @@ export const layoutClickHandlerService = new class {
       }
 
       /**
-       * Dats source requests
+       * Dats source requests.
        */
       if (onClickData.dataSourceRequest) {
         const data = onClickData.dataSourceRequest.data && this.getValue(onClickData.dataSourceRequest.data, options);
@@ -915,6 +915,19 @@ export const layoutClickHandlerService = new class {
            });
         return;
       }
+
+      /**
+       * Reload provider.
+       */
+      if (onClickData.providerReload) {
+        if (onClickData.providerReload.reloadType === 'key') {
+          return await Promise.all(options.rootBuilder.providerExecutors.filter(x => x.providerKey === onClickData.providerReload.key).map(x => x.provideImmediately()));
+        } else if (onClickData.providerReload.reloadType === 'tag') {
+          throw new Error(`Not implemented.`);
+        }
+        return;
+      }
+
 
       if (options.customActionHandler) {
         if (await options.customActionHandler(onClickData, options)) {

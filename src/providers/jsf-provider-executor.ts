@@ -57,6 +57,10 @@ export class JsfProviderExecutor {
     return this.executor.async;
   }
 
+  get providerKey(): string {
+    return this.executor.key;
+  }
+
   constructor(private builder: JsfBuilder,
               private executor: JsfProviderExecutorInterface,
               private consumer: JsfProviderConsumerInterface,
@@ -78,6 +82,9 @@ export class JsfProviderExecutor {
     if (jsfEnv.isApi) {
       return;
     }
+
+    this.builder.providerExecutors.push(this);
+
     this.subscribeToDependencies();
     this.createCustomTriggers().catch(e => {
       throw e;
@@ -89,6 +96,8 @@ export class JsfProviderExecutor {
     this.destroyCustomTriggers().catch(e => {
       throw e;
     });
+
+    this.builder.providerExecutors = this.builder.providerExecutors.filter(x => x !== this);
   }
 
   private async createCustomTriggers() {

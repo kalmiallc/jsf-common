@@ -213,6 +213,7 @@ export class JsfBuilder extends JsfAbstractBuilder {
   resolver: JsfDependencyResolver;
 
   providers: { [key: string]: JsfProvider }                = {};
+  providerExecutors: JsfProviderExecutor[]                 = [];
   private providerExecutorInitQueue: JsfProviderExecutor[] = [];
 
   /**
@@ -845,7 +846,7 @@ export class JsfBuilder extends JsfAbstractBuilder {
       const cachedDirtyValue = this._isDirtyValueCache[path];
       if (cachedDirtyValue === void 0 || !isEqual(this._isDirtyValueCache[path], data.value)) {
         this._isDirtyValueCache[path] = data.value;
-        this.isDirty = true;
+        this.isDirty                  = true;
       }
     }
 
