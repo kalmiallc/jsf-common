@@ -244,6 +244,7 @@ export interface JsfLayoutOnClickInterface {
    */
   showDialog?: {
     key: string;
+    dialogOptions?: any;
     data?: {
              $eval: string;
            } | any;
