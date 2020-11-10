@@ -74,7 +74,11 @@ export const evalService = new class {
 
     let linkedContext;
     if (builder.linkedBuilder) {
-      linkedContext = evalService.getEvalContext(builder.linkedBuilder, options);
+      linkedContext = evalService.getEvalContext(builder.linkedBuilder, {
+        ... options,
+        propBuilder: void 0,
+        layoutBuilder: void 0
+      });
     }
 
     const context = {
