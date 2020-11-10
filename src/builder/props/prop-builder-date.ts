@@ -47,12 +47,16 @@ export class JsfPropBuilderDate extends JsfAbstractPropBuilder<JsfPropDate, JsfH
     }
   }
 
+  private hasValue(x: Date): boolean {
+    return (x !== undefined && x !== null);
+  }
+
   _validateViaProp() {
     this.errors = [];
 
     // required
     if (this.prop.required) {
-      if (this.value === undefined) {
+      if (!this.hasValue(this.value)) {
         this.errors.push(new RequiredValidationError());
       }
     }

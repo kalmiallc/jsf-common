@@ -12,13 +12,17 @@ export class JsfPropBuilderBoolean extends JsfAbstractPropBuilderPrimitive<JsfPr
     return value === null || value === undefined || isBoolean(value);
   }
 
+  private hasValue(x: boolean): boolean {
+    return (x !== undefined && x !== null);
+  }
+
   _validateViaProp() {
     this.errors = [];
 
 
     // required
     if (this.prop.required) {
-      if (this.value === undefined) {
+      if (!this.hasValue(this.value)) {
         this.errors.push(new RequiredValidationError());
       }
     }
