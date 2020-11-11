@@ -85,6 +85,8 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
    */
   rootBuilder: JsfBuilder;
 
+  destroyed?: boolean;
+
   /**
    * Prop name: string, number, ...
    */
@@ -648,6 +650,7 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
   }
 
   onDestroy() {
+    this.destroyed = true;
     this.rootBuilder.resolver.onNodeDestroy(this);
 
     if (this.rootBuilder.pathsCache[this.path]) {
@@ -972,6 +975,10 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
   }
 
   getValue(opt?: { virtual?: boolean, skipGetter?: boolean }): PropValue {
+    if (this.destroyed) {
+      throw new Error(`You tried to call destroyed prop.
+This can happen when angular triggered reload of component and not whole page.`);
+    }
 
     // Here we have paradox: eval needs old / curr. val but we do not know what is it E/D - any/null
     if (this._enabledIfStatus === false) {
@@ -1054,6 +1061,11 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
   }
 
   async setValue(value: PropValue, options: SetValueOptionsInterface = {}): Promise<void> {
+    if (this.destroyed) {
+      throw new Error(`You tried to call destroyed prop.
+This can happen when angular triggered reload of component and not whole page.`);
+    }
+
     if (!options.skipConst && this.prop.hasOwnProperty('const')) {
       return;
     }
@@ -1119,6 +1131,11 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
   }
 
   patchValue(value: PropValue, options: PatchValueOptionsInterface = {}): Promise<void> {
+    if (this.destroyed) {
+      throw new Error(`You tried to call destroyed prop.
+This can happen when angular triggered reload of component and not whole page.`);
+    }
+
     if (this.prop.hasOwnProperty('const')) {
       return;
     }

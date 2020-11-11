@@ -240,6 +240,8 @@ export class JsfBuilder extends JsfAbstractBuilder {
    */
   services: { [key: string]: JsfAbstractService } = {};
 
+  destroyed?: boolean;
+
   searchableProps: string[] = [];
 
   public jsfDefinitionProvider?: (key: string) => Observable<JsfDefinition>;
@@ -550,6 +552,8 @@ export class JsfBuilder extends JsfAbstractBuilder {
   }
 
   onDestroy() {
+    this.destroyed = true;
+
     if (!jsfEnv.isApi && this.doc.$lifeCycle?.$beforeFormDestroy?.$eval) {
       this.runEval((this.doc.$lifeCycle.$beforeFormDestroy as any).$evalTranspiled || this.doc.$lifeCycle.$beforeFormDestroy.$eval);
     }
@@ -684,6 +688,11 @@ export class JsfBuilder extends JsfAbstractBuilder {
 
 
   onExternalEvent(eventKey: string, eventData: any) {
+    if (this.destroyed) {
+      console.warn(`You tried to call destroyed form.
+This can happen when angular triggered reload of component and not whole page.`);
+      return;
+    }
     if (this.debug) {
       console.log('[JSF-BUILDER] Incoming external event', eventKey, eventData);
     }
@@ -747,6 +756,11 @@ export class JsfBuilder extends JsfAbstractBuilder {
   }
 
   setLayoutState(id: string, key: string, value: any): void {
+    if (this.destroyed) {
+      console.warn(`You tried to call destroyed form.
+This can happen when angular triggered reload of component and not whole page.`);
+      return;
+    }
     this.layoutState[id]            = this.layoutState[id] || {
       store   : {},
       listener: new Subject()
@@ -843,6 +857,12 @@ export class JsfBuilder extends JsfAbstractBuilder {
    * All props report their changes.
    */
   masterEmitValueChange(path: string, data: PropValueChangeInterface) {
+    if (this.destroyed) {
+      console.warn(`You tried to call destroyed form.
+This can happen when angular triggered reload of component and not whole page.`);
+      return;
+    }
+
     this.log(`Master emit VALUE "${ path }"`, data);
     if (this.valueChangeListeners[path]) {
       this.valueChangeListeners[path].next(data);
@@ -883,6 +903,12 @@ export class JsfBuilder extends JsfAbstractBuilder {
   }
 
   masterEmitStatusChange(from: { path: string, abstractPath: string }, data: PropStatusChangeInterface) {
+    if (this.destroyed) {
+      console.warn(`You tried to call destroyed form.
+This can happen when angular triggered reload of component and not whole page.`);
+      return;
+    }
+
     this.log(`Master emit STATUS "${ from.path }"`, data);
 
     if (from.path) {
@@ -929,6 +955,12 @@ export class JsfBuilder extends JsfAbstractBuilder {
   ////////////////////////////
 
   getProp(path: string) {
+    if (this.destroyed) {
+      console.warn(`You tried to call destroyed form.
+This can happen when angular triggered reload of component and not whole page.`);
+      return;
+    }
+
     if (this.warnings) {
       // Check if path accesses any array element by index and issue a warning.
       if (/\[\d]/.test(path)) {
@@ -984,6 +1016,7 @@ export class JsfBuilder extends JsfAbstractBuilder {
   }
 
   async setValue(value: any, options: SetValueOptionsInterface = {}) {
+
     return this.propBuilder.setValue(value, options);
   }
 

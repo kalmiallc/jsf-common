@@ -358,6 +358,10 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
     options: { groupKey?: string, skipProcessDirtyDataSources?: boolean } = {}
   ) {
     const jb              = this.components[componentPath].jsfBuilder;
+    if (jb.destroyed) {
+      return;
+    }
+
     const { value, hash } = jb.getProp(filterPath).getValueWithHash();
     const filterState     = this.dataSourcesInfo[dataSource].components[componentPath].filters
       .find(x => x.path === filterPath && x.groupKey === options.groupKey);
@@ -649,7 +653,10 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
       if (!componentBuilder.jsfBuilder) { // component was register after req, that is ok it will make separate req
         continue;
       }
-      componentBuilder.jsfBuilder.onExternalEvent(dataSourceKey, { ...x });
+
+      if (!componentBuilder.jsfBuilder.destroyed) {
+        componentBuilder.jsfBuilder.onExternalEvent(dataSourceKey, { ...x });
+      }
     }
   }
 

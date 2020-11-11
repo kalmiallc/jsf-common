@@ -164,6 +164,11 @@ export class JsfPropBuilderObject
   }
 
   getControl(path: string[], options: GetControlOptions = {}): JsfUnknownPropBuilder {
+    if (this.destroyed) {
+      throw new Error(`You tried to call path ${ JSON.stringify(path) } on destroyed prop.
+This can happen when angular triggered reload of component and not whole page.`);
+    }
+
     if (path.length === 0 || (path.length === 1 && path[0] === '')) {
       return this;
     }
