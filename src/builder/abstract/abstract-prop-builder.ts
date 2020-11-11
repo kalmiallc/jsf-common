@@ -800,10 +800,6 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
     const value = this.getValue();
     this.rootBuilder.masterEmitValueChange(this.abstractPath, { value });
 
-    if (this.hasPersist) {
-      this.persistValue();
-    }
-
     if (this.prop.onValueChange && this.prop.onValueChange.noEmit) {
       return;
     }
@@ -1095,6 +1091,10 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
 
   onSetValue(options: SetValueOptionsInterface = {}): Promise<void> {
     // this.setStatus(PropStatus.Pending);
+
+    if (this.hasPersist) {
+      this.persistValue();
+    }
 
     if (!options.noResolve) {
       return this.resolve();

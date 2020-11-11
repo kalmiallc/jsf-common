@@ -355,7 +355,8 @@ export class JsfBuilder extends JsfAbstractBuilder {
   private valueChangeListeners: { [path: string]: Subject<PropValueChangeInterface> }   = {};
   private statusChangeListeners: { [path: string]: Subject<PropStatusChangeInterface> } = {};
 
-  private propWaitingForOnInitCallback: string[] = [];
+  private propWaitingForOnInitCallback: string[]                                = [];
+  private externalEventsWaitingForReady: { eventKey: string, eventData: any }[] = [];
 
   /**
    * Extra events registered dynamically.
@@ -522,6 +523,18 @@ export class JsfBuilder extends JsfAbstractBuilder {
         propBuilder.runOnInitUserActions();
       }
     }
+    this.propWaitingForOnInitCallback = [];
+
+    for (const externalEvent of this.externalEventsWaitingForReady) {
+      const ctx = this.getEvalContext({
+        propBuilder       : this.propBuilder,
+        extraContextParams: {
+          $eventData: externalEvent.eventData
+        }
+      });
+      this.runEvalWithContext(this.doc.$events.listen[externalEvent.eventKey].$eval, ctx);
+    }
+    this.externalEventsWaitingForReady = [];
 
     if (!jsfEnv.isApi && this.doc.$lifeCycle?.$afterFormInit?.$eval) {
       this.runEval((this.doc.$lifeCycle.$afterFormInit as any).$evalTranspiled || this.doc.$lifeCycle.$afterFormInit.$eval);
@@ -688,13 +701,19 @@ export class JsfBuilder extends JsfAbstractBuilder {
     }
 
     if (this.doc.$events.listen && this.doc.$events.listen[eventKey]) {
-      const ctx = this.getEvalContext({
-        propBuilder       : this.propBuilder,
-        extraContextParams: {
-          $eventData: eventData
-        }
-      });
-      this.runEvalWithContext(this.doc.$events.listen[eventKey].$eval, ctx);
+      if (this.ready) {
+        const ctx = this.getEvalContext({
+          propBuilder       : this.propBuilder,
+          extraContextParams: {
+            $eventData: eventData
+          }
+        });
+        this.runEvalWithContext(this.doc.$events.listen[eventKey].$eval, ctx);
+      } else {
+        this.externalEventsWaitingForReady.push({
+          eventKey, eventData
+        });
+      }
     }
   }
 
