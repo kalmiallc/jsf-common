@@ -55,7 +55,7 @@ export const layoutClickHandlerService = new class {
     }
 
     // Const
-    if (valueOptions.const) {
+    if (valueOptions.const !== void 0) {
       return valueOptions.const;
     }
 
