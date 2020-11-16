@@ -1065,11 +1065,8 @@ This can happen when angular triggered reload of component and not whole page.`)
         let x: any = this.rootBuilder.getPersistedValue(persistType, key);
         if (x !== undefined && x !== null) {
           if ((this.prop as JsfAbstractProp<any, any, any>).persist?.loadMap?.$eval) {
-            const ctx          = this.rootBuilder.getEvalContext({
-              propBuilder       : this,
-              extraContextParams: {
-                $value: x
-              }
+            const ctx          = this.rootBuilder.getStaticEvalContext({
+              extraContextParams: { $value: x }
             });
             const evalObj: any = (this.prop as JsfAbstractProp<any, any, any>).persist?.loadMap;
             x                  = this.rootBuilder.runEvalWithContext(evalObj.$evalTranspiled || evalObj.$eval, ctx);
