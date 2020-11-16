@@ -1030,12 +1030,24 @@ This can happen when angular triggered reload of component and not whole page.`)
     const persistType = (this.prop as JsfAbstractProp<any, any, any>).persist?.type;
 
     if (persistType) {
-      const x = this.getJsonValue();
+      let x: any = this.getJsonValue();
       if (x !== undefined) {
         try {
-          this.rootBuilder.setPersistedValue(persistType, key, JSON.stringify(x));
+          if ((this.prop as JsfAbstractProp<any, any, any>).persist?.storeMap?.$eval) {
+            const ctx          = this.rootBuilder.getEvalContext({
+              propBuilder       : this,
+              extraContextParams: {
+                $value: x
+              }
+            });
+            const evalObj: any = (this.prop as JsfAbstractProp<any, any, any>).persist?.storeMap;
+            x                  = this.rootBuilder.runEvalWithContext(evalObj.$evalTranspiled || evalObj.$eval, ctx);
+          } else {
+            x = JSON.stringify(x);
+          }
+          this.rootBuilder.setPersistedValue(persistType, key, x);
         } catch (e) {
-          console.error(`Failed persist value [key=${ key }, persistType=${persistType}].`, e);
+          console.error(`Failed persist value [key=${ key }, persistType=${ persistType }].`, e);
         }
       }
     }
@@ -1050,12 +1062,25 @@ This can happen when angular triggered reload of component and not whole page.`)
 
     if (persistType) {
       try {
-        const x = this.rootBuilder.getPersistedValue(persistType, key);
+        let x: any = this.rootBuilder.getPersistedValue(persistType, key);
         if (x !== undefined && x !== null) {
-          this.setJsonValueNoResolve(JSON.parse(x), { noValueChange: options.noValueChange });
+          if ((this.prop as JsfAbstractProp<any, any, any>).persist?.loadMap?.$eval) {
+            const ctx          = this.rootBuilder.getEvalContext({
+              propBuilder       : this,
+              extraContextParams: {
+                $value: x
+              }
+            });
+            const evalObj: any = (this.prop as JsfAbstractProp<any, any, any>).persist?.loadMap;
+            x                  = this.rootBuilder.runEvalWithContext(evalObj.$evalTranspiled || evalObj.$eval, ctx);
+          } else {
+            x = JSON.parse(x);
+          }
+
+          this.setJsonValueNoResolve(x, { noValueChange: options.noValueChange });
         }
       } catch (e) {
-        console.error(`Failed to restore persisted value [key=${ key }, persistType=${persistType}].`, e);
+        console.error(`Failed to restore persisted value [key=${ key }, persistType=${ persistType }].`, e);
       }
     }
   }

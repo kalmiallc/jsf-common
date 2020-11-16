@@ -448,6 +448,8 @@ export abstract class JsfAbstractProp<Type, TypeString, Handlers> extends JsfAbs
       $evalTranspiled?: string;
     };
 
+    loadMap?: { $eval: string };
+    storeMap?: { $eval: string };
     // /**
     //  * Prefix key applies to both cases auto generated key or set one.
     //  */
