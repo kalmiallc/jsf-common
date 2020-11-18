@@ -87,9 +87,9 @@ export abstract class JsfAbstractLayoutBuilder<LayoutType extends JsfAbstractLay
     options: JsfLayoutBuilderOptionsInterface) {
     this.layout     = layout;
     this.docDefPath = options.docDefPath;
-    this.computeId(parentBuilder, options);
     this.rootBuilder   = rootBuilder;
     this.parentBuilder = parentBuilder;
+    this.computeId(parentBuilder, options);
     this.resetItemsPropMap(arrayPropMap);
 
     this.rootBuilder.increaseLayoutLoadingCount(this);
@@ -97,7 +97,7 @@ export abstract class JsfAbstractLayoutBuilder<LayoutType extends JsfAbstractLay
 
   private computeId(parentBuilder: JsfAbstractLayoutBuilder<JsfUnknownLayout>, options: JsfLayoutBuilderOptionsInterface) {
     if (!parentBuilder) {
-      this.id = 'root-layout';
+      this.id = `root-layout-${ this.rootBuilder.id }`;
       return;
     }
 
