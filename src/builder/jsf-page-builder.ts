@@ -8,10 +8,7 @@ import { JsfDefinition }                                          from '../jsf-d
 import { debounce, finalize, takeUntil, throttleTime }            from 'rxjs/operators';
 import { DataSourceInterface }                                    from '../jsf-component';
 import { JsfUnknownPropBuilder }                                  from './abstract';
-import { isPropArray }                                            from '../schema/props';
 import { isPropBuilderArray }                                     from './props';
-import { isNil }                                                  from 'lodash';
-
 
 /**
  * Global counter so each page can have uniq ID.
@@ -612,6 +609,10 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
 
     const reqKey = { dataSource: dataSourceKey, groupKey: data.groupKey };
     this.registerDataSourceRequest(reqKey);
+
+    let subscriber;
+    const returnObs = new Observable(x => subscriber = x);
+
     request$
       .pipe(
         takeUntil(this.onDestroy),
@@ -625,13 +626,16 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
         if (!options?.preventDefaultSuccess) {
           this.onDataSourcesRequestResponse(dataSourceKey, x);
         }
+        subscriber.next(x);
+        subscriber.complete();
       }, error => {
         if (!options?.preventDefaultError) {
           this.onDataSourcesRequestFail(dataSourceKey, error);
         }
+        subscriber.error(error);
       });
 
-    return request$;
+    return returnObs;
   }
 
   onDataSourcesRequestFail(dataSourceKey: string, error: any) {
