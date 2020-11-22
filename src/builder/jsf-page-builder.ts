@@ -610,8 +610,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
     const reqKey = { dataSource: dataSourceKey, groupKey: data.groupKey };
     this.registerDataSourceRequest(reqKey);
 
-    let subscriber;
-    const returnObs = new Observable(x => subscriber = x);
+    const resSubject = new Subject<any>();
 
     request$
       .pipe(
@@ -626,16 +625,17 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
         if (!options?.preventDefaultSuccess) {
           this.onDataSourcesRequestResponse(dataSourceKey, x);
         }
-        subscriber.next(x);
-        subscriber.complete();
+        resSubject.next(x);
+        resSubject.complete();
       }, error => {
         if (!options?.preventDefaultError) {
           this.onDataSourcesRequestFail(dataSourceKey, error);
         }
-        subscriber.error(error);
+        resSubject.error(error);
+        resSubject.complete();
       });
 
-    return returnObs;
+    return resSubject.asObservable();
   }
 
   onDataSourcesRequestFail(dataSourceKey: string, error: any) {
