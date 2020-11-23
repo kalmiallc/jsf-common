@@ -3,8 +3,8 @@ import {
   jsfAbstractLayoutTranslatableProperties,
   JsfAbstractSpecialLayout,
   jsfAbstractSpecialLayoutJsfDefinitionLayoutItems,
-  jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties
-}                                                       from '../../../layout';
+  jsfAbstractSpecialLayoutJsfDefinitionSchemaProperties, JsfLayoutOnClickInterface
+} from '../../../layout';
 import { EditorInterfaceLayoutFactory, wrapKeyDynamic } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
 import { JsfRegister }                                  from '../../../register';
 import { EditorInterfaceSchemaFactory }                 from '../../../editor/helpers/editor-factory';
@@ -25,6 +25,8 @@ export class JsfLayoutRender3D extends JsfAbstractSpecialLayout<'render-3d'> {
     $eval: string,
     dependencies?: string[]
   };
+
+  onEvent?: JsfLayoutOnClickInterface | JsfLayoutOnClickInterface[];
 
   width?: string;
   height?: string;
