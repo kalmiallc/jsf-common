@@ -940,7 +940,10 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
     if (this.prop.onUserValueChange?.$eval) {
       const ctx = this.rootBuilder.getEvalContext({
         propBuilder       : this,
-        extraContextParams: {}
+        extraContextParams: {
+          $propVal : this.getJsonValue(),
+          $newValue : this.getJsonValue(),
+        }
       });
       this.rootBuilder.runEvalWithContext((this.prop.onUserValueChange as any).$evalTranspiled || this.prop.onUserValueChange.$eval, ctx);
     }
