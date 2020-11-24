@@ -33,6 +33,11 @@ export class JsfLayoutIframe extends JsfAbstractSpecialLayout<'iframe'> {
     dependencies?: string[]
   };
 
+  sectionTrackingInterval?: number;
+  onSectionTrack?: {
+    $eval: string;
+  };
+
   constructor(data: JsfLayoutIframe) {
     super();
     Object.assign(this, data);
