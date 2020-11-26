@@ -137,6 +137,7 @@ export abstract class EditorInterfaceSchemaFactory {
                     { label: 'Show notification', value: 'showNotification' },
                     ... ($isMode('full') ? [{ label: 'Run service action', value: 'runServiceAction' }] : []),
                     { label: 'Data source reload', value: 'dataSourceReload' },
+                    ... ($isMode('full') ? [{ label: 'Scroll to top', value: 'scrollToTop' }] : []),
                   ]`
                 }
               }
@@ -664,6 +665,16 @@ export abstract class EditorInterfaceSchemaFactory {
                   type: 'string'
                 }
               }
+            },
+
+            // Run service action
+            scrollToTop: {
+              type      : 'boolean',
+              enabledIf : {
+                $eval       : `return $getPropValue('${ editorPropFullPath }') === 'scrollToTop'`,
+                dependencies: [editorPropFullPath]
+              },
+              const: true
             }
           }
         }

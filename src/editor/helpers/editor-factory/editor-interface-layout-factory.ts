@@ -462,6 +462,17 @@ export abstract class EditorInterfaceLayoutFactory {
               ...EditorInterfaceLayoutFactory.outputKey(`${ propFullPath }[].dataSourceReload.dataSourceKey`, 'Data source key')
             ]
           },
+          // Scroll to top
+          {
+            type     : 'div',
+            visibleIf: {
+              $eval       : `return $getItemValue('${ editorPropFullPath }') === 'scrollToTop'`,
+              dependencies: [editorPropFullPath]
+            },
+            items    : [
+              ...EditorInterfaceLayoutFactory.createLabel(`All scrollbars will be set to top.`)
+            ]
+          },
 
           // Condition
           ...EditorInterfaceLayoutFactory.createDivider(),

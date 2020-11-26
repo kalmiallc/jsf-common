@@ -916,6 +916,15 @@ export const layoutClickHandlerService = new class {
         return;
       }
 
+      /**
+       * Scroll to top.
+       */
+      if (onClickData.scrollToTop) {
+        options.rootBuilder.docComponent.osService.scrollAllTo(0, 0);
+        return;
+      }
+
+
 
       if (options.customActionHandler) {
         if (await options.customActionHandler(onClickData, options)) {

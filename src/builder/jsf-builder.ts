@@ -347,6 +347,11 @@ export class JsfBuilder extends JsfAbstractBuilder {
   } = {};
 
   /**
+   * Stores the main document component.
+   */
+  docComponent: any;
+
+  /**
    * Stores layouts components based on custom IDs.
    * Must have unique IDs.
    */
@@ -566,6 +571,10 @@ export class JsfBuilder extends JsfAbstractBuilder {
         });
     }
     this.services = {};
+
+    this.layout = {};
+    this.layoutState = {};
+    this.docComponent = null;
 
     this.propBuilder.onDestroy();
 

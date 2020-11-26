@@ -443,4 +443,9 @@ export interface JsfLayoutOnClickInterface {
 
     key?: string;
   }
+
+  /**
+   * Scroll to top.
+   */
+  scrollToTop?: boolean;
 }
