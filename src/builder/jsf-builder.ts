@@ -481,7 +481,7 @@ export class JsfBuilder extends JsfAbstractBuilder {
       const serviceName   = typeof service === 'object' ? service.name : service;
       const serviceConfig = typeof service === 'object' ? service.config : void 0;
 
-      const serviceInstance = this.options.services[serviceName];
+      const serviceInstance = this.options.services && this.options.services[serviceName];
       if (serviceInstance) {
         await serviceInstance.onCreate(this, serviceConfig);
         await serviceInstance.onInit();
