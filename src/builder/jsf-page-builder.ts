@@ -226,6 +226,16 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
 
   destroy() {
     this.onDestroy.next();
+
+    for (const dataSourceKey of Object.keys(this.dataSourcesInfo)) {
+      if (this.dataSourcesInfo[dataSourceKey].interval) {
+        this.dataSourcesInfo[dataSourceKey].interval.unsubscribe();
+      }
+    }
+
+    this.components = { };
+    this.dataSourcesInfo = {};
+    this.dataSourceRequests = [];
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////
@@ -250,10 +260,15 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
   }
 
   deRegisterComponent(path: string) {
-    // TODO
-    // if (this.dataSourcesInfo[dataSourceKey].interval) {
-    //   this.dataSourcesInfo[dataSourceKey].interval.unsubscribe();
-    // }
+    for (const dataSourceKey of Object.keys(this.dataSourcesInfo)) {
+       if (this.dataSourcesInfo[dataSourceKey].components[path]) {
+         if (this.dataSourcesInfo[dataSourceKey].components[path].refreshInterval && this.dataSourcesInfo[dataSourceKey].interval) {
+           this.dataSourcesInfo[dataSourceKey].interval.unsubscribe();
+           this.repairDataSourceInterval(dataSourceKey);
+         }
+         delete this.dataSourcesInfo[dataSourceKey].components[path];
+       }
+    }
     delete this.components[path];
   }
 
