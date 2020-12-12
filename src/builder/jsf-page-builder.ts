@@ -233,7 +233,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
       }
     }
 
-    this.components = { };
+    this.components = {};
     this.dataSourcesInfo = {};
     this.dataSourceRequests = [];
   }
