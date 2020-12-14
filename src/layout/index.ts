@@ -21,7 +21,7 @@ import {
   JsfLayoutExpansionPanelStandalone,
   JsfLayoutExpansionPanelStandaloneContent,
   JsfLayoutExpansionPanelStandaloneHeader,
-  JsfLayoutExpansionPanelStandalonePanel,
+  JsfLayoutExpansionPanelStandalonePanel, JsfLayoutFloatingDiv,
   JsfLayoutHeading,
   JsfLayoutHr,
   JsfLayoutHtml,
@@ -63,7 +63,7 @@ import {
   JsfLayoutWizardStep,
   JsfLayoutWizardStepperContent,
   JsfLayoutWizardStepperHeader
-}                                                 from './layouts';
+} from './layouts';
 import { JsfItemsStylesBase, JsfItemsStylesFlex } from './styles';
 
 export * from './jsf-layout-util';
@@ -74,6 +74,7 @@ export * from './interfaces';
 
 export type JsfItemsLayout =
   JsfLayoutDiv
+  | JsfLayoutFloatingDiv
   | JsfLayoutRow
   | JsfLayoutCol
   | JsfLayoutTabSet

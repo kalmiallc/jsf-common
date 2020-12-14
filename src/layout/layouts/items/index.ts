@@ -7,6 +7,7 @@ import { JsfLayoutListPreferences }    from './layout-list';
 
 export * from './layout-col';
 export * from './layout-div';
+export * from './layout-floating-div';
 export * from './layout-order-summary';
 export * from './layout-order-summary-overlay';
 export * from './layout-order-summary-scroll-container';
