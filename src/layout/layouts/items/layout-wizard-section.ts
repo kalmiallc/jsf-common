@@ -8,8 +8,6 @@ import {
 }                                       from '../../../layout';
 import { JsfRegister }                  from '../../../register';
 import { EditorInterfaceLayoutFactory } from '../../../editor/helpers/editor-factory/editor-interface-layout-factory';
-import { EditorInterfaceSchemaFactory } from '../../../editor/helpers/editor-factory/editor-interface-schema-factory';
-import { CodeEditorKeyIconType }        from '../../../editor/helpers/editor-factory/layout/code-editor-key';
 
 const layoutInfo: LayoutInfoInterface = {
   type        : 'wizard-section',
@@ -18,6 +16,9 @@ const layoutInfo: LayoutInfoInterface = {
   icon        : 'layout-icons/div.svg',
   items       : {
     enabled: true
+  },
+  parent      : {
+    allowedTypes: ['wizard']
   },
   localization: {
     translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
@@ -48,24 +49,24 @@ export const layoutWizardSectionJsfDefinition = {
       ...jsfAbstractItemsLayoutJsfDefinitionSchemaProperties,
 
       sectionType: {
-        type:  'string',
+        type   : 'string',
         handler: {
-          type: 'common/dropdown',
+          type  : 'common/dropdown',
           values: [
             { value: 'header', label: 'Header' },
             { value: 'sidebar', label: 'Sidebar' },
             { value: 'content', label: 'Content' },
-            { value: 'footer', label: 'Footer' },
+            { value: 'footer', label: 'Footer' }
           ]
         }
       },
 
       sectionOptions: {
-        type: 'object',
+        type      : 'object',
         properties: {
-          stepIds: {
-            type: 'array',
-            items: {
+          stepIds : {
+            type   : 'array',
+            items  : {
               type: 'string'
             },
             handler: {
@@ -73,7 +74,7 @@ export const layoutWizardSectionJsfDefinition = {
             }
           },
           noStyles: {
-            type: 'boolean',
+            type : 'boolean',
             title: 'No styles'
           }
         }
@@ -87,7 +88,7 @@ export const layoutWizardSectionJsfDefinition = {
         ...EditorInterfaceLayoutFactory.createPanel('Wizard section', [
           ...EditorInterfaceLayoutFactory.outputKey('sectionType', 'Section type'),
           ...EditorInterfaceLayoutFactory.outputKey('sectionOptions.stepIds', 'Steps ids:'),
-          ...EditorInterfaceLayoutFactory.outputKey('sectionOptions.noStyles'),
+          ...EditorInterfaceLayoutFactory.outputKey('sectionOptions.noStyles')
         ]),
 
         ...jsfAbstractItemsLayoutJsfDefinitionLayoutItems

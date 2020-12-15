@@ -19,7 +19,8 @@ const layoutInfo: LayoutInfoInterface = {
   category    : 'Layout',
   icon        : 'layout-icons/div.svg',
   items       : {
-    enabled: true
+    enabled: true,
+    allowedTypes: ['wizard-section']
   },
   localization: {
     translatableProperties: [...jsfAbstractLayoutTranslatableProperties]

@@ -17,6 +17,9 @@ const layoutInfo: LayoutInfoInterface = {
   items       : {
     enabled: true
   },
+  parent      : {
+    allowedTypes: ['wizard-stepper-content']
+  },
   localization: {
     translatableProperties: [...jsfAbstractLayoutTranslatableProperties]
   }
