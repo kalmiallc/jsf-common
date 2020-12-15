@@ -14,6 +14,8 @@ export class JsfLayoutEditor {
   protected _definition: JsfUnknownLayout;
   private _parent: JsfLayoutEditor;
 
+  private _metadata = {};
+
   /**
    * Will emit whenever a layout update is required.
    */
@@ -363,6 +365,14 @@ export class JsfLayoutEditor {
     this.definitionChange$.next();
   }
 
+
+  getMetaKey(key: string, defaultValue?: any): any {
+    return this._metadata[key] ?? defaultValue;
+  }
+
+  setMetaKey(key: string, value: any) {
+    this._metadata[key] = value;
+  }
 
   extractTranslatableMessages(): ExtractedMessage[] {
     const localizationInfo = this.info.localization;
