@@ -74,6 +74,10 @@ export interface JsfLayoutButtonPreferences {
    * Default is False.
    */
   disableRipple?: boolean;
+  /**
+   * Whether to display the menu arrow, if the button is a menu trigger.
+   */
+  showMenuArrow?: boolean;
 }
 
 export const layoutButtonPreferencesSchema = {
