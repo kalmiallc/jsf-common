@@ -979,8 +979,10 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
 
   getValue(opt?: { virtual?: boolean, skipGetter?: boolean }): PropValue {
     if (this.destroyed) {
+      /*
       throw new Error(`You tried to call destroyed prop.
 This can happen when angular triggered reload of component and not whole page.`);
+       */
     }
 
     // Here we have paradox: eval needs old / curr. val but we do not know what is it E/D - any/null
