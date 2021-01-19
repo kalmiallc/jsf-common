@@ -6,12 +6,18 @@ import { JsfTranslatableMessage }                                           from
 import { PatchValueOptionsInterface, SetValueOptionsInterface }             from '../interfaces/set-value-options.interface';
 import { jsfEnv }                                                           from '../../jsf-env';
 import { ValueChangeInterface }                                             from '../interfaces';
+import { isNil, isObjectLike }                                             from 'lodash';
 
 export class JsfPropBuilderObject
   extends JsfAbstractPropBuilder<JsfPropObject, JsfHandlerBuilderObject, JsfPropObjectValue, JsfPropObjectJsonValue> {
 
   properties: { [propertyName: string]: JsfUnknownPropBuilder } | null = {};
   propertyKeys: string[]                                               = [];
+
+  /**
+   * If true getValue will always return NULL.
+   */
+  forceNull = false;
 
   get propertiesArray() {
     return this.propertyKeys.map(x => this.properties[x]);
@@ -49,6 +55,9 @@ export class JsfPropBuilderObject
     const differences = {};
 
     for (const key of Object.keys(this.properties)) {
+      if (this.properties[key].prop.virtual) {
+        continue;
+      }
       const propertyDiff = json ? this.properties[key].getJsonDiff(lockKey) : this.properties[key].getDiff(lockKey);
       if (propertyDiff !== undefined) {
         differences[key] = propertyDiff;
@@ -195,6 +204,10 @@ This can happen when angular triggered reload of component and not whole page.`)
       return this.properties;
     }
 
+    if (this.forceNull) {
+      return null;
+    }
+
     /*
      return Object.keys(this.properties).reduce((acc, propertyName) => {
      if (!this.properties[propertyName].disabled) {
@@ -262,12 +275,18 @@ This can happen when angular triggered reload of component and not whole page.`)
   }
 
   _setValueViaProp(value, options: SetValueOptionsInterface) {
+    this.forceNull = this.isNullable;
     this.properties = this.properties || {};
 
     // this.rootBuilder.resolver.requestPauseByOne();
     for (const propertyName of this.propertyKeys) {
       if (value) {
         this.properties[propertyName].setValueNoResolve(value[propertyName], options);
+        if (!isNil(value[propertyName])
+            && !(isObjectLike(this.properties[propertyName]) && !Object.keys(this.properties[propertyName]))
+        ) {
+          this.forceNull = false;
+        }
       } else {
         this.properties[propertyName].setValueNoResolve(null, options);
       }
@@ -276,6 +295,7 @@ This can happen when angular triggered reload of component and not whole page.`)
   }
 
   _patchValueViaProp(value, options: PatchValueOptionsInterface) {
+    this.forceNull = this.isNullable;
     if (!value) {
       return;
     }
@@ -285,6 +305,7 @@ This can happen when angular triggered reload of component and not whole page.`)
     for (const propertyName of this.propertyKeys) {
       if (propertyName in value) {
         this.properties[propertyName].patchValueNoResolve(value[propertyName], options);
+        this.forceNull = false;
       }
     }
     // this.rootBuilder.resolver.requestResumeByOne();

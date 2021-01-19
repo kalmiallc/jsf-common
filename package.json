@@ -24,7 +24,7 @@
     "build:watch:app": "tsc-watch --onSuccess \"npm run cp:dev:ss-app\"",
     "build:watch:es2015": "tsc-watch -p ./tsconfig.es2015.json --onSuccess \"npm run cp:dev:app\"",
     "cp:dev:dpf": "ncp ./lib ../../dpf/node_modules/@kalmia/jsf-common/lib",
-    "cp:dev:api": "ncp ./lib ../../../Configurator/configurator-api/node_modules/@kalmia/jsf-common/lib",
+    "cp:dev:api": "ncp ./lib ./../../../SaleSqueze/API/node_modules/@kalmia/jsf-common/lib",
     "cp:dev:api2": "ncp ./lib ../../configurator-api/node_modules/@kalmia/jsf-common/lib",
     "cp:dev:app": "ncp ./lib5 ../app/node_modules/@kalmia/jsf-common-es2015/lib",
     "cp:dev:ss-app": "ncp ./lib5 ../../APP/node_modules/@kalmia/jsf-common-es2015/lib",
