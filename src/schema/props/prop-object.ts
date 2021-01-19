@@ -55,6 +55,11 @@ export class JsfPropObject extends JsfAbstractProp<JsfPropObjectValue, 'object',
    */
   required?: string[];
 
+  /**
+   * If true, setting null on object will persist no matter what auto null calculation will return until set or patch value is called with some data.
+   */
+  forceNull?: boolean;
+
   constructor(data: JsfPropObject) {
     super();
     Object.assign(this, data);

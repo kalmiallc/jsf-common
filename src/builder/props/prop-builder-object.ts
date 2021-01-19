@@ -275,7 +275,7 @@ This can happen when angular triggered reload of component and not whole page.`)
   }
 
   _setValueViaProp(value, options: SetValueOptionsInterface) {
-    this.forceNull = this.isNullable;
+    this.forceNull = this.prop.forceNull && this.isNullable;
     this.properties = this.properties || {};
 
     // this.rootBuilder.resolver.requestPauseByOne();
@@ -295,7 +295,7 @@ This can happen when angular triggered reload of component and not whole page.`)
   }
 
   _patchValueViaProp(value, options: PatchValueOptionsInterface) {
-    this.forceNull = this.isNullable;
+    this.forceNull = this.prop.forceNull && this.isNullable;
     if (!value) {
       return;
     }
