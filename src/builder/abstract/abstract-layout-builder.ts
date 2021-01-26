@@ -190,6 +190,11 @@ export abstract class JsfAbstractLayoutBuilder<LayoutType extends JsfAbstractLay
         lambda = (this.layout.visibleIf as any).$evalTranspiled || this.layout.visibleIf.$eval;
       }
 
+      if (!lambda) {
+        this.setVisibility(true);
+        return;
+      }
+
       try {
         const result = this.rootBuilder.runEvalWithContext(lambda, ctx);
 
