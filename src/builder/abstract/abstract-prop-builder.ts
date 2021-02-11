@@ -800,6 +800,10 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
   protected emitValueChange(data?: {
     oldValue: any
   }): void {
+    if (this.safeMode && this.rootBuilder.engineVersion > 1) {
+      return;
+    }
+
     const value = this.getValue();
     this.rootBuilder.masterEmitValueChange(this.abstractPath, { value });
 
@@ -816,6 +820,10 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
   }
 
   emitStatusChange(): void {
+    if (this.safeMode && this.rootBuilder.engineVersion > 1) {
+      return;
+    }
+
     if (this._statusChange) {
       this._statusChange.next(this.status);
     }
@@ -835,6 +843,9 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
   protected async onValueChange(data: {
     oldValue: any
   }) {
+    if (this.safeMode && this.rootBuilder.engineVersion > 1) {
+      return;
+    }
     await this.changeOtherPropValues(data);
 
     this.emitValueChange(data);

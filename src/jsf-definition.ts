@@ -54,6 +54,11 @@ export class JsfDefinition {
    * JSF engine options
    */
   $engine?: {
+    /**
+     * Used for compatibility with never or older version.
+     * Based on version JSF engine can behavie differently.
+     */
+    version?: number;
     layoutRenderingMode?: 'sync' | 'async';
     dialogSizeBehaviour?: 'dynamic' | 'fullscreen'
   };

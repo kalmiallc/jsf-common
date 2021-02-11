@@ -110,6 +110,8 @@ export interface JsfBuilderOptions {
   setPersistedValue?: (persistType: string, key: string, value: any) => void;
   getPersistedValue?: (persistType: string, key: string) => any;
 
+  engineVersion?: number;
+
   jsfComponentBuilder?: JsfComponentBuilder;
   jsfDefinitionProvider?: (key: string) => Observable<JsfDefinition>
 }
@@ -387,6 +389,8 @@ export class JsfBuilder extends JsfAbstractBuilder {
     return this.doc.$modes || [];
   }
 
+  engineVersion = 1;
+
   static async create(
     doc: JsfDocument,
     options: JsfBuilderOptions = {}) {
@@ -397,7 +401,7 @@ export class JsfBuilder extends JsfAbstractBuilder {
 
   constructor(public doc: JsfDocument, public options: JsfBuilderOptions = {}) {
     super();
-
+    this.engineVersion = options.engineVersion || doc.$engine?.version || 1;
     if (!jsfEnv.isApi && this.doc.$lifeCycle?.$beforeFormInit?.$eval) {
       this.runEvalWithContext((this.doc.$lifeCycle.$beforeFormInit as any).$evalTranspiled || this.doc.$lifeCycle.$beforeFormInit.$eval, {
         $doc    : doc,
