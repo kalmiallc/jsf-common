@@ -12,5 +12,10 @@ export interface JsfRuntimeContext {
     language: string;
   };
 
+  /**
+   * Currency code to use.
+   */
+  currency?: string;
+
   // TODO client info
 }

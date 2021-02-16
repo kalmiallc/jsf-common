@@ -28,8 +28,7 @@ export const evalService = new class {
    */
   getStaticEvalContext(builder: JsfBuilder, options: { extraContextParams?: { [key: string]: any }; } = {}) {
     const locale = builder.runtimeContext ? builder.runtimeContext.application.language : 'en';
-
-    const defaultCurrency = locale === 'en' ? 'GBP' : 'EUR';
+    const defaultCurrency =  builder.runtimeContext?.currency || 'EUR';
 
     return {
       $moment: moment,
