@@ -29,6 +29,8 @@ export const evalService = new class {
   getStaticEvalContext(builder: JsfBuilder, options: { extraContextParams?: { [key: string]: any }; } = {}) {
     const locale = builder.runtimeContext ? builder.runtimeContext.application.language : 'en';
 
+    const defaultCurrency = locale === 'en' ? 'GBP' : 'EUR';
+
     return {
       $moment: moment,
       _      : lodash,
@@ -36,7 +38,7 @@ export const evalService = new class {
       $locale: locale,
 
       $format: {
-        currency: (value: number, currency = 'EUR') => {
+        currency: (value: number, currency = defaultCurrency) => {
           return new Intl.NumberFormat(locale, { style: 'currency', currency, maximumFractionDigits: 2 }).format(value);
         },
         number  : (value: number, minimumFractionDigits = 0, maximumFractionDigits = void 0) => {
