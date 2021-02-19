@@ -121,6 +121,23 @@ export interface DataSourceFilterInterface {
 
 export class JsfPageBuilder extends JsfAbstractBuilder {
 
+  protected onFilterChange$: Subject<{
+    dataSource: string;
+    componentPath: string;
+    filterPath: string;
+    groupKey?: string;
+    skipProcessDirtyDataSources?: boolean;
+    filterValueHash: string;
+    filterValue: any;
+  }>                      = new Subject<{
+    dataSource: string;
+    componentPath: string;
+    filterPath: string;
+    groupKey?: string;
+    skipProcessDirtyDataSources?: boolean;
+    filterValueHash: string;
+    filterValue: any;
+  }>();
   protected onDestroy: Subject<void>                      = new Subject<void>();
   protected requestProcessDirtyDataSources: Subject<void> = new Subject<void>();
 
@@ -383,6 +400,16 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
     filterState.hash  = hash;
     filterState.value = value;
     filterState.dirty = true;
+
+    this.onFilterChange$.next({
+      dataSource,
+      componentPath,
+      filterPath,
+      groupKey: options.groupKey,
+      skipProcessDirtyDataSources: options.skipProcessDirtyDataSources,
+      filterValueHash: hash,
+      filterValue: value
+    });
 
     if (!options.skipProcessDirtyDataSources) {
       this.processDirtyDataSources();
