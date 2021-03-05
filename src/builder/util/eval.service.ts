@@ -293,3 +293,7 @@ export const evalService = new class {
     }
   }
 };
+
+export function isEvalObject(x: any): x is { $eval: string, dependencies?: string[], layoutDependencies?: string[] } {
+  return typeof x === 'object' && '$eval' in x;
+}
