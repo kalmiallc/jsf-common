@@ -564,7 +564,7 @@ export class JsfPageBuilder extends JsfAbstractBuilder {
       }
 
       if (!dirtyFilters.length && !dataSource.forceDirty) {
-        return;
+        continue;
       }
       dataSource.forceDirty = false;
 
