@@ -32,17 +32,18 @@ import {
   JsfAbstractAuthUserProvider,
   JsfAbstractRouter
 }                                                       from '../abstract';
-import { JsfProvider }                                  from '../providers/jsf-provider';
-import { JsfProviderExecutor }                          from '../providers';
-import { jsfEnv }                                       from '../jsf-env';
-import { JsfAbstractService }                           from '../abstract/abstract-service';
+import { JsfProvider }              from '../providers/jsf-provider';
+import { JsfProviderExecutor }      from '../providers';
+import { jsfEnv }                   from '../jsf-env';
+import { JsfAbstractService }       from '../abstract/abstract-service';
 import {
   JsfNotificationInterface,
   JsfRuntimeContext
-}                                                       from './interfaces';
-import ObjectID                                         from 'bson-objectid';
-import { JsfDefinition }                                from '../jsf-definition';
-import { JsfAnalyticsService }                          from '../analytics/jsf-analytics.service';
+}                                   from './interfaces';
+import ObjectID                     from 'bson-objectid';
+import { JsfDefinition }            from '../jsf-definition';
+import { JsfAnalyticsService }      from '../analytics/jsf-analytics.service';
+import { createDocumentValueProxy } from './util/document-value-proxy';
 
 export interface PropValueChangeInterface {
   value: any;
@@ -150,7 +151,7 @@ export enum LayoutMode {
 
 let jsfBuilderId = 0;
 
-export class JsfBuilder extends JsfAbstractBuilder {
+export class JsfBuilder<ValueInterface = any> extends JsfAbstractBuilder {
 
   /**
    * ID
@@ -175,6 +176,7 @@ export class JsfBuilder extends JsfAbstractBuilder {
    */
   warnings = false;
 
+  value: ValueInterface;
 
   /**
    * This is part of common module so backend can verify form/layout structure.
@@ -475,6 +477,8 @@ export class JsfBuilder extends JsfAbstractBuilder {
         console.warn(`No dirty prop list provided for this document. The document will be marked as dirty on every value change, which may not be what you want.`);
       }
     }
+
+    this.value = createDocumentValueProxy(this);
 
     this.propBuilder.onDependenciesInit();
   }
