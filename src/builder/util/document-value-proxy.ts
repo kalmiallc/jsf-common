@@ -4,7 +4,7 @@ import { isJsfPropBuilderObject, isPropBuilderArray } from '../props';
 export function createDocumentValueProxy(jsf: JsfBuilder): any {
     const handler = {
         get: function (target, path: string) {
-            console.log('GET ' + path);
+            // console.log('GET ' + path);
 
             if (isPropBuilderArray(target)) {
                 path = '[' + path + ']';
@@ -16,7 +16,7 @@ export function createDocumentValueProxy(jsf: JsfBuilder): any {
             return control.getValue();
         },
         set: (target, path: string, value: any) => {
-            console.log('SET ' + path, value);
+            // console.log('SET ' + path, value);
 
             if (isPropBuilderArray(target)) {
                 path = '[' + path + ']';
