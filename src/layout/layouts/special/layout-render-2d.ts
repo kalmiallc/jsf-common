@@ -37,6 +37,10 @@ export class JsfLayoutRender2D extends JsfAbstractSpecialLayout<'render-2d'> {
     key: string;
   };
 
+  vars?: {
+    [ key: string ]: any
+  }
+
   ssr?: {
     /**
      * Set to true to enable SSR rendering.
