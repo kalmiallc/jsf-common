@@ -28,6 +28,9 @@ export class JsfPropBuilderObject
   }
 
   lock(lockKey: Symbol = Symbol() as Symbol): Symbol {
+    if (this.hasHandler) {
+      return this.handler.lock(lockKey);
+    }
     for (const key of Object.keys(this.properties)) {
       this.properties[key].lock(lockKey);
     }
@@ -35,18 +38,30 @@ export class JsfPropBuilderObject
   }
 
   getDiff(lockKey: Symbol): any {
+    if (this.hasHandler) {
+      return this.handler.getDiff(lockKey);
+    }
     return this.getDiffInternal(lockKey, false);
   }
 
   getDiffKeys(lockKey: Symbol): string[] {
+    if (this.hasHandler) {
+      return this.handler.getDiffKeys(lockKey);
+    }
     return this.propertiesArray.reduce((a, c) => a.concat(c.getDiffKeys(lockKey) || []), [])
   }
 
   getJsonDiff(lockKey: Symbol): any {
+    if (this.hasHandler) {
+      return this.handler.getJsonDiff(lockKey);
+    }
     return this.getDiffInternal(lockKey, true);
   }
 
   isDiff(lockKey: Symbol): boolean {
+    if (this.hasHandler) {
+      return this.handler.isDiff(lockKey);
+    }
     const diff = this.getDiffInternal(lockKey, false);
     return diff && !!Object.keys(diff).length;
   }
