@@ -7,11 +7,14 @@ import {
 import { JsfUnknownPropBuilder }      from '../../builder/abstract/index';
 import { jsfHandlerAnyCompatibility } from './any.schema';
 import { isArray, isPlainObject, isNil } from 'lodash';
+import * as hash                         from 'object-hash';
 
 export class JsfHandlerBuilderAny extends JsfBasicHandlerBuilder<JsfUnknownPropBuilder> {
   type: 'any';
 
   value: any;
+
+  lockMap: Map<Symbol, any> = new Map<Symbol, any>();
 
   constructor(builder: JsfUnknownPropBuilder) {
     super(builder);
@@ -19,24 +22,36 @@ export class JsfHandlerBuilderAny extends JsfBasicHandlerBuilder<JsfUnknownPropB
     this.builder.jsonToValue = x => x;
   }
 
-  lock(lockKey?: Symbol): Symbol {
-    return this.builder.lock(lockKey);
+  lock(lockKey: Symbol = Symbol() as Symbol): Symbol {
+    const val = this.getValue();
+    this.lockMap.set(lockKey, val ? hash.MD5(val) : val);
+    return lockKey;
   }
 
   isDiff(lockKey: Symbol): boolean {
-    return this.builder.isDiff(lockKey);
+    if (this.lockMap.has(lockKey)) {
+      const val = this.getValue();
+      const lockedValue = this.lockMap.get(lockKey);
+      if (lockedValue !== (val ? hash.MD5(val) : val)) {
+        return true;
+      }
+    }
   }
 
   getDiff(lockKey: Symbol): any {
     if (this.isDiff(lockKey)) {
-      return this.builder.getDiff(lockKey);
+      return this.getValue();
     }
   }
 
   getJsonDiff(lockKey: Symbol): any {
     if (this.isDiff(lockKey)) {
-      return this.builder.getJsonDiff(lockKey);
+      return this.getJsonValue();
     }
+  }
+
+  getDiffKeys(lockKey: Symbol): string[] {
+    return this.isDiff(lockKey) ? [ this.builder.path ] : [];
   }
 
   setValue(value: any, options: SetValueOptionsInterface = {}) {
