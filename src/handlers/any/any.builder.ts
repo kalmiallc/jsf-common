@@ -24,7 +24,7 @@ export class JsfHandlerBuilderAny extends JsfBasicHandlerBuilder<JsfUnknownPropB
 
     getHashValue() {
         const val = this.getValue();
-        return hash.MD5({ val });
+        return hash.MD5({ val: val ? JSON.parse(JSON.stringify(val)) : val });
     }
 
     lock(lockKey: Symbol = Symbol() as Symbol): Symbol {
