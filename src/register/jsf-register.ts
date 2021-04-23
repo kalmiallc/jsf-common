@@ -51,9 +51,6 @@ export class JsfRegister {
   }
 
   static registerCustomClickAction(actionKey: string, handlerFn: (onClickData: JsfLayoutOnClickInterface, options: JsfHandleClickOptions) => Promise<boolean> | boolean) {
-    if (this.appClickActions[actionKey]) {
-      throw new Error(`A custom action with the key ${ actionKey } is already registered.`);
-    }
     this.appClickActions[actionKey] = handlerFn;
   }
 
