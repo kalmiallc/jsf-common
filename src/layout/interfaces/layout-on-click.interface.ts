@@ -448,4 +448,12 @@ export interface JsfLayoutOnClickInterface {
    * Scroll to top.
    */
   scrollToTop?: boolean;
+
+  /**
+   * Run a custom action from the registry.
+   */
+  customAction?: {
+    key: string;
+    config?: any;
+  };
 }

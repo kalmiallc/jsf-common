@@ -1,15 +1,18 @@
-import { JsfAbstractHandlerBuilder, JsfUnknownPropBuilder } from '../builder/abstract';
-import { JsfDefinition }                                    from '../jsf-definition';
-import { JsfProp, JsfPropObject }                           from '../schema/props';
-import { LayoutInfoInterface }                              from '../editor/layout';
-import { EvalContextOptions, JsfBuilder }                   from '../builder';
-import { HandlerCompatibilityInterface }                    from './interfaces/handler-compatibility.interface';
-import { PropInfoInterface }                                from './interfaces';
-import { defaultToolboxLayoutWhitelist }                    from './layout-whitelist';
+import { JsfAbstractHandlerBuilder, JsfUnknownPropBuilder }      from '../builder/abstract';
+import { JsfDefinition }                                         from '../jsf-definition';
+import { JsfProp, JsfPropObject }                                from '../schema/props';
+import { LayoutInfoInterface }                                   from '../editor/layout';
+import { EvalContextOptions, JsfBuilder, JsfHandleClickOptions } from '../builder';
+import { HandlerCompatibilityInterface }                         from './interfaces/handler-compatibility.interface';
+import { PropInfoInterface }                                     from './interfaces';
+import { defaultToolboxLayoutWhitelist }                         from './layout-whitelist';
+import { JsfLayoutOnClickInterface }                             from '../layout';
 
 export class JsfRegister {
 
   private static appEvalContextLambda: (builder: JsfBuilder, options?: EvalContextOptions) => any;
+
+  private static appClickActions: { [actionName: string]: (onClickData: JsfLayoutOnClickInterface, options: JsfHandleClickOptions) => Promise<boolean> | boolean } = {};
 
   private static layoutStore: { [layoutKey: string]: JsfDefinition }             = {};
   private static layoutBuilderInfo: { [layoutKey: string]: LayoutInfoInterface } = {};
@@ -45,6 +48,17 @@ export class JsfRegister {
 
   static setAppEvalContextLambda(x: (builder: JsfBuilder, options?: EvalContextOptions) => any) {
     JsfRegister.appEvalContextLambda = x;
+  }
+
+  static registerCustomClickAction(actionKey: string, handlerFn: (onClickData: JsfLayoutOnClickInterface, options: JsfHandleClickOptions) => Promise<boolean> | boolean) {
+    if (this.appClickActions[actionKey]) {
+      throw new Error(`A custom action with the key ${ actionKey } is already registered.`);
+    }
+    this.appClickActions[actionKey] = handlerFn;
+  }
+
+  static getCustomClickActions() {
+    return this.appClickActions;
   }
 
   /**************************************

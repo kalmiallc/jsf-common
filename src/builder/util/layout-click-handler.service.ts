@@ -8,6 +8,7 @@ import { JsfValueOptionsType }                                                  
 import { jsfClipboardBaseKey, jsfClipboardClear, jsfClipboardClearAll, jsfClipboardClearMany, jsfClipboardGet } from './clipboard';
 import { JsfArrayPropLayoutBuilder }                                                                            from '../layout';
 import { isObservable, Observable }                                                                             from 'rxjs';
+import { JsfRegister }                                                                                          from '../../register';
 
 export class JsfAbortEventChain extends Error {
 
@@ -18,6 +19,12 @@ export class JsfAbortEventChain extends Error {
     // The following line is needed for working `instanceof`.
     Object.setPrototypeOf(this, JsfAbortEventChain.prototype);
   }
+}
+
+export interface JsfHandleClickOptions {
+  rootBuilder: JsfBuilder;
+  layoutBuilder: JsfAbstractLayoutBuilder<JsfAbstractLayout>;
+  extraContextParams?: { [key: string]: any };
 }
 
 export const layoutClickHandlerService = new class {
@@ -119,16 +126,9 @@ export const layoutClickHandlerService = new class {
     });
   }
 
-  async handleOnClick(onClickData: JsfLayoutOnClickInterface | JsfLayoutOnClickInterface[], options: {
-    rootBuilder: JsfBuilder,
-    layoutBuilder: JsfAbstractLayoutBuilder<JsfAbstractLayout>,
-    extraContextParams?: { [key: string]: any },
-    customActionHandler?: (onClickData: any, options: {
-      rootBuilder: JsfBuilder,
-      layoutBuilder: JsfAbstractLayoutBuilder<JsfAbstractLayout>,
-      extraContextParams?: { [key: string]: any }
-    }) => Promise<boolean> | boolean
-  }, $event?: any) {
+  async handleOnClick(onClickData: JsfLayoutOnClickInterface | JsfLayoutOnClickInterface[],
+                      options: JsfHandleClickOptions & { customActionHandler?: (onClickData: any, options: JsfHandleClickOptions) => Promise<boolean> | boolean },
+                      $event?: any) {
 
     try {
       /**
@@ -924,8 +924,20 @@ export const layoutClickHandlerService = new class {
         return;
       }
 
+      /**
+       * Custom actions from JSF registry
+       */
+      if (onClickData.customAction) {
+        const actionHandler = JsfRegister.getCustomClickActions()[onClickData.customAction?.key];
+        if (!actionHandler) {
+          throw new Error(`Custom action "${ onClickData.customAction?.key } does not exist"`);
+        }
+        return actionHandler(onClickData, options);
+      }
 
-
+      /**
+       * Custom actions from layout
+       */
       if (options.customActionHandler) {
         if (await options.customActionHandler(onClickData, options)) {
           return;
