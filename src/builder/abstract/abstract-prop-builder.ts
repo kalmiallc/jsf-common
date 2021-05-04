@@ -851,6 +851,17 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
     this.emitValueChange(data);
   }
 
+  protected onValueChangeSync(data: {
+    oldValue: any
+  }) {
+    if (this.safeMode && this.rootBuilder.engineVersion > 1) {
+      return;
+    }
+    this.changeOtherPropValuesSync(data);
+
+    this.emitValueChange(data);
+  }
+
   /**
    * Change value to other props.
    * @param data
@@ -934,6 +945,102 @@ export abstract class JsfAbstractPropBuilder<PropType extends JsfUnknownProp,
               await prop.patchValue(valueToSet);
             } else {
               await prop.setValue(valueToSet);
+            }
+          }
+
+          builderAction.resolver.updateStatus(prop).catch(console.error);
+        } else if (condition === false) {
+          // no op
+        } else {
+          throw new Error(`${ this.path } condition.eval for ${ udv.key } returned non bool value.`);
+        }
+      }
+    }
+  }
+
+  /**
+   * Change value to other props.
+   * @param data
+   */
+  private changeOtherPropValuesSync(data: {
+    oldValue: any
+  }) {
+    if (!this.rootBuilder.ready) {
+      return;
+    }
+    const newValue = this.getValue();
+
+    if (this.prop.onValueChange && this.prop.onValueChange.updateDependencyValue) {
+      for (const udv of this.prop.onValueChange.updateDependencyValue) {
+        let builderAction = this.rootBuilder;
+        if (udv.onLinked) { builderAction = this.rootBuilder.linkedBuilder; }
+
+        // CONDITION
+        let condition = true;
+        if (udv.condition && udv.condition.$eval) {
+
+          // prepare builder or linked builder
+          let builderCondition = this.rootBuilder;
+          if (udv.condition.onLinked) { builderCondition = this.rootBuilder.linkedBuilder; }
+          const ctxCondition = builderCondition.getEvalContext({
+            propBuilder       : this,
+            extraContextParams: {
+              $propVal : newValue,
+              $oldValue: data.oldValue,
+              $newValue: newValue
+            }
+          });
+
+          // ok now check condition
+          condition = builderCondition.runEvalWithContext((udv.condition as any).$evalTranspiled || udv.condition.$eval, ctxCondition);
+        }
+
+        if (condition === true) { // IF CAN ...
+          // prepare builder or linked builder for value part
+          let builderValue = this.rootBuilder;
+          if (udv.value.onLinked) { builderValue = this.rootBuilder.linkedBuilder; }
+          const ctxValue = builderValue.getEvalContext({
+            propBuilder       : this,
+            extraContextParams: {
+              $propVal : newValue,
+              $oldValue: data.oldValue,
+              $newValue: newValue
+            }
+          });
+
+          let key;
+          if (isString(udv.key)) {
+            key = udv.key;
+          } else {
+            const ctxKey = builderValue.getEvalContext({
+              propBuilder       : this,
+              extraContextParams: {
+                $propVal : newValue,
+                $oldValue: data.oldValue,
+                $newValue: newValue
+              }
+            });
+
+            key = builderValue.runEvalWithContext((udv.key as any).$evalTranspiled || udv.key.$eval, ctxKey);
+          }
+
+          const prop = udv.onLinked ? builderAction.propBuilder.getControlByPath(key) : this.getSibling(key);
+          if (!prop) {
+            throw new Error(`OnValueChange from ${ this.path } complains that prop ${ udv.key } does not exist.`);
+          }
+          if (udv.value.default !== undefined) {
+            const propValue = builderValue.propBuilder.getControlByPath(key);
+            propValue.resetToDefault();
+          } else {
+            // ok now go
+            let valueToSet = udv.value.const;
+            if (udv.value.$eval) {
+              valueToSet = builderValue.runEvalWithContext((udv.value as any).$evalTranspiled || udv.value.$eval, ctxValue);
+            }
+            if (udv.mode === 'patch') {
+              prop.patchValueSync(valueToSet);
+            } else {
+              prop.setValueSync(valueToSet);
             }
           }
 
@@ -1139,6 +1246,40 @@ This can happen when angular triggered reload of component and not whole page.`)
     }
   }
 
+  setValueSync(value: PropValue, options: SetValueOptionsInterface = {}) {
+    if (this.destroyed) {
+      throw new Error(`You tried to call destroyed prop.
+This can happen when angular triggered reload of component and not whole page.`);
+    }
+
+    if (!options.skipConst && this.prop.hasOwnProperty('const')) {
+      return;
+    }
+
+    const oldValue = options.noValueChange ? undefined : this.getValue();
+
+    if (this.hasHandlerSetValue) {
+      this.handler.setValue(value, options);
+    } else if (this.hasSetter && !options.skipSetter) {
+      if (!this._modifyValueViaSetter(
+          value,
+          'set',
+          x => this._patchValueViaProp(x, options),
+          options
+      )) {
+        return;
+      }
+    } else {
+      this._setValueViaProp(value, options);
+    }
+
+    this._recalculateEnabledIfStatusOnNextResolve = true;
+    if (!options.noValueChange) {
+       this.onValueChangeSync({ oldValue });
+    }
+    this.onSetValueSync(options);
+  }
+
   onSetValue(options: SetValueOptionsInterface = {}): Promise<void> {
     // this.setStatus(PropStatus.Pending);
 
@@ -1148,6 +1289,16 @@ This can happen when angular triggered reload of component and not whole page.`)
 
     if (!options.noResolve) {
       return this.resolve();
+    }
+  }
+
+  onSetValueSync(options: SetValueOptionsInterface = {}) {
+    if (this.hasPersist) {
+      this.persistValue();
+    }
+
+    if (!options.noResolve) {
+      this.resolve().catch(console.error);
     }
   }
 
@@ -1209,11 +1360,53 @@ This can happen when angular triggered reload of component and not whole page.`)
     }
   }
 
+  patchValueSync(value: PropValue, options: PatchValueOptionsInterface = {}) {
+    if (this.destroyed) {
+      throw new Error(`You tried to call destroyed prop.
+This can happen when angular triggered reload of component and not whole page.`);
+    }
+
+    if (this.prop.hasOwnProperty('const')) {
+      return;
+    }
+
+    const oldValue = options.noValueChange ? undefined : this.getValue();
+
+    if (this.hasHandlerPatchValue) {
+      this.handler.patchValue(value, options);
+    } else if (this.hasSetter && !options.skipSetter) {
+      if (!this._modifyValueViaSetter(
+          value,
+          'patch',
+          x => this._patchValueViaProp(x, options),
+          options
+      )) {
+        return;
+      }
+    } else {
+      this._patchValueViaProp(value, options);
+    }
+
+    this._recalculateEnabledIfStatusOnNextResolve = true;
+
+    if (!options.noValueChange) {
+      this.onValueChangeSync({ oldValue });
+    }
+
+    this.onPatchValueSync(options);
+  }
+
   async onPatchValue(options: PatchValueOptionsInterface = {}) {
     // this.setStatus(PropStatus.Pending);
 
     if (!options.noResolve) {
       return this.resolve();
+    }
+  }
+
+  onPatchValueSync(options: PatchValueOptionsInterface = {}) {
+    if (!options.noResolve) {
+      this.resolve().catch(console.error);
     }
   }
 
@@ -1505,7 +1698,20 @@ This can happen when angular triggered reload of component and not whole page.`)
   async _updateValidationStatus(options: { noEmit?: boolean, force?: boolean } = {}) {
     if (!this._enabledIfStatus) {
       if (this.isAlreadyScheduledForResolver) {
-        throw new Error(`Validation can not be run for ${ this.path } since status is unknown (_enabledIfStatus = null).`);
+        if (this.rootBuilder.unsafeResolverMode) {
+          this._updateEnabledStatus({noEmit: true});
+          if (!this._enabledIfStatus) {
+            if (this.isAlreadyScheduledForResolver) {
+              throw new Error(`Validation can not be run for ${ this.path } since status is unknown (_enabledIfStatus = null).`);
+            }
+            this.errors = [];
+            this.setStatus(PropStatus.Disabled, options);
+          } else {
+            await this.validate(options);
+          }
+        } else {
+          throw new Error(`Validation can not be run for ${ this.path } since status is unknown (_enabledIfStatus = null).`);
+        }
       }
       this.errors = [];
       this.setStatus(PropStatus.Disabled, options);

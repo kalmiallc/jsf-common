@@ -138,6 +138,7 @@ export const evalService = new class {
       $propVal: void 0,
 
       $form   : builder,
+      $resolver   : builder.resolver,
       $builder: builder.propBuilder,
       $objects: builder.$evalObjects,
       $prop   : options.propBuilder,

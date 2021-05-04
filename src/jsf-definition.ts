@@ -59,6 +59,7 @@ export class JsfDefinition {
      * Based on version JSF engine can behavie differently.
      */
     version?: number;
+    unsafeResolverMode?: boolean;
     layoutRenderingMode?: 'sync' | 'async';
     dialogSizeBehaviour?: 'dynamic' | 'fullscreen'
   };

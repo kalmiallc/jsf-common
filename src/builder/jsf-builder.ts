@@ -392,6 +392,7 @@ export class JsfBuilder<ValueInterface = any> extends JsfAbstractBuilder {
   }
 
   engineVersion = 1;
+  unsafeResolverMode = false;
 
   static async create(
     doc: JsfDocument,
@@ -404,6 +405,8 @@ export class JsfBuilder<ValueInterface = any> extends JsfAbstractBuilder {
   constructor(public doc: JsfDocument, public options: JsfBuilderOptions = {}) {
     super();
     this.engineVersion = options.engineVersion || doc.$engine?.version || 1;
+    this.unsafeResolverMode = doc.$engine?.unsafeResolverMode;
+
     if (!jsfEnv.isApi && this.doc.$lifeCycle?.$beforeFormInit?.$eval) {
       this.runEvalWithContext((this.doc.$lifeCycle.$beforeFormInit as any).$evalTranspiled || this.doc.$lifeCycle.$beforeFormInit.$eval, {
         $doc    : doc,
