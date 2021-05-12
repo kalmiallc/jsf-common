@@ -297,6 +297,9 @@ Non-existing path: "${ path }"`);
     if (jsonValue === undefined || jsonValue === null) {
       return jsonValue;
     }
+    if (!Array.isArray(jsonValue)) {
+      throw new Error(`Invalid JSON value [${ JSON.stringify(jsonValue) }] for array "${ this.path }".`);
+    }
     if (Array.isArray(this.prop.items)) {
       if (this.prop.items.length === jsonValue.length) {
         return this.items.map((prop, i) => prop.jsonToValue(jsonValue[i]));
