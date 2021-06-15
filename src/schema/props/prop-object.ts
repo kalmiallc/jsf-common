@@ -60,6 +60,8 @@ export class JsfPropObject extends JsfAbstractProp<JsfPropObjectValue, 'object',
    */
   forceNull?: boolean;
 
+  ignoreUndefined?: boolean;
+
   constructor(data: JsfPropObject) {
     super();
     Object.assign(this, data);

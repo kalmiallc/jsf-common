@@ -246,6 +246,9 @@ This can happen when angular triggered reload of component and not whole page.`)
           (x === undefined && !this.properties[propertyName].isNullable)
           || (x === null && !this.properties[propertyName].isNullable)
         )) {
+          if (x === undefined && this.prop.ignoreUndefined) {
+            continue;
+          }
           value[propertyName] = x;
           valuePropCount++;
         }
