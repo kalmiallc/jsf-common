@@ -58,6 +58,12 @@ export class JsfLayoutRender2D extends JsfAbstractSpecialLayout<'render-2d'> {
      * If set to true the renderer will initially use SSR until the realtime renderer has finished loading.
      */
     preloadWithSSR?: boolean;
+    /**
+     * Optional eval which returns the value that will be sent to the server to generate the image with.
+     */
+    valueMapper?: {
+      $eval: string;
+    }
   };
 
   resourceLoader?: {
