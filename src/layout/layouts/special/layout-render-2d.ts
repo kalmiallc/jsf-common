@@ -64,6 +64,8 @@ export class JsfLayoutRender2D extends JsfAbstractSpecialLayout<'render-2d'> {
     valueMapper?: {
       $eval: string;
     }
+
+    forceRealtimeSupport?: boolean;
   };
 
   resourceLoader?: {
