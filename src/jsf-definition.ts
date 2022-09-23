@@ -61,7 +61,8 @@ export class JsfDefinition {
     version?: number;
     unsafeResolverMode?: boolean;
     layoutRenderingMode?: 'sync' | 'async';
-    dialogSizeBehaviour?: 'dynamic' | 'fullscreen'
+    dialogSizeBehaviour?: 'dynamic' | 'fullscreen';
+    visibilityHandler?: 'class' | 'angular';
   };
 
   /**
